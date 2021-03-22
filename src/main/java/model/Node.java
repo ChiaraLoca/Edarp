@@ -21,4 +21,18 @@ public class Node {
         this.arrival = arrival;
         this.departure = departure;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "id=" + id +
+                ", lat=" + lat +
+                ", lon=" + lon +
+                ", service=" + service +
+                ", time=" + time +
+                ", load=" + load +
+                ", arrival=" + arrival +
+                ", departure=" + departure +
+                '}';
+    }
 }

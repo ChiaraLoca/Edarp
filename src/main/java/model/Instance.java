@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Instance {
@@ -14,18 +16,19 @@ public class Instance {
     private int nReplications;
     private int timeHorizon;
     private List<Node> nodes;
-    private final int[] commonOriginDepotId = new int[nOriginDepots];
-    private final int[] commonDestinationDepotId = new int[nDestinationDepots];
-    private final int[] artificialOriginDepotId= new int[nVehicles]; //TODO non sappiamo da dove arriva la lunghezza di questo
-    private final int[] chargingStationId = new int[nStations];
-    private final int[] userMaxRideTime = new int[nCustomers];
-    private final int[] vehicleCapacity = new int[nVehicles];
-    private final int[] vehicleInitBatteryInventory = new int[nVehicles];
-    private final double[] vehicleBatteryCapacity = new double[nVehicles];
-    private final double[] minEndBatteryRatioLvl = new double[nVehicles];
-    private final double[] stationRechargingRate = new double[nStations];
+    private final int[] commonOriginDepotId;
+    private final int[] commonDestinationDepotId;
+    private final int[] artificialOriginDepotId;
+    private final int[] artificialDestinationDepotId;
+    private final int[] chargingStationId;
+    private final int[] userMaxRideTime;
+    private final int[] vehicleCapacity;
+    private final double[] vehicleInitBatteryInventory;
+    private final double[] vehicleBatteryCapacity;
+    private final double[] minEndBatteryRatioLvl;
+    private final double[] stationRechargingRate;
     private double vehicleDischargingRate;
-    private final double[] weightFactor = new double[2]; //TODO non abbiamo idea di che cazzo sia
+    private final double[] weightFactor;//TODO non abbiamo idea di che cazzo sia
     //Todo original travel time non compare mai
 
 
@@ -105,9 +108,7 @@ public class Instance {
         return nodes;
     }
 
-    public void setNodes(List<Node> nodes) {
-        this.nodes = nodes;
-    }
+    public void setNodes(List<Node> nodes) {this.nodes= nodes; }
 
     public int[] getCommonOriginDepotId() {
         return commonOriginDepotId;
@@ -119,6 +120,10 @@ public class Instance {
 
     public int[] getArtificialOriginDepotId() {
         return artificialOriginDepotId;
+    }
+
+    public int[] getArtificialDestinationDepotId() {
+        return artificialDestinationDepotId;
     }
 
     public int[] getChargingStationId() {
@@ -133,7 +138,7 @@ public class Instance {
         return vehicleCapacity;
     }
 
-    public int[] getVehicleInitBatteryInventory() {
+    public double[] getVehicleInitBatteryInventory() {
         return vehicleInitBatteryInventory;
     }
 
@@ -161,27 +166,62 @@ public class Instance {
         return weightFactor;
     }
 
-    public Instance(String[] firstLine) {
-        this.nVehicles = Integer.parseInt(firstLine[0]);
-        this.nCustomers = Integer.parseInt(firstLine[1]);
-        this.nOriginDepots = Integer.parseInt(firstLine[2]);
-        this.nDestinationDepots = Integer.parseInt(firstLine[3]);
-        this.nStations = Integer.parseInt(firstLine[4]);
-        this.nReplications = Integer.parseInt(firstLine[5]);
-        this.timeHorizon = Integer.parseInt(firstLine[6]);
-    }
 
-    public Instance(String name, int nVehicles, int nCustomers, double minBatteryRatioLvl, int nOriginDepots, int nDestinationDepots, int nStations, int nReplications, int timeHorizon, List<Node> nodes, double vehicleDischargingRate) {
+
+    public Instance(String name, int nVehicles, int nCustomers, int nOriginDepots, int nDestinationDepots, int nStations, int nReplications, int timeHorizon) {
         this.name = name;
         this.nVehicles = nVehicles;
         this.nCustomers = nCustomers;
-        this.minBatteryRatioLvl = minBatteryRatioLvl;
         this.nOriginDepots = nOriginDepots;
         this.nDestinationDepots = nDestinationDepots;
         this.nStations = nStations;
         this.nReplications = nReplications;
         this.timeHorizon = timeHorizon;
-        this.nodes = nodes;
-        this.vehicleDischargingRate = vehicleDischargingRate;
+
+        commonOriginDepotId = new int[nOriginDepots];
+        commonDestinationDepotId = new int[nDestinationDepots];
+        artificialOriginDepotId= new int[nVehicles];
+        artificialDestinationDepotId= new int[nVehicles];
+        chargingStationId = new int[nStations];
+       userMaxRideTime = new int[nCustomers];
+        vehicleCapacity = new int[nVehicles];
+        vehicleInitBatteryInventory = new double[nVehicles];
+        vehicleBatteryCapacity = new double[nVehicles];
+        minEndBatteryRatioLvl = new double[nVehicles];
+        stationRechargingRate = new double[nStations];
+        weightFactor = new double[2];
+
+
+
+    }
+
+    @Override
+    public String toString() {
+        return
+                "name='" + name + '\'' +
+                ","+"\n"+ "nVehicles=" + nVehicles +
+                ","+"\n"+ "nCustomers=" + nCustomers +
+                        ","+"\n"+ "minBatteryRatioLvl=" + minBatteryRatioLvl +
+                        ","+"\n"+ "nOriginDepots=" + nOriginDepots +
+                        ","+"\n"+ "nDestinationDepots=" + nDestinationDepots +
+                        ","+"\n"+ "nStations=" + nStations +
+                        ","+"\n"+ "nReplications=" + nReplications +
+                        ","+"\n"+ "timeHorizon=" + timeHorizon +
+                        ","+"\n"+ "nodes=" + nodes +
+                        ","+"\n"+ "commonOriginDepotId=" + Arrays.toString(commonOriginDepotId) +
+                        ","+"\n"+ " commonDestinationDepotId=" + Arrays.toString(commonDestinationDepotId) +
+                        ","+"\n"+ " artificialOriginDepotId=" + Arrays.toString(artificialOriginDepotId) +
+                        ","+"\n"+ " artificialDestinationDepotId=" + Arrays.toString(artificialDestinationDepotId) +
+                        ","+"\n"+ " chargingStationId=" + Arrays.toString(chargingStationId) +
+                        ","+"\n"+ " userMaxRideTime=" + Arrays.toString(userMaxRideTime) +
+                        ","+"\n"+ " vehicleCapacity=" + Arrays.toString(vehicleCapacity) +
+                        ","+"\n"+ " vehicleInitBatteryInventory=" + Arrays.toString(vehicleInitBatteryInventory) +
+                        ","+"\n"+ " vehicleBatteryCapacity=" + Arrays.toString(vehicleBatteryCapacity) +
+                        ","+"\n"+ " minEndBatteryRatioLvl=" + Arrays.toString(minEndBatteryRatioLvl) +
+                        ","+"\n"+ " stationRechargingRate=" + Arrays.toString(stationRechargingRate) +
+                        ","+"\n"+ " vehicleDischargingRate=" + vehicleDischargingRate +
+                        ","+"\n"+ " weightFactor=" + Arrays.toString(weightFactor);
     }
 }
+
+
