@@ -1,0 +1,19 @@
+reset;
+
+/*Istruisce AMPL ad usare gurobi*/
+option solver gurobi;
+
+/*Mostra fino alla seconda cifra decimale*/
+option display_round 2;
+
+model Model.mod;
+#data  Data.dat;
+
+solve; 
+
+
+display {j in 1.._nvars} 
+	(_varname[j],_var[j],_var[j].lb,_var[j].ub,_var[j].rc);
+
+display {j in 1.._ncons} 
+	(_conname[j],_con[j].body,_con[j].slack, _con[j].dual);
