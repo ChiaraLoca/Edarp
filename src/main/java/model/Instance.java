@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Instance {
+
+    private String title;
     private String name;
     private int nVehicles;
     private int nCustomers;
@@ -31,6 +33,14 @@ public class Instance {
     private final double[] weightFactor;//TODO non abbiamo idea di che cazzo sia
     //Todo original travel time non compare mai
 
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getName() {
         return name;
@@ -168,7 +178,8 @@ public class Instance {
 
 
 
-    public Instance(String name, int nVehicles, int nCustomers, int nOriginDepots, int nDestinationDepots, int nStations, int nReplications, int timeHorizon) {
+    public Instance(String title,String name, int nVehicles, int nCustomers, int nOriginDepots, int nDestinationDepots, int nStations, int nReplications, int timeHorizon) {
+        this.title = title;
         this.name = name;
         this.nVehicles = nVehicles;
         this.nCustomers = nCustomers;

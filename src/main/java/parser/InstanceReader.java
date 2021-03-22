@@ -10,9 +10,7 @@ import java.util.stream.Collectors;
 
 public class InstanceReader {
     private static InstanceReader instanceReader=null;
-    private InstanceReader(){
-
-    }
+    private InstanceReader(){ }
     public static InstanceReader getInstanceReader(){
         if (instanceReader==null)
             instanceReader=new InstanceReader();
@@ -21,7 +19,9 @@ public class InstanceReader {
     public Instance read(String path){
 
         String str[] = path.split("/");
-        String name = "" +str[str.length-1].toCharArray()[0];
+        String title = str[str.length-1];
+        String name = "" +title.toCharArray()[0];
+        title = title.substring(0,title.length()-4);
 
         File file=new File(path);
         if(!file.exists())
@@ -40,7 +40,7 @@ public class InstanceReader {
             int nOriginDepots =Integer.parseInt(lines.get(0)[2]);
             int nDestinationDepots = Integer.parseInt(lines.get(0)[3]);
             int nStations = Integer.parseInt(lines.get(0)[4]);
-            Instance instance= new Instance(name,nVehicles, nCustomers,  nOriginDepots,  nDestinationDepots, nStations,  Integer.parseInt(lines.get(0)[5]),  Integer.parseInt(lines.get(0)[6]));
+            Instance instance= new Instance(title,name,nVehicles, nCustomers,  nOriginDepots,  nDestinationDepots, nStations,  Integer.parseInt(lines.get(0)[5]),  Integer.parseInt(lines.get(0)[6]));
             int i=1;
             List<Node> nodes=new ArrayList<>();
             while (lines.get(i)[0].equals("")){
