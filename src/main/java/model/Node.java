@@ -4,19 +4,16 @@ public class Node {
     private int id;
     private double lat;
     private double lon;
-    private int service;
-    private int time;
+    private int serviceTime;
     private int load;
     private int arrival;
-    //TODO chiedere per mancanza dell'ottavo dato
     private int departure;
 
-    public Node(int id, double lat, double lon, int service, int time, int load, int arrival, int departure) {
+    public Node(int id, double lat, double lon, int serviceTime, int load, int arrival, int departure) {
         this.id = id;
         this.lat = lat;
         this.lon = lon;
-        this.service = service;
-        this.time = time;
+        this.serviceTime = serviceTime;
         this.load = load;
         this.arrival = arrival;
         this.departure = departure;
@@ -28,8 +25,7 @@ public class Node {
                 "id=" + id +
                 ", lat=" + lat +
                 ", lon=" + lon +
-                ", service=" + service +
-                ", time=" + time +
+                ", serviceTime=" + serviceTime +
                 ", load=" + load +
                 ", arrival=" + arrival +
                 ", departure=" + departure +

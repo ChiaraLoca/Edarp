@@ -45,19 +45,12 @@ public class InstanceReader {
             List<Node> nodes=new ArrayList<>();
             while (lines.get(i)[0].equals("")){
 
-                //TODO un elemento manca per qualche motino sconosciuto
-                /*
-                if(lines.get(i).length!=9)
-                    return null;
 
-                nodes.add(new Node(Integer.parseInt(lines.get(i)[1]),  Double.parseDouble(lines.get(i)[2]),    Double.parseDouble(lines.get(i)[3]),    Integer.parseInt(lines.get(i)[4]),
-                                   Integer.parseInt(lines.get(i)[5]),  Integer.parseInt(lines.get(i)[6]),      Integer.parseInt(lines.get(i)[7]),      Integer.parseInt(lines.get(i)[8])));
-                */
                 if(lines.get(i).length!=8)
                     return null;
 
                 nodes.add(new Node(Integer.parseInt(lines.get(i)[1]),  Double.parseDouble(lines.get(i)[2]),    Double.parseDouble(lines.get(i)[3]),    Integer.parseInt(lines.get(i)[4]),
-                        Integer.parseInt(lines.get(i)[5]),  Integer.parseInt(lines.get(i)[6]),      Integer.parseInt(lines.get(i)[7]),      0));
+                        Integer.parseInt(lines.get(i)[5]),  Integer.parseInt(lines.get(i)[6]),      Integer.parseInt(lines.get(i)[7])));
 
                 i++;
             }

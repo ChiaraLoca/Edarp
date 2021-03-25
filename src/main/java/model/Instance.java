@@ -208,30 +208,32 @@ public class Instance {
 
     @Override
     public String toString() {
-        return
-                "name='" + name + '\'' +
-                ","+"\n"+ "nVehicles=" + nVehicles +
-                ","+"\n"+ "nCustomers=" + nCustomers +
-                        ","+"\n"+ "minBatteryRatioLvl=" + minBatteryRatioLvl +
-                        ","+"\n"+ "nOriginDepots=" + nOriginDepots +
-                        ","+"\n"+ "nDestinationDepots=" + nDestinationDepots +
-                        ","+"\n"+ "nStations=" + nStations +
-                        ","+"\n"+ "nReplications=" + nReplications +
-                        ","+"\n"+ "timeHorizon=" + timeHorizon +
-                        ","+"\n"+ "nodes=" + nodes +
-                        ","+"\n"+ "commonOriginDepotId=" + Arrays.toString(commonOriginDepotId) +
-                        ","+"\n"+ " commonDestinationDepotId=" + Arrays.toString(commonDestinationDepotId) +
-                        ","+"\n"+ " artificialOriginDepotId=" + Arrays.toString(artificialOriginDepotId) +
-                        ","+"\n"+ " artificialDestinationDepotId=" + Arrays.toString(artificialDestinationDepotId) +
-                        ","+"\n"+ " chargingStationId=" + Arrays.toString(chargingStationId) +
-                        ","+"\n"+ " userMaxRideTime=" + Arrays.toString(userMaxRideTime) +
-                        ","+"\n"+ " vehicleCapacity=" + Arrays.toString(vehicleCapacity) +
-                        ","+"\n"+ " vehicleInitBatteryInventory=" + Arrays.toString(vehicleInitBatteryInventory) +
-                        ","+"\n"+ " vehicleBatteryCapacity=" + Arrays.toString(vehicleBatteryCapacity) +
-                        ","+"\n"+ " minEndBatteryRatioLvl=" + Arrays.toString(minEndBatteryRatioLvl) +
-                        ","+"\n"+ " stationRechargingRate=" + Arrays.toString(stationRechargingRate) +
-                        ","+"\n"+ " vehicleDischargingRate=" + vehicleDischargingRate +
-                        ","+"\n"+ " weightFactor=" + Arrays.toString(weightFactor);
+        return "Instance{" +
+                "title='" + title + '\'' +
+                ", name='" + name + '\'' +
+                ", nVehicles=" + nVehicles +
+                ", nCustomers=" + nCustomers +
+                ", minBatteryRatioLvl=" + minBatteryRatioLvl +
+                ", nOriginDepots=" + nOriginDepots +
+                ", nDestinationDepots=" + nDestinationDepots +
+                ", nStations=" + nStations +
+                ", nReplications=" + nReplications +
+                ", timeHorizon=" + timeHorizon +
+                ", nodes=" + nodes +
+                ", commonOriginDepotId=" + Arrays.toString(commonOriginDepotId) +
+                ", commonDestinationDepotId=" + Arrays.toString(commonDestinationDepotId) +
+                ", artificialOriginDepotId=" + Arrays.toString(artificialOriginDepotId) +
+                ", artificialDestinationDepotId=" + Arrays.toString(artificialDestinationDepotId) +
+                ", chargingStationId=" + Arrays.toString(chargingStationId) +
+                ", userMaxRideTime=" + Arrays.toString(userMaxRideTime) +
+                ", vehicleCapacity=" + Arrays.toString(vehicleCapacity) +
+                ", vehicleInitBatteryInventory=" + Arrays.toString(vehicleInitBatteryInventory) +
+                ", vehicleBatteryCapacity=" + Arrays.toString(vehicleBatteryCapacity) +
+                ", minEndBatteryRatioLvl=" + Arrays.toString(minEndBatteryRatioLvl) +
+                ", stationRechargingRate=" + Arrays.toString(stationRechargingRate) +
+                ", vehicleDischargingRate=" + vehicleDischargingRate +
+                ", weightFactor=" + Arrays.toString(weightFactor) +
+                '}';
     }
 }
 
