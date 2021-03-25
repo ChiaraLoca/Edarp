@@ -31,4 +31,33 @@ public class Node {
                 ", departure=" + departure +
                 '}';
     }
+
+
+    public int getId() {
+        return id;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
+    public int getServiceTime() {
+        return serviceTime;
+    }
+
+    public int getLoad() {
+        return load;
+    }
+
+    public int getArrival() {
+        return arrival;
+    }
+
+    public int getDeparture() {
+        return departure;
+    }
 }
