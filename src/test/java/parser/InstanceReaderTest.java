@@ -11,7 +11,8 @@ class InstanceReaderTest {
 
         InstanceReader instanceReader = InstanceReader.getInstanceReader();
 
-        Instance instance = instanceReader.read("src/test/resources/a2-16-0.7.txt");
+        Instance instance = instanceReader.read("src/test/resources/u2-16-0.7.txt");
+        assert instance!=null;
         System.out.println(instance);
 
 
