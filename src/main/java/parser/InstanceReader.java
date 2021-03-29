@@ -157,6 +157,8 @@ public class InstanceReader {
                 instance.getWeightFactor()[k]= Double.parseDouble(lines.get(i)[k]);
             }i++;
 
+
+
             if(lines.size() == i)
                 return instance;
             return null;
