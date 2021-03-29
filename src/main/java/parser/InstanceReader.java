@@ -6,7 +6,6 @@ import model.Node;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class InstanceReader {
     private static InstanceReader instanceReader=null;
@@ -43,16 +42,14 @@ public class InstanceReader {
             Instance instance= new Instance(title,name,nVehicles, nCustomers,  nOriginDepots,  nDestinationDepots, nStations,  Integer.parseInt(lines.get(0)[5]),  Integer.parseInt(lines.get(0)[6]));
             int i=1;
             List<Node> nodes=new ArrayList<>();
-            while (lines.get(i)[0].equals("")){
+            int nodeIndex= 1;
+            while (lines.get(i).length==7 && Integer.parseInt(lines.get(i)[0])==nodeIndex){
 
-
-                if(lines.get(i).length!=8)
-                    return null;
-
-                nodes.add(new Node(Integer.parseInt(lines.get(i)[1]),  Double.parseDouble(lines.get(i)[2]),    Double.parseDouble(lines.get(i)[3]),    Integer.parseInt(lines.get(i)[4]),
-                        Integer.parseInt(lines.get(i)[5]),  Integer.parseInt(lines.get(i)[6]),      Integer.parseInt(lines.get(i)[7])));
+                nodes.add(new Node(Integer.parseInt(lines.get(i)[0]),  Double.parseDouble(lines.get(i)[1]),    Double.parseDouble(lines.get(i)[2]),    Double.parseDouble(lines.get(i)[3]),
+                        Double.parseDouble(lines.get(i)[4]),  Double.parseDouble(lines.get(i)[5]),      Double.parseDouble(lines.get(i)[6])));
 
                 i++;
+                nodeIndex++;
             }
             instance.setNodes(nodes);
             /**commonOriginDepotId*/
@@ -80,9 +77,9 @@ public class InstanceReader {
             }i++;
 
             /**artificialDestinationDepotId*/
-            if(lines.get(i).length!=nVehicles)
+            if(lines.get(i).length!=nStations)
                 return null;
-            for(int k=0;k<nVehicles;k++)
+            for(int k=0;k<nStations;k++)
             {
                 instance.getArtificialDestinationDepotId()[k]= Integer.parseInt(lines.get(i)[k]);
             }i++;
@@ -157,10 +154,21 @@ public class InstanceReader {
                 instance.getWeightFactor()[k]= Double.parseDouble(lines.get(i)[k]);
             }i++;
 
+
+            //TimeDistance Matrix
+            double[][] timeDistance = new double[nodes.size()][nodes.size()];
+            for(int row=0; row<nodes.size(); row++){
+                String [] line= lines.get(i);
+                for (int col=0;col<nodes.size();col++){
+                    timeDistance[row][col] = Double.parseDouble(line[col]);
+                }
+                i++;
+            }
+            instance.setTravelTime(timeDistance);
+
             if(lines.size() == i)
                 return instance;
             return null;
-
 
             //instance.setNodes();
         } catch (IOException e) {

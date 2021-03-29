@@ -1,6 +1,5 @@
 package model;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,6 +30,7 @@ public class Instance {
     private final double[] stationRechargingRate;
     private double vehicleDischargingRate;
     private final double[] weightFactor;//TODO non abbiamo idea di che cazzo sia
+    private double[][] travelTime;
     //Todo original travel time non compare mai
 
 
@@ -176,9 +176,15 @@ public class Instance {
         return weightFactor;
     }
 
+    public double[][] getTravelTime() {
+        return travelTime;
+    }
 
+    public void setTravelTime(double[][] travelTime) {
+        this.travelTime = travelTime;
+    }
 
-    public Instance(String title,String name, int nVehicles, int nCustomers, int nOriginDepots, int nDestinationDepots, int nStations, int nReplications, int timeHorizon) {
+    public Instance(String title, String name, int nVehicles, int nCustomers, int nOriginDepots, int nDestinationDepots, int nStations, int nReplications, int timeHorizon) {
         this.title = title;
         this.name = name;
         this.nVehicles = nVehicles;
@@ -192,7 +198,7 @@ public class Instance {
         commonOriginDepotId = new int[nOriginDepots];
         commonDestinationDepotId = new int[nDestinationDepots];
         artificialOriginDepotId= new int[nVehicles];
-        artificialDestinationDepotId= new int[nVehicles];
+        artificialDestinationDepotId= new int[nStations];
         chargingStationId = new int[nStations];
        userMaxRideTime = new int[nCustomers];
         vehicleCapacity = new int[nVehicles];
@@ -200,11 +206,22 @@ public class Instance {
         vehicleBatteryCapacity = new double[nVehicles];
         minEndBatteryRatioLvl = new double[nVehicles];
         stationRechargingRate = new double[nStations];
+        this.travelTime = null;
         weightFactor = new double[2];
 
-
-
     }
+
+    private String printMatrix(double[][] m){
+        StringBuilder stringBuilder= new StringBuilder();
+        for (int i = 0; i < m.length; i++) {
+            for (int j = 0; j < m[0].length; j++) {
+                stringBuilder.append(""+m[i][j]+"\t");
+            }
+            stringBuilder.append("\n");
+        }
+        return stringBuilder.toString();
+    }
+
 
     @Override
     public String toString() {
@@ -233,6 +250,7 @@ public class Instance {
                 ", stationRechargingRate=" + Arrays.toString(stationRechargingRate) +
                 ", vehicleDischargingRate=" + vehicleDischargingRate +
                 ", weightFactor=" + Arrays.toString(weightFactor) +
+                ", travelTime=\n" + printMatrix(travelTime) +
                 '}';
     }
 }
