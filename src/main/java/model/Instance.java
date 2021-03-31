@@ -213,6 +213,11 @@ public class Instance {
 
     private String printMatrix(double[][] m){
         StringBuilder stringBuilder= new StringBuilder();
+        if(m==null){
+            stringBuilder.append("null");
+            return stringBuilder.toString();
+        }
+
         for (int i = 0; i < m.length; i++) {
             for (int j = 0; j < m[0].length; j++) {
                 stringBuilder.append(""+m[i][j]+"\t");
@@ -221,6 +226,7 @@ public class Instance {
         }
         return stringBuilder.toString();
     }
+
 
 
     @Override

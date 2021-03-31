@@ -33,6 +33,11 @@ public class InstanceWriter {
 
     public void write(Instance instance)
     {
+        if(instance.getName().equals("a"))
+        {
+            instance.setTravelTime(calculateTravelTime(1));
+        }
+
 
         writeSingleParam("n",instance.getnStations());//n = number of stations*/
 
@@ -44,19 +49,10 @@ public class InstanceWriter {
 
         writeSet("F",instance.getCommonDestinationDepotId());//set F = All avaible destinations depots*/
 
-        //TODO   param t{V,V}; 		# Travel time from location V to location V
         int V = instance.getNodes().size();
-        int t[][] = new int[V][V];
-        Random random = new Random();
-        for(int k =0;k<V;k++)
-        {
-            for(int j =0;j<V;j++) {
-                t[k][j] = random.nextInt(100);
-            }
-        }
-        writeMatrixParam("t",t,V,V);// param t{V,V}; 		# Travel time from location V to location V
+        writeMatrixParam("t",instance.getTravelTime(),V,V);// param t{V,V}; 		# Travel time from location V to location V
 
-        int arr[] = new int[instance.getNodes().size()];
+        double arr[] = new double[instance.getNodes().size()];
         int i=0;
         for(Node n: instance.getNodes())
         {
@@ -66,7 +62,7 @@ public class InstanceWriter {
         writeKeyValueParam("arr",arr);//param arr{V}; 		# Earliest time at which service can begin at V*/
 
 
-        int dep[] = new int[instance.getNodes().size()];
+        double dep[] = new double[instance.getNodes().size()];
         i=0;
         for(Node n: instance.getNodes())
         {
@@ -75,7 +71,7 @@ public class InstanceWriter {
         }
        writeKeyValueParam("dep",dep);//param dep{V}; 		# Latest time at which service can begin at V*/
 
-        int d[] = new int[instance.getNodes().size()];
+        double d[] = new double[instance.getNodes().size()];
         i=0;
         for(Node n: instance.getNodes())
         {
@@ -84,7 +80,7 @@ public class InstanceWriter {
         }
         writeKeyValueParam("d",d);//param d{V};	 		# Service duration at location V*/
 
-        int l[] = new int[instance.getNodes().size()];
+        double l[] = new double[instance.getNodes().size()];
         i=0;
         for(Node n: instance.getNodes())
         {
@@ -103,7 +99,8 @@ public class InstanceWriter {
 
         writeSingleParam("r",instance.getMinBatteryRatioLvl());//* param r;			# Final minimum battery level ratio*/
 
-        //TODO  //*param beta{V,V};	# Battery consumption between nodes i, j in V*/
+        double [][] batteryConsumption = calculateBatteryConsumption();
+        writeMatrixParam("beta",batteryConsumption,V,V);//*param beta{V,V};	# Battery consumption between nodes i, j in V*/
 
         writeKeyValueParam("alpha",instance.getChargingStationId(),instance.getStationRechargingRate());//*param alpha{S};		# Recharge rate at charging facility S*/
 
@@ -113,7 +110,8 @@ public class InstanceWriter {
 
         writeSingleParam("w2",instance.getWeightFactor()[1]); //*param w2;*/
 
-        int M[][] = new int[V][V];
+        double M[][] = new double[V][V];
+        double t[][] = instance.getTravelTime();
         for(int k =0;k<V;k++)
         {
             for(int j =0;j<V;j++) {
@@ -261,7 +259,7 @@ public class InstanceWriter {
         printWriter.println(";");
     }
 
-    public double[][] timeBetweenNodes(int speed)
+    public double[][] calculateTravelTime(int speed)
     {
         List<Node> nodes = instance.getNodes();
         int size= nodes.size();
@@ -278,6 +276,29 @@ public class InstanceWriter {
                 matrix[i][j] = Math.sqrt(Math.pow(a.getLat()-b.getLat(),2)+Math.pow(a.getLon()-b.getLon(),2))/speed;
             }
         }
+        return matrix;
+    }
+
+    public double[][] calculateBatteryConsumption()
+    {
+        List<Node> nodes = instance.getNodes();
+        int size= nodes.size();
+        double matrix[][] = new double[size][size];
+        double timeTravel[][] = instance.getTravelTime();
+        double dischargingRate = instance.getVehicleDischargingRate();
+
+        Node a;
+        Node b;
+        for(int i=0;i<size;i++)
+        {
+            a =nodes.get(i);
+            for(int j=0;j<size;j++)
+            {
+                b = nodes.get(j);
+                matrix[i][j] = timeTravel[i][j]*dischargingRate;
+            }
+        }
+
         return matrix;
     }
 

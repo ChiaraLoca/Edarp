@@ -3,29 +3,29 @@ package parser;
 import model.Instance;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class InstanceWriterTest {
 
     @Test
     void write() {
         InstanceReader instanceReader = InstanceReader.getInstanceReader();
-        Instance instance = instanceReader.read("src/test/resources/a2-16-0.7.txt");
+        Instance instanceA = instanceReader.read("src/test/resources/a2-16-0.7.txt");
 
+        InstanceWriter instanceWriter = new InstanceWriter(instanceA);
+        instanceWriter.write(instanceA);
 
-        InstanceWriter instanceWriter = new InstanceWriter(instance);
-        instanceWriter.write(instance);
+        Instance instanceU = instanceReader.read("src/test/resources/u2-16-0.7.txt");
+        instanceWriter = new InstanceWriter(instanceU);
+        instanceWriter.write(instanceU);
 
     }
     @Test
-    void  timeBetweenNodesTest()
-    {
+    void  timeBetweenNodesTest() {
         InstanceReader instanceReader = InstanceReader.getInstanceReader();
         Instance instance = instanceReader.read("src/test/resources/a2-16-0.7.txt");
 
 
         InstanceWriter instanceWriter = new InstanceWriter(instance);
-        double [][] matrix = instanceWriter.timeBetweenNodes(1);
+        double [][] matrix = instanceWriter.calculateTravelTime(1);
         int size= instance.getNodes().size();
         System.out.println("Matrix:");
 
