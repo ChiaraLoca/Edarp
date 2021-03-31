@@ -195,7 +195,6 @@ public class InstanceWriter {
         }
         printWriter.println(";");
 
-        printWriter.close();
     }
 
     private void writeMatrixParam(String name,int data[][],int row,int column)
