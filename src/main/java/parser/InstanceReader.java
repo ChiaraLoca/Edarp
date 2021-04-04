@@ -25,7 +25,7 @@ public class InstanceReader {
         File file=new File(path);
         if(!file.exists())
             return null;
-        try (BufferedReader bufferedReader= new BufferedReader(new FileReader(file))){
+            try (BufferedReader bufferedReader= new BufferedReader(new FileReader(file))){
             List<String[]> lines=bufferedReader.lines().collect(() -> new ArrayList<String[]>(),
                     (array, s)->{
                         array.add(s.split("\\s+"));
@@ -43,30 +43,24 @@ public class InstanceReader {
             int i=1;
             int nodeIndex= 1;
             List<Node> nodes=new ArrayList<>();
-            if(name.equals("a"))
-            {
-                while (lines.get(i).length==8 && (lines.get(i)[0]).equals(""))
-                {
-                    nodes.add(new Node(Integer.parseInt(lines.get(i)[1]),  Double.parseDouble(lines.get(i)[2]),    Double.parseDouble(lines.get(i)[3]),    Double.parseDouble(lines.get(i)[4]),
-                            Double.parseDouble(lines.get(i)[5]),  Double.parseDouble(lines.get(i)[6]),      Double.parseDouble(lines.get(i)[7])));
+            int arrayPositionModifier=0;
+            int nodeArrayLength=0;
+            if(lines.get(i).length==7 && Integer.parseInt(lines.get(i)[0])==nodeIndex){
+                arrayPositionModifier=0;
+                nodeArrayLength=7;
 
-                    i++;
-                }
-            }else if(name.equals("u"))
-            {
-                while (lines.get(i).length==7 && Integer.parseInt(lines.get(i)[0])==nodeIndex){
-
-                    nodes.add(new Node(Integer.parseInt(lines.get(i)[0]),  Double.parseDouble(lines.get(i)[1]),    Double.parseDouble(lines.get(i)[2]),    Double.parseDouble(lines.get(i)[3]),
-                            Double.parseDouble(lines.get(i)[4]),  Double.parseDouble(lines.get(i)[5]),      Double.parseDouble(lines.get(i)[6])));
-
-                    i++;
-                    nodeIndex++;
-                }
-            }else
-            {
-                return null;
+            } else if(lines.get(i).length==8 && lines.get(i)[0].equals("")){
+                arrayPositionModifier=1;
+                nodeArrayLength=8;
             }
+            else return null;
+            while (lines.get(i).length==nodeArrayLength && Integer.parseInt(lines.get(i)[0+arrayPositionModifier])==nodeIndex){
 
+                nodes.add(new Node(Integer.parseInt(lines.get(i)[0+arrayPositionModifier]),  Double.parseDouble(lines.get(i)[1+arrayPositionModifier]),    Double.parseDouble(lines.get(i)[2+arrayPositionModifier]),    Double.parseDouble(lines.get(i)[3+arrayPositionModifier]),
+                        Double.parseDouble(lines.get(i)[4+arrayPositionModifier]),  Double.parseDouble(lines.get(i)[5+arrayPositionModifier]),      Double.parseDouble(lines.get(i)[6+arrayPositionModifier])));
+                i++;
+                nodeIndex++;
+            }
 
             instance.setNodes(nodes);
             /**commonOriginDepotId*/
