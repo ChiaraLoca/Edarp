@@ -96,13 +96,26 @@ public class InstanceReader {
             /**artificialDestinationDepotId*/
             //TODO errore nStation =3, nella linea solo 2 valori,
             //TODO non so quanto sia la dimenzione di sta array
-            /*if(lines.get(i).length!=nStations)
-                return null;
-            for(int k=0;k<nStations;k++)
+
+            if(instance.getName().equals("a"))
             {
-                instance.getArtificialDestinationDepotId()[k]= Integer.parseInt(lines.get(i)[k]);
-            }i++;*/
-            i++;
+                if(lines.get(i).length!=nVehicles)
+                    return null;
+                for(int k=0;k<nVehicles;k++)
+                {
+                    instance.getArtificialDestinationDepotId()[k]= Integer.parseInt(lines.get(i)[k]);
+                }i++;
+            }
+            else
+            {
+                if(lines.get(i).length!=5)
+                    return null;
+                for(int k=0;k<5;k++)
+                {
+                    instance.getArtificialDestinationDepotId()[k]= Integer.parseInt(lines.get(i)[k]);
+                }i++;
+            }
+
 
             /**chargingStationId*/
             if(lines.get(i).length!=nStations)
@@ -188,6 +201,11 @@ public class InstanceReader {
                 instance.setTravelTime(timeDistance);
 
             }
+            else
+            {
+                instance.setTravelTime(calculateTravelTime(1,instance));
+            }
+
             if(lines.size() == i)
                 return instance;
             return null;
@@ -197,5 +215,25 @@ public class InstanceReader {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public double[][] calculateTravelTime(int speed,Instance instance)
+    {
+        List<Node> nodes = instance.getNodes();
+        int size= nodes.size();
+        double matrix[][] = new double[size][size];
+
+        Node a;
+        Node b;
+        for(int i=0;i<size;i++)
+        {
+            a =nodes.get(i);
+            for(int j=0;j<size;j++)
+            {
+                b = nodes.get(j);
+                matrix[i][j] = Math.sqrt(Math.pow(a.getLat()-b.getLat(),2)+Math.pow(a.getLon()-b.getLon(),2))/speed;
+            }
+        }
+        return matrix;
     }
 }

@@ -33,10 +33,7 @@ public class InstanceWriter {
 
     public void write(Instance instance)
     {
-        if(instance.getName().equals("a"))
-        {
-            instance.setTravelTime(calculateTravelTime(1));
-        }
+
 
 
         writeSingleParam("n",instance.getnStations());//n = number of stations*/
@@ -258,25 +255,7 @@ public class InstanceWriter {
         printWriter.println(";");
     }
 
-    public double[][] calculateTravelTime(int speed)
-    {
-        List<Node> nodes = instance.getNodes();
-        int size= nodes.size();
-        double matrix[][] = new double[size][size];
 
-        Node a;
-        Node b;
-        for(int i=0;i<size;i++)
-        {
-            a =nodes.get(i);
-            for(int j=0;j<size;j++)
-            {
-                b = nodes.get(j);
-                matrix[i][j] = Math.sqrt(Math.pow(a.getLat()-b.getLat(),2)+Math.pow(a.getLon()-b.getLon(),2))/speed;
-            }
-        }
-        return matrix;
-    }
 
     public double[][] calculateBatteryConsumption()
     {

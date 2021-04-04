@@ -198,9 +198,12 @@ public class Instance {
         commonOriginDepotId = new int[nOriginDepots];
         commonDestinationDepotId = new int[nDestinationDepots];
         artificialOriginDepotId= new int[nVehicles];
-        artificialDestinationDepotId= new int[nVehicles];
+        if(name.equals("a"))
+            artificialDestinationDepotId= new int[nVehicles];
+        else
+            artificialDestinationDepotId= new int[5];
         chargingStationId = new int[nStations];
-       userMaxRideTime = new int[nCustomers];
+        userMaxRideTime = new int[nCustomers];
         vehicleCapacity = new int[nVehicles];
         vehicleInitBatteryInventory = new double[nVehicles];
         vehicleBatteryCapacity = new double[nVehicles];
