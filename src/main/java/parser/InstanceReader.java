@@ -43,7 +43,6 @@ public class InstanceReader {
             int nodeIndex = 1;
             List<Node> nodes = new ArrayList<>();
             int arrayPositionModifier = 0;
-            int nodeArrayLength = 0;
 
             while ((lines.get(i).length == 7 && Integer.parseInt(lines.get(i)[0]) == nodeIndex) || (lines.get(i).length == 8 && lines.get(i)[0].equals("") && Integer.parseInt(lines.get(i)[1]) == nodeIndex)) {
                 if (lines.get(i).length == 7) {
@@ -66,7 +65,7 @@ public class InstanceReader {
             else if(lines.get(i).length==nOriginDepots+1 && lines.get(i)[0].equals(""))
                 arrayPositionModifier=1;
             else
-                return null;
+                throw new ParseException("Common origin depot id", i);
             for(int k=0;k<nOriginDepots;k++)
             {
                 instance.getCommonOriginDepotId()[k]= Integer.parseInt(lines.get(i)[k+arrayPositionModifier]);
@@ -79,7 +78,7 @@ public class InstanceReader {
                 else if(lines.get(i).length==nDestinationDepots+1 && lines.get(i)[0].equals(""))
                     arrayPositionModifier=1;
                 else
-                    return null;
+                    throw new ParseException("Common destination depot id", i);
             for(int k=0;k<nDestinationDepots;k++)
             {
                 instance.getCommonDestinationDepotId()[k]= Integer.parseInt(lines.get(i)[k+arrayPositionModifier]);
@@ -91,7 +90,7 @@ public class InstanceReader {
                 else if(lines.get(i).length==nVehicles+1 && lines.get(i)[0].equals(""))
                     arrayPositionModifier=1;
                 else
-                    return null;
+                    throw new ParseException("Artificial origin depot id", i);
             for(int k=0;k<nVehicles;k++)
             {
                 instance.getArtificialOriginDepotId()[k]= Integer.parseInt(lines.get(i)[k+arrayPositionModifier]);
@@ -106,7 +105,7 @@ public class InstanceReader {
                 else if(lines.get(i).length==nVehicles+1 && lines.get(i)[0].equals(""))
                     arrayPositionModifier=1;
                 else
-                    return null;
+                    throw new ParseException("Artificial destination depot id", i);
                 for(int k=0;k<nVehicles;k++)
                 {
                     instance.getArtificialDestinationDepotId()[k]= Integer.parseInt(lines.get(i)[k+arrayPositionModifier]);
@@ -119,7 +118,7 @@ public class InstanceReader {
                 else if(lines.get(i).length==6 && lines.get(i)[0].equals(""))
                     arrayPositionModifier=1;
                 else
-                    return null;
+                    throw new ParseException("Artificial destination depot id", i);
                 for(int k=0;k<5;k++)
                 {
                     instance.getArtificialDestinationDepotId()[k]= Integer.parseInt(lines.get(i)[k+arrayPositionModifier]);
@@ -133,7 +132,7 @@ public class InstanceReader {
                 else if(lines.get(i).length==nStations+1 && lines.get(i)[0].equals(""))
                     arrayPositionModifier=1;
                 else
-                    return null;
+                    throw new ParseException("Charging station id", i);
             for(int k=0;k<nStations;k++)
             {
                 instance.getChargingStationId()[k]= Integer.parseInt(lines.get(i)[k+arrayPositionModifier]);
@@ -145,7 +144,7 @@ public class InstanceReader {
                 else if(lines.get(i).length==nCustomers+1 && lines.get(i)[0].equals(""))
                     arrayPositionModifier=1;
                 else
-                    return null;
+                    throw new ParseException("User max ride time", i);
 
             for(int k=0;k<nCustomers;k++)
             {
@@ -158,7 +157,7 @@ public class InstanceReader {
                 else if(lines.get(i).length==nVehicles+1 && lines.get(i)[0].equals(""))
                     arrayPositionModifier=1;
                 else
-                    return null;
+                    throw new ParseException("Vehicle capacity", i);
             for(int k=0;k<nVehicles;k++)
             {
                 instance.getVehicleCapacity()[k]= Integer.parseInt(lines.get(i)[k+arrayPositionModifier]);
@@ -170,7 +169,7 @@ public class InstanceReader {
                 else if(lines.get(i).length==nVehicles+1 && lines.get(i)[0].equals(""))
                     arrayPositionModifier=1;
                 else
-                    return null;
+                    throw new ParseException("Vehicle initial battery inventory", i);
 
             for(int k=0;k<nVehicles;k++)
             {
@@ -183,7 +182,7 @@ public class InstanceReader {
                 else if(lines.get(i).length==nVehicles+1 && lines.get(i)[0].equals(""))
                     arrayPositionModifier=1;
                 else
-                    return null;
+                    throw new ParseException("Vehicle battery capacity", i);
 
             for(int k=0;k<nVehicles;k++)
             {
@@ -196,7 +195,7 @@ public class InstanceReader {
                 else if(lines.get(i).length==nVehicles+1 && lines.get(i)[0].equals(""))
                     arrayPositionModifier=1;
                 else
-                    return null;
+                    throw new ParseException("Minimum final battery ratio level", i);
 
             for(int k=0;k<nVehicles;k++)
             {
@@ -209,7 +208,7 @@ public class InstanceReader {
                 else if(lines.get(i).length==nStations+1 && lines.get(i)[0].equals(""))
                     arrayPositionModifier=1;
                 else
-                    return null;
+                    throw new ParseException("Station recharging rate", i);
             for(int k=0;k<nStations;k++)
             {
                 instance.getStationRechargingRate()[k]= Double.parseDouble(lines.get(i)[k+arrayPositionModifier]);
@@ -221,7 +220,7 @@ public class InstanceReader {
                 else if(lines.get(i).length==1+1 && lines.get(i)[0].equals(""))
                     arrayPositionModifier=1;
                 else
-                    return null;
+                    throw new ParseException("Station discharging rate", i);
 
             instance.setVehicleDischargingRate(Double.parseDouble(lines.get(i)[0+arrayPositionModifier]));
             i++;
@@ -232,7 +231,7 @@ public class InstanceReader {
                 else if(lines.get(i).length==3 && lines.get(i)[0].equals(""))
                     arrayPositionModifier=1;
                 else
-                    return null;
+                    throw new ParseException("Weight factor", i);
 
             for(int k=0;k<2;k++)
             {
@@ -258,7 +257,7 @@ public class InstanceReader {
 
             if (lines.size() == i)
                 return instance;
-            return null;
+            throw new ParseException("Time distance matrix", i);
 
             //instance.setNodes();
         } catch (IOException e) {
