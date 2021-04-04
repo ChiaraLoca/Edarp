@@ -31,7 +31,7 @@ public class InstanceWriter {
 
 
 
-    public void write(Instance instance)
+    public void write()
     {
 
 
