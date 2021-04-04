@@ -9,14 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InstanceReader {
-    private static InstanceReader instanceReader = null;
-
-    private InstanceReader() {
-    }
-
-    public static InstanceReader getInstanceReader() {
-        if (instanceReader == null)
-            instanceReader = new InstanceReader();
+    private static InstanceReader instanceReader=null;
+    private InstanceReader(){ }
+    public static InstanceReader getInstanceReader(){
+        if (instanceReader==null)
+            instanceReader=new InstanceReader();
         return instanceReader;
     }
 
@@ -63,119 +60,184 @@ public class InstanceReader {
 
             instance.setNodes(nodes);
             /**commonOriginDepotId*/
-            if (lines.get(i).length != nOriginDepots)
+
+            if(lines.get(i).length==nOriginDepots)
+                arrayPositionModifier=0;
+            else if(lines.get(i).length==nOriginDepots+1 && lines.get(i)[0].equals(""))
+                arrayPositionModifier=1;
+            else
                 return null;
-            for (int k = 0; k < nOriginDepots; k++) {
-                instance.getCommonOriginDepotId()[k] = Integer.parseInt(lines.get(i)[k]);
-            }
-            i++;
+            for(int k=0;k<nOriginDepots;k++)
+            {
+                instance.getCommonOriginDepotId()[k]= Integer.parseInt(lines.get(i)[k+arrayPositionModifier]);
+            }i++;
 
             /**commonDestinationDepotId*/
-            if (lines.get(i).length != nDestinationDepots)
-                return null;
-            for (int k = 0; k < nDestinationDepots; k++) {
-                instance.getCommonDestinationDepotId()[k] = Integer.parseInt(lines.get(i)[k]);
-            }
-            i++;
+
+                if(lines.get(i).length==nDestinationDepots)
+                    arrayPositionModifier=0;
+                else if(lines.get(i).length==nDestinationDepots+1 && lines.get(i)[0].equals(""))
+                    arrayPositionModifier=1;
+                else
+                    return null;
+            for(int k=0;k<nDestinationDepots;k++)
+            {
+                instance.getCommonDestinationDepotId()[k]= Integer.parseInt(lines.get(i)[k+arrayPositionModifier]);
+            }i++;
 
             /**artificialOriginDepotId*/
-            if (lines.get(i).length != nVehicles)
-                return null;
-            for (int k = 0; k < nVehicles; k++) {
-                instance.getArtificialOriginDepotId()[k] = Integer.parseInt(lines.get(i)[k]);
-            }
-            i++;
+                if(lines.get(i).length==nVehicles)
+                    arrayPositionModifier=0;
+                else if(lines.get(i).length==nVehicles+1 && lines.get(i)[0].equals(""))
+                    arrayPositionModifier=1;
+                else
+                    return null;
+            for(int k=0;k<nVehicles;k++)
+            {
+                instance.getArtificialOriginDepotId()[k]= Integer.parseInt(lines.get(i)[k+arrayPositionModifier]);
+            }i++;
 
             /**artificialDestinationDepotId*/
-            //TODO errore nStation =3, nella linea solo 2 valori,
-            //TODO non so quanto sia la dimenzione di sta array
 
-            if (instance.getName().equals("a")) {
-                if (lines.get(i).length != nVehicles)
+            if(instance.getName().equals("a"))
+            {
+                if(lines.get(i).length==nVehicles)
+                    arrayPositionModifier=0;
+                else if(lines.get(i).length==nVehicles+1 && lines.get(i)[0].equals(""))
+                    arrayPositionModifier=1;
+                else
                     return null;
-                for (int k = 0; k < nVehicles; k++) {
-                    instance.getArtificialDestinationDepotId()[k] = Integer.parseInt(lines.get(i)[k]);
-                }
-                i++;
-            } else {
-                if (lines.get(i).length != 5)
+                for(int k=0;k<nVehicles;k++)
+                {
+                    instance.getArtificialDestinationDepotId()[k]= Integer.parseInt(lines.get(i)[k+arrayPositionModifier]);
+                }i++;
+            }
+            else
+            {
+                if(lines.get(i).length==5)
+                    arrayPositionModifier=0;
+                else if(lines.get(i).length==6 && lines.get(i)[0].equals(""))
+                    arrayPositionModifier=1;
+                else
                     return null;
-                for (int k = 0; k < 5; k++) {
-                    instance.getArtificialDestinationDepotId()[k] = Integer.parseInt(lines.get(i)[k]);
-                }
-                i++;
+                for(int k=0;k<5;k++)
+                {
+                    instance.getArtificialDestinationDepotId()[k]= Integer.parseInt(lines.get(i)[k+arrayPositionModifier]);
+                }i++;
             }
 
 
             /**chargingStationId*/
-            if (lines.get(i).length != nStations)
-                return null;
-            for (int k = 0; k < nStations; k++) {
-                instance.getChargingStationId()[k] = Integer.parseInt(lines.get(i)[k]);
-            }
-            i++;
+                if(lines.get(i).length==nStations)
+                    arrayPositionModifier=0;
+                else if(lines.get(i).length==nStations+1 && lines.get(i)[0].equals(""))
+                    arrayPositionModifier=1;
+                else
+                    return null;
+            for(int k=0;k<nStations;k++)
+            {
+                instance.getChargingStationId()[k]= Integer.parseInt(lines.get(i)[k+arrayPositionModifier]);
+            }i++;
 
             /**userMaxRideTime*/
-            if (lines.get(i).length != nCustomers)
-                return null;
-            for (int k = 0; k < nCustomers; k++) {
-                instance.getUserMaxRideTime()[k] = Integer.parseInt(lines.get(i)[k]);
-            }
-            i++;
+                if(lines.get(i).length==nCustomers)
+                    arrayPositionModifier=0;
+                else if(lines.get(i).length==nCustomers+1 && lines.get(i)[0].equals(""))
+                    arrayPositionModifier=1;
+                else
+                    return null;
+
+            for(int k=0;k<nCustomers;k++)
+            {
+                instance.getUserMaxRideTime()[k]= Integer.parseInt(lines.get(i)[k+arrayPositionModifier]);
+            }i++;
 
             /**vehicleCapacity*/
-            if (lines.get(i).length != nVehicles)
-                return null;
-            for (int k = 0; k < nVehicles; k++) {
-                instance.getVehicleCapacity()[k] = Integer.parseInt(lines.get(i)[k]);
-            }
-            i++;
+                if(lines.get(i).length==nVehicles)
+                    arrayPositionModifier=0;
+                else if(lines.get(i).length==nVehicles+1 && lines.get(i)[0].equals(""))
+                    arrayPositionModifier=1;
+                else
+                    return null;
+            for(int k=0;k<nVehicles;k++)
+            {
+                instance.getVehicleCapacity()[k]= Integer.parseInt(lines.get(i)[k+arrayPositionModifier]);
+            }i++;
 
             /**vehicleInitBatteryInventory*/
-            if (lines.get(i).length != nVehicles)
-                return null;
-            for (int k = 0; k < nVehicles; k++) {
-                instance.getVehicleInitBatteryInventory()[k] = Double.parseDouble(lines.get(i)[k]);
-            }
-            i++;
+                if(lines.get(i).length==nVehicles)
+                    arrayPositionModifier=0;
+                else if(lines.get(i).length==nVehicles+1 && lines.get(i)[0].equals(""))
+                    arrayPositionModifier=1;
+                else
+                    return null;
+
+            for(int k=0;k<nVehicles;k++)
+            {
+                instance.getVehicleInitBatteryInventory()[k]= Double.parseDouble(lines.get(i)[k+arrayPositionModifier]);
+            }i++;
 
             /**vehicleBatteryCapacity*/
-            if (lines.get(i).length != nVehicles)
-                return null;
-            for (int k = 0; k < nVehicles; k++) {
-                instance.getVehicleBatteryCapacity()[k] = Double.parseDouble(lines.get(i)[k]);
-            }
-            i++;
+                if(lines.get(i).length==nVehicles)
+                    arrayPositionModifier=0;
+                else if(lines.get(i).length==nVehicles+1 && lines.get(i)[0].equals(""))
+                    arrayPositionModifier=1;
+                else
+                    return null;
+
+            for(int k=0;k<nVehicles;k++)
+            {
+                instance.getVehicleBatteryCapacity()[k]= Double.parseDouble(lines.get(i)[k+arrayPositionModifier]);
+            }i++;
 
             /**minEndBatteryRatioLvl*/
-            if (lines.get(i).length != nVehicles)
-                return null;
-            for (int k = 0; k < nVehicles; k++) {
-                instance.getMinEndBatteryRatioLvl()[k] = Double.parseDouble(lines.get(i)[k]);
-            }
-            i++;
+                if(lines.get(i).length==nVehicles)
+                    arrayPositionModifier=0;
+                else if(lines.get(i).length==nVehicles+1 && lines.get(i)[0].equals(""))
+                    arrayPositionModifier=1;
+                else
+                    return null;
+
+            for(int k=0;k<nVehicles;k++)
+            {
+                instance.getMinEndBatteryRatioLvl()[k]= Double.parseDouble(lines.get(i)[k+arrayPositionModifier]);
+            }i++;
 
             /**stationRechargingRate*/
-            if (lines.get(i).length != nStations)
-                return null;
-            for (int k = 0; k < nStations; k++) {
-                instance.getStationRechargingRate()[k] = Double.parseDouble(lines.get(i)[k]);
-            }
-            i++;
+                if(lines.get(i).length==nStations)
+                    arrayPositionModifier=0;
+                else if(lines.get(i).length==nStations+1 && lines.get(i)[0].equals(""))
+                    arrayPositionModifier=1;
+                else
+                    return null;
+            for(int k=0;k<nStations;k++)
+            {
+                instance.getStationRechargingRate()[k]= Double.parseDouble(lines.get(i)[k+arrayPositionModifier]);
+            }i++;
 
             /**vehicleDischargingRate*/
-            if (lines.get(i).length != 1)
-                return null;
-            instance.setVehicleDischargingRate(Double.parseDouble(lines.get(i)[0]));
+                if(lines.get(i).length==1)
+                    arrayPositionModifier=0;
+                else if(lines.get(i).length==1+1 && lines.get(i)[0].equals(""))
+                    arrayPositionModifier=1;
+                else
+                    return null;
+
+            instance.setVehicleDischargingRate(Double.parseDouble(lines.get(i)[0+arrayPositionModifier]));
             i++;
 
             /**weightFactor*/
-            if (lines.get(i).length != 2)
-                return null;
-            for (int k = 0; k < 2; k++) {
-                instance.getWeightFactor()[k] = Double.parseDouble(lines.get(i)[k]);
-            }
-            i++;
+                if(lines.get(i).length==2)
+                    arrayPositionModifier=0;
+                else if(lines.get(i).length==3 && lines.get(i)[0].equals(""))
+                    arrayPositionModifier=1;
+                else
+                    return null;
+
+            for(int k=0;k<2;k++)
+            {
+                instance.getWeightFactor()[k]= Double.parseDouble(lines.get(i)[k+arrayPositionModifier]);
+            }i++;
 
 
             if (name.equals("u")) {
