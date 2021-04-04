@@ -198,9 +198,12 @@ public class Instance {
         commonOriginDepotId = new int[nOriginDepots];
         commonDestinationDepotId = new int[nDestinationDepots];
         artificialOriginDepotId= new int[nVehicles];
-        artificialDestinationDepotId= new int[nStations];
+        if(name.equals("a"))
+            artificialDestinationDepotId= new int[nVehicles];
+        else
+            artificialDestinationDepotId= new int[5];
         chargingStationId = new int[nStations];
-       userMaxRideTime = new int[nCustomers];
+        userMaxRideTime = new int[nCustomers];
         vehicleCapacity = new int[nVehicles];
         vehicleInitBatteryInventory = new double[nVehicles];
         vehicleBatteryCapacity = new double[nVehicles];
@@ -213,6 +216,11 @@ public class Instance {
 
     private String printMatrix(double[][] m){
         StringBuilder stringBuilder= new StringBuilder();
+        if(m==null){
+            stringBuilder.append("null");
+            return stringBuilder.toString();
+        }
+
         for (int i = 0; i < m.length; i++) {
             for (int j = 0; j < m[0].length; j++) {
                 stringBuilder.append(""+m[i][j]+"\t");
@@ -221,6 +229,7 @@ public class Instance {
         }
         return stringBuilder.toString();
     }
+
 
 
     @Override

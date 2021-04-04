@@ -41,16 +41,33 @@ public class InstanceReader {
             int nStations = Integer.parseInt(lines.get(0)[4]);
             Instance instance= new Instance(title,name,nVehicles, nCustomers,  nOriginDepots,  nDestinationDepots, nStations,  Integer.parseInt(lines.get(0)[5]),  Integer.parseInt(lines.get(0)[6]));
             int i=1;
-            List<Node> nodes=new ArrayList<>();
             int nodeIndex= 1;
-            while (lines.get(i).length==7 && Integer.parseInt(lines.get(i)[0])==nodeIndex){
+            List<Node> nodes=new ArrayList<>();
+            if(name.equals("a"))
+            {
+                while (lines.get(i).length==8 && (lines.get(i)[0]).equals(""))
+                {
+                    nodes.add(new Node(Integer.parseInt(lines.get(i)[1]),  Double.parseDouble(lines.get(i)[2]),    Double.parseDouble(lines.get(i)[3]),    Double.parseDouble(lines.get(i)[4]),
+                            Double.parseDouble(lines.get(i)[5]),  Double.parseDouble(lines.get(i)[6]),      Double.parseDouble(lines.get(i)[7])));
 
-                nodes.add(new Node(Integer.parseInt(lines.get(i)[0]),  Double.parseDouble(lines.get(i)[1]),    Double.parseDouble(lines.get(i)[2]),    Double.parseDouble(lines.get(i)[3]),
-                        Double.parseDouble(lines.get(i)[4]),  Double.parseDouble(lines.get(i)[5]),      Double.parseDouble(lines.get(i)[6])));
+                    i++;
+                }
+            }else if(name.equals("u"))
+            {
+                while (lines.get(i).length==7 && Integer.parseInt(lines.get(i)[0])==nodeIndex){
 
-                i++;
-                nodeIndex++;
+                    nodes.add(new Node(Integer.parseInt(lines.get(i)[0]),  Double.parseDouble(lines.get(i)[1]),    Double.parseDouble(lines.get(i)[2]),    Double.parseDouble(lines.get(i)[3]),
+                            Double.parseDouble(lines.get(i)[4]),  Double.parseDouble(lines.get(i)[5]),      Double.parseDouble(lines.get(i)[6])));
+
+                    i++;
+                    nodeIndex++;
+                }
+            }else
+            {
+                return null;
             }
+
+
             instance.setNodes(nodes);
             /**commonOriginDepotId*/
             if(lines.get(i).length!=nOriginDepots)
@@ -77,12 +94,28 @@ public class InstanceReader {
             }i++;
 
             /**artificialDestinationDepotId*/
-            if(lines.get(i).length!=nStations)
-                return null;
-            for(int k=0;k<nStations;k++)
+            //TODO errore nStation =3, nella linea solo 2 valori,
+            //TODO non so quanto sia la dimenzione di sta array
+
+            if(instance.getName().equals("a"))
             {
-                instance.getArtificialDestinationDepotId()[k]= Integer.parseInt(lines.get(i)[k]);
-            }i++;
+                if(lines.get(i).length!=nVehicles)
+                    return null;
+                for(int k=0;k<nVehicles;k++)
+                {
+                    instance.getArtificialDestinationDepotId()[k]= Integer.parseInt(lines.get(i)[k]);
+                }i++;
+            }
+            else
+            {
+                if(lines.get(i).length!=5)
+                    return null;
+                for(int k=0;k<5;k++)
+                {
+                    instance.getArtificialDestinationDepotId()[k]= Integer.parseInt(lines.get(i)[k]);
+                }i++;
+            }
+
 
             /**chargingStationId*/
             if(lines.get(i).length!=nStations)
@@ -155,16 +188,23 @@ public class InstanceReader {
             }i++;
 
 
-            //TimeDistance Matrix
-            double[][] timeDistance = new double[nodes.size()][nodes.size()];
-            for(int row=0; row<nodes.size(); row++){
-                String [] line= lines.get(i);
-                for (int col=0;col<nodes.size();col++){
-                    timeDistance[row][col] = Double.parseDouble(line[col]);
+            if(name.equals("u")) {
+                //TimeDistance Matrix
+                double[][] timeDistance = new double[nodes.size()][nodes.size()];
+                for (int row = 0; row < nodes.size(); row++) {
+                    String[] line = lines.get(i);
+                    for (int col = 0; col < nodes.size(); col++) {
+                        timeDistance[row][col] = Double.parseDouble(line[col]);
+                    }
+                    i++;
                 }
-                i++;
+                instance.setTravelTime(timeDistance);
+
             }
-            instance.setTravelTime(timeDistance);
+            else
+            {
+                instance.setTravelTime(calculateTravelTime(1,instance));
+            }
 
             if(lines.size() == i)
                 return instance;
@@ -175,5 +215,25 @@ public class InstanceReader {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public double[][] calculateTravelTime(int speed,Instance instance)
+    {
+        List<Node> nodes = instance.getNodes();
+        int size= nodes.size();
+        double matrix[][] = new double[size][size];
+
+        Node a;
+        Node b;
+        for(int i=0;i<size;i++)
+        {
+            a =nodes.get(i);
+            for(int j=0;j<size;j++)
+            {
+                b = nodes.get(j);
+                matrix[i][j] = Math.sqrt(Math.pow(a.getLat()-b.getLat(),2)+Math.pow(a.getLon()-b.getLon(),2))/speed;
+            }
+        }
+        return matrix;
     }
 }
