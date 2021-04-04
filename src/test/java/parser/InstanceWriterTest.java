@@ -14,11 +14,11 @@ class InstanceWriterTest {
         InstanceReader instanceReader = InstanceReader.getInstanceReader();
         Instance instanceA = instanceReader.read(new File("src/test/resources/instances/a2-16-0.7.txt"));
 
-        InstanceWriter instanceWriter = new InstanceWriter(instanceA);
+        InstanceWriter instanceWriter = new InstanceWriter(instanceA, "Ampl");
         instanceWriter.write();
 
         Instance instanceU = instanceReader.read(new File("src/test/resources/instances/u2-16-0.7.txt"));
-        instanceWriter = new InstanceWriter(instanceU);
+        instanceWriter = new InstanceWriter(instanceU, "Ampl");
         instanceWriter.write();
 
         System.out.println(instanceA);

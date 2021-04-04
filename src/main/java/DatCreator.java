@@ -7,8 +7,13 @@ import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.List;
 
-public class Main {
+public class DatCreator {
     public static void main(String[] args) {
+        if(args.length!=2){
+            System.out.println("Invalid arguments. Correct use:\n" +
+                    "./DatCreator <Source folder> <Destination folder>");
+            return;
+        }
         File target = new File(args[0]);
         if(!target.exists()){
             System.out.println("File not found");
@@ -19,7 +24,7 @@ public class Main {
             File[] files= target.listFiles();
             for(File f : files){
                 try {
-                    new InstanceWriter(instanceReader.read(f)).write();
+                    new InstanceWriter(instanceReader.read(f), args[1]).write();
                 } catch (ParseException e) {
                     e.printStackTrace();
                 } catch (FileNotFoundException e) {

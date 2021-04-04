@@ -14,9 +14,11 @@ public class InstanceWriter {
 
     private  PrintWriter printWriter;
     private  Instance instance;
-    public InstanceWriter(Instance instance){
+    private  String destination;
+    public InstanceWriter(Instance instance, String destination){
         this.instance = instance;
-        File file = new File("Ampl/"+instance.getTitle()+".dat");
+        this.destination= destination;
+        File file = new File(destination+"/"+instance.getTitle()+".dat");
         try {
             file.createNewFile();
         } catch (IOException e) {
