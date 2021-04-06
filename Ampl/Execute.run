@@ -7,9 +7,9 @@ option solver gurobi;
 option display_round 2;
 
 model Model.mod;
-data  a2-16-0.7.dat;
+data  u2-16-0.7.dat;
 
-#solve; 
+solve; 
 
 
 printf '\nINSTANCE u2-16-14.85-0.9-14.85.txt\n\n';
@@ -26,7 +26,7 @@ printf 'Number of customers:\n';
 display n;
 
 printf 'Number of origin depots,destination depots and recharging stations:\n';
-#display Origin, F, S;
+display Origin, F, S;
 
 printf 'Number of vehicles:\n';
 display numVehicles;
@@ -45,7 +45,7 @@ print '';
 display r;
 
 printf 'Vehicles consumption rates (beta in  kWh/min):\n';
-#display beta;
+display beta;
 
 printf 'Recharging rates at stations (alpha in kWh/min):\n';
 display alpha;
@@ -53,7 +53,7 @@ display alpha;
 print '';
 
 printf 'Objective Value:\n';
-#display one;	
+display one;	
 
 printf 'Objective Value 1st component (by vehicle):\n';
 #76.814362
@@ -66,8 +66,7 @@ printf 'Objective Value 3rd component (by vehicle):\n';
 
 print 'SOLUTION';
 #printf 'i, j, T[i], T[j],arr[i],dep[i],arr[j],dep[j],t[i,j],B[i],e[i]\n';
-/*display {i in V,j in V} 													--> if x[i,j]
-	(i, j, T[i], T[j],arr[i],dep[i],arr[j],dep[j],t[i,j],B[i],e[i]);*/
+display	T;
 
 print '';
 
