@@ -38,15 +38,15 @@ public class InstanceWriter {
 
 
 
-        writeSingleParam("n",instance.getnStations());//n = number of stations*/
+        writeSingleParam("n",instance.getnCustomers());//n = number of customer*/
 
         writeSingleParam("numVehicles",instance.getnVehicles());//n = number of stations*/
 
-        writeSet("Origin",instance.getCommonOriginDepotId());//set Origin;								# Origin depots
+        writeSet("Origin",instance.getArtificialOriginDepotId());//set Origin;								# Origin depots
 
         writeSet("S",instance.getChargingStationId());//set S = Charging stations*/
 
-        writeSet("F",instance.getCommonDestinationDepotId());//set F = All avaible destinations depots*/
+        writeSet("F",instance.getArtificialDestinationDepotId());//set F = All avaible destinations depots*/
 
         int V = instance.getNodes().size();
         writeMatrixParam("t",instance.getTravelTime(),V,V);// param t{V,V}; 		# Travel time from location V to location V

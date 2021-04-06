@@ -1,4 +1,4 @@
-param n := 5;
+param n := 32;
 param numVehicles := 4;
 set Origin := 65;
 set S := 76 77 78 79 80;
