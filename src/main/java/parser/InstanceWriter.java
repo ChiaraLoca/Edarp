@@ -52,6 +52,7 @@ public class InstanceWriter {
         // 								# Origin depots
         writeSet("O",instance.getArtificialOriginDepotId());//set Origin;
 
+        writeKeyValueParam("Ok",instance.getArtificialOriginDepotId());
         writeSet("S",instance.getChargingStationId());//set S = Charging stations*/
 
         int[] res2 =new int[instance.getCommonDestinationDepotId().length+ instance.getArtificialDestinationDepotId().length];
