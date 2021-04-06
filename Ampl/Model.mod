@@ -9,7 +9,7 @@ set N := P union D;						# Pickup and Dropoff locations
 param numVehicles;
 set K := 1..numVehicles;				# Available vehicles 
 set Origin;								# Origin depots
-set O{K} within Origin ordered;					# Origin depots for vehicles K
+set O{K} within Origin ordered;			# Origin depots for vehicles K
 
 set F;											# All avaible destinations depots
 set S;											# Charging stations 
