@@ -7,13 +7,75 @@ option solver gurobi;
 option display_round 2;
 
 model Model.mod;
-#data  Data.dat;
+data  a2-16-0.7.dat;
 
-solve; 
+#solve; 
 
 
-display {j in 1.._nvars} 
-	(_varname[j],_var[j],_var[j].lb,_var[j].ub,_var[j].rc);
+printf '\nINSTANCE u2-16-14.85-0.9-14.85.txt\n\n';
 
-display {j in 1.._ncons} 
-	(_conname[j],_con[j].body,_con[j].slack, _con[j].dual);
+
+printf 'PARAMETER';
+printf '\nObjective function weight factors:\n';
+display w1,w2;
+
+printf 'Time horizon [min]:\n';
+display Tp;
+
+printf 'Number of customers:\n';
+display n;
+
+printf 'Number of origin depots,destination depots and recharging stations:\n';
+#display Origin, F, S;
+
+printf 'Number of vehicles:\n';
+display numVehicles;
+
+printf 'Capacity of vehicles (C):\n';
+display c;
+
+printf 'Initial battery range level of vehicles (B0 in kWh):\n';
+display Binit; 
+
+printf 'Available battery range for the vehicles at every node (Q in kWh):\n';
+display Q;
+
+printf 'Maximum battery emptiness at end depots (r)(% of the available battery range Q):';
+print '';
+display r;
+
+printf 'Vehicles consumption rates (beta in  kWh/min):\n';
+#display beta;
+
+printf 'Recharging rates at stations (alpha in kWh/min):\n';
+display alpha;
+
+print '';
+
+printf 'Objective Value:\n';
+#display one;	
+
+printf 'Objective Value 1st component (by vehicle):\n';
+#76.814362
+
+printf 'Objective Value 2nd component (by vehicle):\n';
+#NaN
+
+printf 'Objective Value 3rd component (by vehicle):\n';
+#0.0
+
+print 'SOLUTION';
+#printf 'i, j, T[i], T[j],arr[i],dep[i],arr[j],dep[j],t[i,j],B[i],e[i]\n';
+/*display {i in V,j in V} 													--> if x[i,j]
+	(i, j, T[i], T[j],arr[i],dep[i],arr[j],dep[j],t[i,j],B[i],e[i]);*/
+
+print '';
+
+printf 'Number of visited stations (per vehicle):\n';
+/*display {k in K}
+	(sum{s in S}{i in V} X[k,s,i]);
+
+printf 'Charging time (per vehicle):\n';
+display {k in K}
+	(sum{s in S} E[K,S]);
+*/
