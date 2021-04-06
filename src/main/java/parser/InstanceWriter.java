@@ -6,6 +6,9 @@ import model.Node;
 import java.io.*;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -42,11 +45,18 @@ public class InstanceWriter {
 
         writeSingleParam("numVehicles",instance.getnVehicles());//n = number of stations*/
 
-        writeSet("Origin",instance.getArtificialOriginDepotId());//set Origin;								# Origin depots
+        int[] res =new int[instance.getCommonOriginDepotId().length+ instance.getArtificialOriginDepotId().length];
+        System.arraycopy(instance.getCommonOriginDepotId(),0,res,0,instance.getCommonOriginDepotId().length);
+        System.arraycopy(instance.getArtificialOriginDepotId(),0,res,instance.getCommonOriginDepotId().length,instance.getArtificialOriginDepotId().length);
+        writeSet("Origin",res);//set Origin;								# Origin depots
 
         writeSet("S",instance.getChargingStationId());//set S = Charging stations*/
 
-        writeSet("F",instance.getArtificialDestinationDepotId());//set F = All avaible destinations depots*/
+        int[] res2 =new int[instance.getCommonDestinationDepotId().length+ instance.getArtificialDestinationDepotId().length];
+        System.arraycopy(instance.getCommonDestinationDepotId(),0,res2,0,instance.getCommonDestinationDepotId().length);
+        System.arraycopy(instance.getArtificialDestinationDepotId(),0,res2,instance.getCommonDestinationDepotId().length,instance.getArtificialDestinationDepotId().length);
+
+        writeSet("F",res2);//set F = All avaible destinations depots*/
 
         int V = instance.getNodes().size();
         writeMatrixParam("t",instance.getTravelTime(),V,V);// param t{V,V}; 		# Travel time from location V to location V
