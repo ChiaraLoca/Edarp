@@ -48,7 +48,9 @@ public class InstanceWriter {
         int[] res =new int[instance.getCommonOriginDepotId().length+ instance.getArtificialOriginDepotId().length];
         System.arraycopy(instance.getCommonOriginDepotId(),0,res,0,instance.getCommonOriginDepotId().length);
         System.arraycopy(instance.getArtificialOriginDepotId(),0,res,instance.getCommonOriginDepotId().length,instance.getArtificialOriginDepotId().length);
-        writeSet("Origin",res);//set Origin;								# Origin depots
+        writeSet("Origin",res);//set Origin;
+        // 								# Origin depots
+        writeSet("O",instance.getArtificialOriginDepotId());//set Origin;
 
         writeSet("S",instance.getChargingStationId());//set S = Charging stations*/
 

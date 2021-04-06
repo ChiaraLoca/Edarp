@@ -1,6 +1,7 @@
 param n := 24;
 param numVehicles := 4;
 set Origin := 49 51 52 53 54;
+set O := 51 52 53 54;
 set S := 60 61 62 63 64;
 set F := 50 55 56 57 58 59;
 param t:
