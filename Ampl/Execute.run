@@ -1,7 +1,9 @@
 reset;
 
-/*Istruisce AMPL ad usare gurobi*/
-option solver gurobi;
+/*Istruisce AMPL ad usare cplex*/
+option solver cplex;
+/*Istruzioni di cplex*/
+option cplex_options 'mipemphasis=1 mipdisplay=2 timelimit=600';
 
 /*Mostra fino alla seconda cifra decimale*/
 option display_round 2;
@@ -12,7 +14,7 @@ data  u2-16-0.7.dat;
 solve; 
 
 
-printf '\nINSTANCE u2-16-14.85-0.9-14.85.txt\n\n';
+printf '\nSTART SOLVING\n\n';
 
 
 printf 'PARAMETER';

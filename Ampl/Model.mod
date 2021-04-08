@@ -35,7 +35,7 @@ param Ok{K};		# Origin depots for vehicles K (array)
 param w1;
 param w2;
 
-param M{V,V};		#M[i,j] = max{0,dep[i]+d[i]+t[i,j]*arr[j]} --> in file .dat
+param M{V,V};		#M[i,j] = max{0,dep[i]+d[i]+t[i,j]-arr[j]} --> in file .dat
 param G{K,V};		#G[k,j] = min{C[k],C[k]+l[i]}
 
 # Decision variables
@@ -60,7 +60,7 @@ s.t. eight		{k in K, i in P}:			T[k,i] + d[i] + t[i,n+i]										<= 	T [k,n+i];
 s.t. nine_a		{k in K, i in V}:			arr[i]															<= 	T [k,i];
 s.t. nine_b 	{k in K, i in V}:			dep[i]															>= 	T [k,i];
 s.t. ten		{k in K, i in P}:			T[k, n+i] - T[k,i] - d[i]										<= 	u[i];
-s.t. eleven 	{k in K, i in V, j in V : i!=j}:	T[k,i] + t[i,j] + d[i] - M[i,j] * (1- X[k, i,j])		<= 	T[k,j];  	# TODO: manca questo | Mi,j > 0
+s.t. eleven 	{k in K, i in V, j in V : i!=j}:	T[k,i] + t[i,j] + d[i] - M[i,j] * (1- X[k, i,j])		<= 	T[k,j];  	
 s.t. twelve 	{k in K, i in P}:			T[k, n+i] - T[k,i] - d[i] - t[i, n+i]							<= 	R[i];
 s.t. thirteen 	{k in K, i in V, j in V : i!=j}:	L[k,i] + l[j] - G[k, i] * (1- X[k, i,j])				<= 	L[k,j]; # TODO: è diverso dal model
 s.t. fourteen 	{k in K, i in V, j in V : i!=j}:	L[k,i] + l[j] + G[k, i] * (1- X[k, i,j])				>= 	L[k,j]; # TODO: è diverso dal model
@@ -74,5 +74,5 @@ s.t. twentyone 	{k in K, s in S, j in P union F union S : s != j}:  	B[k, s] + a
 s.t. twentytwo 	{k in K, s in S, j in P union F union S : s != j}: 		B[k, s] + alpha[s] * E[k, s] - beta[s, j] - Q * (1 - X[k, s, j]) <= B[k, j];	
 s.t. twentythree{k in K, s in S}: 			B[k, s]+ alpha[s]*E[k, s] 										<= Q; 
 s.t. twentyfour {k in K, i in F}: 			B[k, i] 														>= r*Q; 
-s.t. twentyfive {k in K, s in S, i in D union S union O : i != s}: 	T[k, s] - t[i, s] - T[k, i] + M[i, s]*(1 - X[k, i, s]) >= E[k, s]; # TODO: è diverso dal model
-s.t. twentysix 	{k in K, s in S, i in D union S union O : i != s}: 	T[k, s] - t[i, s] - T[k, i] - M[i, s]*(1 - X[k, i, s]) <= E[k, s]; # TODO: è diverso dal model
+s.t. twentyfive {k in K, s in S, i in D union S union O : i != s}: 	T[k, s] - t[i, s] - T[k, i] + M[i, s]*(1 - X[k, i, s]) >= E[k, s]; 
+s.t. twentysix 	{k in K, s in S, i in D union S union O : i != s}: 	T[k, s] - t[i, s] - T[k, i] - M[i, s]*(1 - X[k, i, s]) <= E[k, s]; 
