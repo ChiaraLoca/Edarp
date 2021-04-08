@@ -127,10 +127,10 @@ public class InstanceWriter {
         for(int k =0;k<V;k++)
         {
             for(int j =0;j<V;j++) {
-                M[k][j] = (dep[k]+d[k]+t[k][j] *arr[j])>0 ? (dep[k]+d[k]+t[k][j] *arr[j]) :0;
+                M[k][j] = (dep[k]+d[k]+t[k][j] - arr[j])>0 ? (dep[k]+d[k]+t[k][j] - arr[j]) :0;
             }
         }
-        writeMatrixParam("M",M,V,V); //#M[i,j] = max{0,dep[i]+d[i]+t[i,j]*arr[j]} --> in file .dat
+        writeMatrixParam("M",M,V,V); //#M[i,j] = max{0,dep[i]+d[i]+t[i,j]-arr[j]} --> in file .dat
 
         int K = instance.getnVehicles();
         double G[][] = new double[K][V];
