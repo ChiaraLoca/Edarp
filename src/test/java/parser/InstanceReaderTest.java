@@ -71,7 +71,7 @@ class InstanceReaderTest {
         }
         System.out.println();
 
-        System.out.println("instance Modificata "+instanceModificata.getTimeHorizon());
+        System.out.println("instance Modificata ");
         for (int i =0;i<5;i++)
         {
             for(int j =0;j<5;j++)

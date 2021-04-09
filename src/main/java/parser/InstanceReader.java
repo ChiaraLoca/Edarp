@@ -34,6 +34,7 @@ public class InstanceReader {
             if (lines.get(0).length != 7)
                 throw new ParseException("First line not Parsable", i);
 
+            //TODO time-service 15 minuti
             int nVehicles = Integer.parseInt(lines.get(0)[0]);
             int nCustomers = Integer.parseInt(lines.get(0)[1]);
             int nOriginDepots = Integer.parseInt(lines.get(0)[2]);
@@ -236,7 +237,7 @@ public class InstanceReader {
             double value =  Double.parseDouble(lines.get(i)[0+arrayPositionModifier]);
 
             if(implementChanges)
-                instance.setVehicleDischargingRate(value +(value +0.3));
+                instance.setVehicleDischargingRate(value+(value*0.3));
             else
                 instance.setVehicleDischargingRate(value);
             i++;
