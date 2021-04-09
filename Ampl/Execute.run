@@ -1,9 +1,10 @@
 reset;
 
-/*Istruisce AMPL ad usare cplex*/
+/*Istruisce AMPL ad usare cplex one = 37.76
+*/
 option solver cplex;
 /*Istruzioni di cplex*/
-option cplex_options 'mipemphasis=1 mipdisplay=2 timelimit=600';
+option cplex_options 'mipemphasis=1 mipdisplay=2 timelimit=3600';
 
 /*Mostra fino alla seconda cifra decimale*/
 option display_round 2;
