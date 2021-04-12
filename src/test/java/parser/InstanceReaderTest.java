@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class InstanceReaderTest {
 
     @org.junit.jupiter.api.Test
-    void readU() throws FileNotFoundException, ParseException {
+    void readA() throws FileNotFoundException, ParseException {
 
         InstanceReader instanceReader = InstanceReader.getInstanceReader();
 
@@ -24,7 +24,7 @@ class InstanceReaderTest {
 
     }
     @org.junit.jupiter.api.Test
-    void readA() throws FileNotFoundException, ParseException {
+    void readU() throws FileNotFoundException, ParseException {
 
         InstanceReader instanceReader = InstanceReader.getInstanceReader();
         Instance instance = instanceReader.read(new File("src/test/resources/instances/u2-16-0.7.txt"),false);

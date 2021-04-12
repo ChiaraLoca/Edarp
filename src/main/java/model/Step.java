@@ -13,6 +13,14 @@ public class Step{
     private double batteryLevel;//i
     private double chargingTime;//i
 
+    public Step() {
+    }
+
+    public Step(Node startingNode, Node arrivingNodo) {
+        this.startingNode = startingNode;
+        this.arrivingNodo = arrivingNodo;
+    }
+
     public Node getStartingNode() {
         return startingNode;
     }
@@ -99,5 +107,12 @@ public class Step{
 
     public void setChargingTime(double chargingTime) {
         this.chargingTime = chargingTime;
+    }
+
+    @Override
+    public String toString() {
+        return "" + startingNode.getId() +
+                " - " + arrivingNodo.getId()+
+                "( "+batteryLevel+" )\t";
     }
 }

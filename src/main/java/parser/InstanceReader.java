@@ -2,10 +2,13 @@ package parser;
 
 import model.Instance;
 import model.Node;
+import model.NodeType;
 
 import java.io.*;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class InstanceReader {
@@ -300,6 +303,24 @@ public class InstanceReader {
                 instance.setTimeHorizon(th);
             }
 
+
+            for(Node n : instance.getNodes()){
+                if(n.getLoad()>0)
+                    n.setNodeType(NodeType.PICKUP);
+                else if(n.getLoad()<0)
+                    n.setNodeType(NodeType.DROPOFF);
+                else
+                {
+                    for(int k=0;k<instance.getChargingStationId().length;k++)
+                    {
+                        if(instance.getChargingStationId()[k]==n.getId())
+                            n.setNodeType(NodeType.CHARGE);
+                    }
+
+                }
+            }
+
+            instance.setBatteryConsumption(calculateBatteryConsumption(instance));
             if (lines.size() == i){
                 return instance;
             }
@@ -329,6 +350,29 @@ public class InstanceReader {
                     matrix[i][j] = Math.sqrt(Math.pow(a.getLat() - b.getLat(), 2) + Math.pow(a.getLon() - b.getLon(), 2)) / speed;
             }
         }
+        return matrix;
+    }
+
+    public double[][] calculateBatteryConsumption(Instance instance)
+    {
+        List<Node> nodes = instance.getNodes();
+        int size= nodes.size();
+        double matrix[][] = new double[size][size];
+        double timeTravel[][] = instance.getTravelTime();
+        double dischargingRate = instance.getVehicleDischargingRate();
+
+        Node a;
+        Node b;
+        for(int i=0;i<size;i++)
+        {
+            a =nodes.get(i);
+            for(int j=0;j<size;j++)
+            {
+                b = nodes.get(j);
+                matrix[i][j] = timeTravel[i][j]*dischargingRate;
+            }
+        }
+
         return matrix;
     }
 }

@@ -31,6 +31,7 @@ public class Instance {
     private double vehicleDischargingRate;
     private final double[] weightFactor;
     private double[][] travelTime;
+    private double[][] batteryConsumption;
 
 
 
@@ -212,6 +213,14 @@ public class Instance {
         this.travelTime = null;
         weightFactor = new double[2];
 
+    }
+
+    public double[][] getBatteryConsumption() {
+        return batteryConsumption;
+    }
+
+    public void setBatteryConsumption(double[][] batteryConsumption) {
+        this.batteryConsumption = batteryConsumption;
     }
 
     private String printMatrix(double[][] m){

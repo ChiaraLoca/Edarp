@@ -107,8 +107,8 @@ public class InstanceWriter {
 
         writeSingleParam("r",instance.getMinBatteryRatioLvl());//* param r;			# Final minimum battery level ratio*/
 
-        double [][] batteryConsumption = calculateBatteryConsumption();
-        writeMatrixParam("beta",batteryConsumption,V,V);//*param beta{V,V};	# Battery consumption between nodes i, j in V*/
+
+        writeMatrixParam("beta",instance.getBatteryConsumption(),V,V);//*param beta{V,V};	# Battery consumption between nodes i, j in V*/
 
         writeKeyValueParam("alpha",instance.getChargingStationId(),instance.getStationRechargingRate());//*param alpha{S};		# Recharge rate at charging facility S*/
 
@@ -265,28 +265,7 @@ public class InstanceWriter {
 
 
 
-    public double[][] calculateBatteryConsumption()
-    {
-        List<Node> nodes = instance.getNodes();
-        int size= nodes.size();
-        double matrix[][] = new double[size][size];
-        double timeTravel[][] = instance.getTravelTime();
-        double dischargingRate = instance.getVehicleDischargingRate();
 
-        Node a;
-        Node b;
-        for(int i=0;i<size;i++)
-        {
-            a =nodes.get(i);
-            for(int j=0;j<size;j++)
-            {
-                b = nodes.get(j);
-                matrix[i][j] = timeTravel[i][j]*dischargingRate;
-            }
-        }
-
-        return matrix;
-    }
 
 
 }

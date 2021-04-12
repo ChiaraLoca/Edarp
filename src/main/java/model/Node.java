@@ -8,6 +8,7 @@ public class Node {
     private double load;
     private double arrival;
     private double departure;
+    private NodeType nodeType = NodeType.NONE;
 
     public Node(int id, double lat, double lon, double serviceTime, double load, double arrival, double departure) {
         this.id = id;
@@ -87,5 +88,13 @@ public class Node {
 
     public void setDeparture(double departure) {
         this.departure = departure;
+    }
+
+    public NodeType getNodeType() {
+        return nodeType;
+    }
+
+    public void setNodeType(NodeType nodeType) {
+        this.nodeType = nodeType;
     }
 }
