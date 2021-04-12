@@ -30,7 +30,7 @@ public class Instance {
     private final double[] minEndBatteryRatioLvl;
     private final double[] stationRechargingRate;
     private double vehicleDischargingRate;
-    private final double[] weightFactor;
+    private final double[] weightFactor;//TODO non abbiamo idea di che cazzo sia
     private double[][] travelTime;
     private double[][] batteryConsumption;
     private ArrayList<Node> pickupAndDropoffLocations;
