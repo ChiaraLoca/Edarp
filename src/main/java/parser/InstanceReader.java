@@ -17,7 +17,7 @@ public class InstanceReader {
         return instanceReader;
     }
 
-    public Instance read(File file) throws ParseException, FileNotFoundException {
+    public Instance read(File file,boolean implementChanges) throws ParseException, FileNotFoundException {
 
         String title = file.getName();
         String name = "" + title.toCharArray()[0];
@@ -34,12 +34,16 @@ public class InstanceReader {
             if (lines.get(0).length != 7)
                 throw new ParseException("First line not Parsable", i);
 
+            //TODO time-service 15 minuti
             int nVehicles = Integer.parseInt(lines.get(0)[0]);
             int nCustomers = Integer.parseInt(lines.get(0)[1]);
             int nOriginDepots = Integer.parseInt(lines.get(0)[2]);
             int nDestinationDepots = Integer.parseInt(lines.get(0)[3]);
             int nStations = Integer.parseInt(lines.get(0)[4]);
-            Instance instance = new Instance(title, name, nVehicles, nCustomers, nOriginDepots, nDestinationDepots, nStations, Integer.parseInt(lines.get(0)[5]), Integer.parseInt(lines.get(0)[6]));
+            int timeHorizon = Integer.parseInt(lines.get(0)[6]);
+
+
+            Instance instance = new Instance(title, name, nVehicles, nCustomers, nOriginDepots, nDestinationDepots, nStations, Integer.parseInt(lines.get(0)[5]));
             int nodeIndex = 1;
             List<Node> nodes = new ArrayList<>();
             int arrayPositionModifier = 0;
@@ -148,7 +152,10 @@ public class InstanceReader {
 
             for(int k=0;k<nCustomers;k++)
             {
-                instance.getUserMaxRideTime()[k]= Integer.parseInt(lines.get(i)[k+arrayPositionModifier]);
+                if(implementChanges)
+                    instance.getUserMaxRideTime()[k]= 8;
+                else
+                    instance.getUserMaxRideTime()[k]= Integer.parseInt(lines.get(i)[k+arrayPositionModifier]);
             }i++;
 
             /**vehicleCapacity*/
@@ -164,17 +171,20 @@ public class InstanceReader {
             }i++;
 
             /**vehicleInitBatteryInventory*/
-                if(lines.get(i).length==nVehicles)
-                    arrayPositionModifier=0;
-                else if(lines.get(i).length==nVehicles+1 && lines.get(i)[0].equals(""))
-                    arrayPositionModifier=1;
-                else
-                    throw new ParseException("Vehicle initial battery inventory", i);
+            if(lines.get(i).length==nVehicles)
+                arrayPositionModifier=0;
+            else if(lines.get(i).length==nVehicles+1 && lines.get(i)[0].equals(""))
+                arrayPositionModifier=1;
+            else
+                throw new ParseException("Vehicle initial battery inventory", i);
 
             for(int k=0;k<nVehicles;k++)
             {
-                instance.getVehicleInitBatteryInventory()[k]= Double.parseDouble(lines.get(i)[k+arrayPositionModifier]);
-            }i++;
+                if(implementChanges)
+                    instance.getVehicleInitBatteryInventory()[k]=3.5;
+                else
+                    instance.getVehicleInitBatteryInventory()[k]= Double.parseDouble(lines.get(i)[k+arrayPositionModifier]);
+            } i++;
 
             /**vehicleBatteryCapacity*/
                 if(lines.get(i).length==nVehicles)
@@ -184,10 +194,13 @@ public class InstanceReader {
                 else
                     throw new ParseException("Vehicle battery capacity", i);
 
-            for(int k=0;k<nVehicles;k++)
-            {
-                instance.getVehicleBatteryCapacity()[k]= Double.parseDouble(lines.get(i)[k+arrayPositionModifier]);
-            }i++;
+                for(int k=0;k<nVehicles;k++)
+                {
+                    if(implementChanges)
+                        instance.getVehicleBatteryCapacity()[k]= 3.5;
+                    else
+                        instance.getVehicleBatteryCapacity()[k]= Double.parseDouble(lines.get(i)[k+arrayPositionModifier]);
+                }i++;
 
             /**minEndBatteryRatioLvl*/
                 if(lines.get(i).length==nVehicles)
@@ -215,14 +228,18 @@ public class InstanceReader {
             }i++;
 
             /**vehicleDischargingRate*/
-                if(lines.get(i).length==1)
-                    arrayPositionModifier=0;
-                else if(lines.get(i).length==1+1 && lines.get(i)[0].equals(""))
-                    arrayPositionModifier=1;
-                else
-                    throw new ParseException("Station discharging rate", i);
+            if(lines.get(i).length==1)
+                arrayPositionModifier=0;
+            else if(lines.get(i).length==1+1 && lines.get(i)[0].equals(""))
+                arrayPositionModifier=1;
+            else
+                throw new ParseException("Station discharging rate", i);
+            double value =  Double.parseDouble(lines.get(i)[0+arrayPositionModifier]);
 
-            instance.setVehicleDischargingRate(Double.parseDouble(lines.get(i)[0+arrayPositionModifier]));
+            if(implementChanges)
+                instance.setVehicleDischargingRate(value+(value*0.3));
+            else
+                instance.setVehicleDischargingRate(value);
             i++;
 
             /**weightFactor*/
@@ -245,18 +262,47 @@ public class InstanceReader {
                 for (int row = 0; row < nodes.size(); row++) {
                     String[] line = lines.get(i);
                     for (int col = 0; col < nodes.size(); col++) {
-                        timeDistance[row][col] = Double.parseDouble(line[col]);
+                        if(implementChanges)
+                            timeDistance[row][col] = Double.parseDouble(line[col])*2;
+                        else
+                            timeDistance[row][col] = Double.parseDouble(line[col]);
                     }
                     i++;
                 }
                 instance.setTravelTime(timeDistance);
 
             } else {
-                instance.setTravelTime(calculateTravelTime(1, instance));
+                instance.setTravelTime(calculateTravelTime(1, instance,implementChanges));
             }
 
-            if (lines.size() == i)
+            /**time horizon*/
+            if(!implementChanges)
+                instance.setTimeHorizon(timeHorizon);
+            else{
+                double th;
+                Node node= instance.getNodes().get(instance.getnStations());//node = dropoff station with last start time service;
+                for(Node n: instance.getNodes())
+                {
+                    if(n.getLoad()==-1){
+                       if(n.getArrival()>node.getArrival())
+                           node = n;
+                    }
+                }
+                th = node.getArrival();
+                double distance=0;//travel time to the furthest charging station
+                double [][] travelTime = instance.getTravelTime();
+                for(int station :  instance.getChargingStationId())
+                {
+                    if(travelTime[station-1][node.getId()-1]>distance)
+                        distance =  travelTime[station-1][node.getId()-1];
+                }
+                th+=distance;
+                instance.setTimeHorizon(th);
+            }
+
+            if (lines.size() == i){
                 return instance;
+            }
             throw new ParseException("Time distance matrix", i);
 
             //instance.setNodes();
@@ -266,7 +312,7 @@ public class InstanceReader {
         return null;
     }
 
-    public double[][] calculateTravelTime(int speed, Instance instance) {
+    public double[][] calculateTravelTime(int speed, Instance instance,boolean implementChanges) {
         List<Node> nodes = instance.getNodes();
         int size = nodes.size();
         double matrix[][] = new double[size][size];
@@ -277,7 +323,10 @@ public class InstanceReader {
             a = nodes.get(i);
             for (int j = 0; j < size; j++) {
                 b = nodes.get(j);
-                matrix[i][j] = Math.sqrt(Math.pow(a.getLat() - b.getLat(), 2) + Math.pow(a.getLon() - b.getLon(), 2)) / speed;
+                if(implementChanges)
+                    matrix[i][j] = (Math.sqrt(Math.pow(a.getLat() - b.getLat(), 2) + Math.pow(a.getLon() - b.getLon(), 2)) / speed)*2;
+                else
+                    matrix[i][j] = Math.sqrt(Math.pow(a.getLat() - b.getLat(), 2) + Math.pow(a.getLon() - b.getLon(), 2)) / speed;
             }
         }
         return matrix;

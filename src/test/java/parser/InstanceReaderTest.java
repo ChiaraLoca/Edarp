@@ -18,7 +18,7 @@ class InstanceReaderTest {
 
         InstanceReader instanceReader = InstanceReader.getInstanceReader();
 
-        Instance instance = instanceReader.read(new File("src/test/resources/instances/a2-16-0.7.txt"));
+        Instance instance = instanceReader.read(new File("src/test/resources/instances/a2-16-0.7.txt"),false);
         assert instance!=null;
         System.out.println(instance);
 
@@ -27,7 +27,7 @@ class InstanceReaderTest {
     void readA() throws FileNotFoundException, ParseException {
 
         InstanceReader instanceReader = InstanceReader.getInstanceReader();
-        Instance instance = instanceReader.read(new File("src/test/resources/instances/u2-16-0.7.txt"));
+        Instance instance = instanceReader.read(new File("src/test/resources/instances/u2-16-0.7.txt"),false);
 
         assert instance!=null;
         System.out.println(instance);
@@ -43,6 +43,44 @@ class InstanceReaderTest {
 
 
 
+    }
+    @Test
+    void impementDatChangesTest() throws FileNotFoundException, ParseException {
+        InstanceReader instanceReader = InstanceReader.getInstanceReader();
+
+        Instance instanceBase = instanceReader.read(new File("src/test/resources/instances/a2-16-0.7.txt"),false);
+        assert instanceBase!=null;
+
+
+        Instance instanceModificata = instanceReader.read(new File("src/test/resources/instances/a2-16-0.7.txt"),true);
+        assert instanceModificata!=null;
+
+        System.out.println("Time Horizon");
+        System.out.println("instance Base "+instanceBase.getTimeHorizon());
+        System.out.println("instance Modificata "+instanceModificata.getTimeHorizon());
+
+        System.out.println("Time Travel");
+        System.out.println("instance Base ");
+        for (int i =0;i<5;i++)
+        {
+            for(int j =0;j<5;j++)
+            {
+                System.out.print(String.format("%1$,.2f" , instanceBase.getTravelTime()[i][j])+"\t");
+            }
+            System.out.println();
+        }
+        System.out.println();
+
+        System.out.println("instance Modificata ");
+        for (int i =0;i<5;i++)
+        {
+            for(int j =0;j<5;j++)
+            {
+                System.out.print(String.format("%1$,.2f" , instanceModificata.getTravelTime()[i][j])+"\t");
+            }
+            System.out.println();
+        }
+        System.out.println();
     }
 
 }

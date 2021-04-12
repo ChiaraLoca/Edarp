@@ -15,7 +15,7 @@ public class Instance {
     private int nDestinationDepots;
     private int nStations;
     private int nReplications;
-    private int timeHorizon;
+    private double timeHorizon;
     private List<Node> nodes;
     private final int[] commonOriginDepotId;
     private final int[] commonDestinationDepotId;
@@ -106,11 +106,11 @@ public class Instance {
         this.nReplications = nReplications;
     }
 
-    public int getTimeHorizon() {
+    public double getTimeHorizon() {
         return timeHorizon;
     }
 
-    public void setTimeHorizon(int timeHorizon) {
+    public void setTimeHorizon(double timeHorizon) {
         this.timeHorizon = timeHorizon;
     }
 
@@ -184,7 +184,7 @@ public class Instance {
         this.travelTime = travelTime;
     }
 
-    public Instance(String title, String name, int nVehicles, int nCustomers, int nOriginDepots, int nDestinationDepots, int nStations, int nReplications, int timeHorizon) {
+    public Instance(String title, String name, int nVehicles, int nCustomers, int nOriginDepots, int nDestinationDepots, int nStations, int nReplication) {
         this.title = title;
         this.name = name;
         this.nVehicles = nVehicles;
@@ -193,7 +193,7 @@ public class Instance {
         this.nDestinationDepots = nDestinationDepots;
         this.nStations = nStations;
         this.nReplications = nReplications;
-        this.timeHorizon = timeHorizon;
+
 
         commonOriginDepotId = new int[nOriginDepots];
         commonDestinationDepotId = new int[nDestinationDepots];

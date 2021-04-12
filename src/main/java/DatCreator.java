@@ -24,7 +24,7 @@ public class DatCreator {
             File[] files= target.listFiles();
             for(File f : files){
                 try {
-                    new InstanceWriter(instanceReader.read(f), args[1]).write();
+                    new InstanceWriter(instanceReader.read(f,true), args[1]).write();
                 } catch (ParseException e) {
                     e.printStackTrace();
                 } catch (FileNotFoundException e) {

@@ -6,11 +6,7 @@ import model.Node;
 import java.io.*;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 
 public class InstanceWriter {
@@ -182,10 +178,7 @@ public class InstanceWriter {
     {
         printWriter.println("param "+name+" := "+data+";");
     }
-    private void writeSingleParam(String name,int data)
-    {
-        printWriter.println("param "+name+" := "+data+";");
-    }
+
 
     private void writeMatrixParam(String name,double data[][],int row,int column)
     {
