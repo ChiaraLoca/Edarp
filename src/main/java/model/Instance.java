@@ -29,9 +29,9 @@ public class Instance {
     private final double[] minEndBatteryRatioLvl;
     private final double[] stationRechargingRate;
     private double vehicleDischargingRate;
-    private final double[] weightFactor;//TODO non abbiamo idea di che cazzo sia
+    private final double[] weightFactor;
     private double[][] travelTime;
-    //Todo original travel time non compare mai
+
 
 
     public String getTitle() {
