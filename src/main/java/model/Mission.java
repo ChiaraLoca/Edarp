@@ -1,12 +1,13 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Mission {
-    Node departure;//i
-    Node arrival;//j
-    double departureTime;
-    double arrivalTime;
-    double travelTime;//t[i,j]
-    double batteryLevel;//i
-    double chargingTime;//i
+    private List<Step> steps = new ArrayList<>();
+
+    public List<Step> getSteps() {
+        return steps;
+    }
 
 }
