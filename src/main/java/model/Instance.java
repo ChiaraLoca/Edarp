@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class Instance {
     private double vehicleDischargingRate;
     private final double[] weightFactor;
     private double[][] travelTime;
+    private ArrayList<Node> pickupAndDropoffLocations;
 
 
 
@@ -184,6 +186,14 @@ public class Instance {
         this.travelTime = travelTime;
     }
 
+    public ArrayList<Node> getPickupAndDropoffLocations() {
+        return pickupAndDropoffLocations;
+    }
+
+    public void setPickupAndDropoffLocations(ArrayList<Node> pickupAndDropoffLocations) {
+        this.pickupAndDropoffLocations = pickupAndDropoffLocations;
+    }
+
     public Instance(String title, String name, int nVehicles, int nCustomers, int nOriginDepots, int nDestinationDepots, int nStations, int nReplication) {
         this.title = title;
         this.name = name;
@@ -193,6 +203,7 @@ public class Instance {
         this.nDestinationDepots = nDestinationDepots;
         this.nStations = nStations;
         this.nReplications = nReplications;
+        this.pickupAndDropoffLocations=new ArrayList<>();
 
 
         commonOriginDepotId = new int[nOriginDepots];
