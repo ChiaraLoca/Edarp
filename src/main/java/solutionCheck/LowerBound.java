@@ -13,6 +13,12 @@ public class LowerBound extends AbstractConstraint {
 
     @Override
     boolean check() {
+        for(int k=0; k<solution.getList().size(); k++) {
+            for(int i=0; i<solution.getInstance().getPickupAndDropoffLocations().size(); i++) {
+                solution.getInstance().getPickupAndDropoffLocations().get(i).getLoad(); //li
+            }
+        }
+
         return false;
     }
 }

@@ -2,7 +2,7 @@ package model;
 
 public class Step{
     private Node startingNode;//i
-    private Node arrivingNodo;//j
+    private Node arrivingNode;//j
     private double departureTime;//T[i]
     private double arrivalTime;//T[j]
     private double startingNodeArrivingTime;//arr[i]
@@ -21,12 +21,12 @@ public class Step{
         this.startingNode = startingNode;
     }
 
-    public Node getArrivingNodo() {
-        return arrivingNodo;
+    public Node getArrivingNode() {
+        return arrivingNode;
     }
 
-    public void setArrivingNodo(Node arrivingNodo) {
-        this.arrivingNodo = arrivingNodo;
+    public void setArrivingNode(Node arrivingNode) {
+        this.arrivingNode = arrivingNode;
     }
 
     public double getDepartureTime() {

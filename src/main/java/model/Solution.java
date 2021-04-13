@@ -4,6 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Solution {
+    public Instance getInstance() {
+        return instance;
+    }
+
+    public void setInstance(Instance instance) {
+        this.instance = instance;
+    }
+
     private Instance instance;
     private List<Mission> list;
 
