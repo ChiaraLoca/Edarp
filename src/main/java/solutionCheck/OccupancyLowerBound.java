@@ -5,9 +5,9 @@ package solutionCheck;
 
 import model.Solution;
 
-public class LowerBound extends AbstractConstraint {
+public class OccupancyLowerBound extends AbstractConstraint {
 
-    public LowerBound(Solution solution) {
+    public OccupancyLowerBound(Solution solution) {
         super(solution);
     }
 
