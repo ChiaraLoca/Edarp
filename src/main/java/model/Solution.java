@@ -32,4 +32,27 @@ public class Solution {
         return list;
     }
 
+    public int[][][] getVehicleSeqStopAtLocations() {
+        return vehicleSeqStopAtLocations;
+    }
+
+    public double[][] getTimeVehicleStartsAtLocation() {
+        return timeVehicleStartsAtLocation;
+    }
+
+    public double[][] getLoadOfVehicleAtLocation() {
+        return loadOfVehicleAtLocation;
+    }
+
+    public double[][] getBatteryLoadOfVehicleAtLocation() {
+        return batteryLoadOfVehicleAtLocation;
+    }
+
+    public double[][] getChargingTimeOfVehicleAtStation() {
+        return chargingTimeOfVehicleAtStation;
+    }
+
+    public double[][] getExcessRideTimeOfPassenger() {
+        return excessRideTimeOfPassenger;
+    }
 }
