@@ -1,6 +1,6 @@
 package solutionCheck;
 
-// constraint 15: Lki ≥ max(0, li) ∀k ∈ K, ∀i ∈ N
+// constraint 15: Lki ≥ max(0, li)      ∀k ∈ K, ∀i ∈ N
 // set lower bound on the occupancy of all vehicles
 
 import model.Solution;
@@ -15,10 +15,10 @@ public class LowerBound extends AbstractConstraint {
     boolean check() {
         for(int k=0; k<solution.getInstance().getnVehicles(); k++) {
             for(int i=0; i<solution.getInstance().getPickupAndDropoffLocations().size(); i++) {
-                solution.getInstance().getPickupAndDropoffLocations().get(i).getLoad(); //li
+                if(solution.getLoadOfVehicleAtLocation()[k][i]<Math.max(0,solution.getInstance().getPickupAndDropoffLocations().get(i).getLoad()))
+                    return false;
             }
         }
-
-        return false;
+        return true;
     }
 }
