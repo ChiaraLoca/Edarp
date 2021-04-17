@@ -109,7 +109,7 @@ public class Mission {
         str.append("Veicolo numero: "+vehicleId+"\n");
         for(Step s:steps)
         {
-            str.append("["+s.getStartingNode().getId()+"\t- "+s.getArrivingNodo().getId()+" \t- "+s.getBatteryLevel()+"]\n");
+            str.append("["+s.getStartingNode().getId()+"\t- "+s.getArrivingNodo().getId()+" \t- "+s.getBatteryLevel()+" \t- "+ s.getTravelTime()+"]\n");
         }
         return str.toString();
     }

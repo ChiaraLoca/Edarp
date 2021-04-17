@@ -1,16 +1,16 @@
 package model;
 
 public class Step{
-    private Node startingNode;//i
-    private Node arrivingNodo;//j
+    private Node startingNode;//iOK
+    private Node arrivingNodo;//jOK
     private double departureTime;//T[i]
     private double arrivalTime;//T[j]
     private double startingNodeArrivingTime;//arr[i]
     private double startingNodeDepartureTime;//dep[i]
     private double arrivingNodeArrivingTime;//arr[j]
     private double arrivingNodeDepartureTime;//dep[j]
-    private double travelTime;//t[i,j]
-    private double batteryLevel;//i
+    private double travelTime;//t[i,j]OK
+    private double batteryLevel;//iOK
     private double chargingTime;//i
 
     public Step() {

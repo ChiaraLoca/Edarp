@@ -71,6 +71,7 @@ public class Solver {
                     step.setStartingNode(currentNode);
                     step.setArrivingNodo(newStep);
                     step.setBatteryLevel(mission.getCurrentCharge());
+                    step.setTravelTime(travelTime[currentNode.getId()-1][newStep.getId()-1]);//si puo togliere
                     if(mission.getNextNodeType().equals(NodeType.CHARGE)){
                         mission.setCurrentCharge(instance.getVehicleInitBatteryInventory()[i]);
                     }
