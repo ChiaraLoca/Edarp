@@ -1,16 +1,16 @@
 package model;
 
 public class Step{
-    private Node startingNode;//iOK
-    private Node arrivingNodo;//jOK
+    private Node startingNode;//i
+    private Node arrivingNode;//j
     private double departureTime;//T[i]
     private double arrivalTime;//T[j]
     private double startingNodeArrivingTime;//arr[i]
     private double startingNodeDepartureTime;//dep[i]
     private double arrivingNodeArrivingTime;//arr[j]
     private double arrivingNodeDepartureTime;//dep[j]
-    private double travelTime;//t[i,j]OK
-    private double batteryLevel;//iOK
+    private double travelTime;//t[i,j]
+    private double batteryLevel;//i
     private double chargingTime;//i
 
     public Step() {
@@ -18,7 +18,7 @@ public class Step{
 
     public Step(Node startingNode, Node arrivingNodo) {
         this.startingNode = startingNode;
-        this.arrivingNodo = arrivingNodo;
+        this.arrivingNode = arrivingNodo;
     }
 
     public Node getStartingNode() {
@@ -29,12 +29,12 @@ public class Step{
         this.startingNode = startingNode;
     }
 
-    public Node getArrivingNodo() {
-        return arrivingNodo;
+    public Node getArrivingNode() {
+        return arrivingNode;
     }
 
-    public void setArrivingNodo(Node arrivingNodo) {
-        this.arrivingNodo = arrivingNodo;
+    public void setArrivingNode(Node arrivingNode) {
+        this.arrivingNode = arrivingNode;
     }
 
     public double getDepartureTime() {
@@ -112,7 +112,7 @@ public class Step{
     @Override
     public String toString() {
         return "" + startingNode.getId() +
-                " - " + arrivingNodo.getId()+
+                " - " + arrivingNode.getId()+
                 "( "+batteryLevel+" )\t";
     }
 }

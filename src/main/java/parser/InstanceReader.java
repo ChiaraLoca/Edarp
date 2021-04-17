@@ -65,6 +65,11 @@ public class InstanceReader {
             }
 
             instance.setNodes(nodes);
+            for(Node n:nodes) {
+                if(n.getLoad()!=0) {
+                    instance.getPickupAndDropoffLocations().add(n);
+                }
+            }
             /**commonOriginDepotId*/
 
             if(lines.get(i).length==nOriginDepots)
