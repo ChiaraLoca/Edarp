@@ -13,7 +13,7 @@ public class Solution {
     }
 
     private Instance instance;
-    private List<Mission> list;
+    private List<Mission> list; // K = {1, . . ., k}: set of available vehicles
 
     // Decision variables:
     private int[][][] vehicleSeqStopAtLocations; // X: 1 if vehicle k sequentially stops at location i and j ∈ V, 0 otherwise

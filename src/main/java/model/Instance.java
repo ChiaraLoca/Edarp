@@ -20,9 +20,10 @@ public class Instance {
     private List<Node> nodes;
     private final int[] commonOriginDepotId;
     private final int[] commonDestinationDepotId;
-    private final int[] artificialOriginDepotId;
+    private final int[] artificialOriginDepotId; // O: set of origin depots for vehicles k ∈ K, the origin of vehicle k is denoted by ok
     private final int[] artificialDestinationDepotId;
-    private final int[] chargingStationId;
+    private final int[] chargingStationId; // S: set of all charging stations
+    private final int[] allAvailableDestinationDepotsId; // F: set of all available destination depots
     private final int[] userMaxRideTime;
     private final int[] vehicleCapacity;
     private final double[] vehicleInitBatteryInventory;
@@ -32,9 +33,11 @@ public class Instance {
     private double vehicleDischargingRate;
     private final double[] weightFactor;
     private double[][] travelTime;
-    private ArrayList<Node> pickupAndDropoffLocations;
-
-
+    private final int[] pickupLocationsId; // P = {1,...,n}: set of pickup locations
+    private final int[] dropoffLocationsId; // D = {n + 1,...,2n}: set of dropoff locations
+    private final ArrayList<Node> pickupAndDropoffLocations; // N = P ∪ D: set of pickup and dropoff locations
+    // TODO: perché è un Node e non un array di int?
+    private final int[] allPossibleLocationsId; // V = N ∪ O ∪ F ∪ S: set of all possible locations
 
     public String getTitle() {
         return title;
@@ -138,6 +141,10 @@ public class Instance {
         return artificialDestinationDepotId;
     }
 
+    public int[] getAllAvailableDestinationDepotsId() {
+        return allAvailableDestinationDepotsId;
+    }
+
     public int[] getChargingStationId() {
         return chargingStationId;
     }
@@ -186,12 +193,20 @@ public class Instance {
         this.travelTime = travelTime;
     }
 
+    public int[] getPickupLocationsId() {
+        return pickupLocationsId;
+    }
+
+    public int[] getDropoffLocationsId() {
+        return dropoffLocationsId;
+    }
+
     public ArrayList<Node> getPickupAndDropoffLocations() {
         return pickupAndDropoffLocations;
     }
 
-    public void setPickupAndDropoffLocations(ArrayList<Node> pickupAndDropoffLocations) {
-        this.pickupAndDropoffLocations = pickupAndDropoffLocations;
+    public int[] getAllPossibleLocationsId() {
+        return allPossibleLocationsId;
     }
 
     public Instance(String title, String name, int nVehicles, int nCustomers, int nOriginDepots, int nDestinationDepots, int nStations, int nReplication) {
@@ -203,8 +218,6 @@ public class Instance {
         this.nDestinationDepots = nDestinationDepots;
         this.nStations = nStations;
         this.nReplications = nReplications;
-        this.pickupAndDropoffLocations=new ArrayList<>();
-
 
         commonOriginDepotId = new int[nOriginDepots];
         commonDestinationDepotId = new int[nDestinationDepots];
@@ -213,6 +226,11 @@ public class Instance {
             artificialDestinationDepotId= new int[nVehicles];
         else
             artificialDestinationDepotId= new int[5];
+        // TODO: controllare se è giusto qua sotto
+        this.allAvailableDestinationDepotsId = new int[getCommonDestinationDepotId().length+getArtificialDestinationDepotId().length];
+        System.arraycopy(getCommonDestinationDepotId(),0,allAvailableDestinationDepotsId,0,getCommonDestinationDepotId().length);
+        System.arraycopy(getArtificialDestinationDepotId(),0,allAvailableDestinationDepotsId, getCommonDestinationDepotId().length,getArtificialDestinationDepotId().length);
+
         chargingStationId = new int[nStations];
         userMaxRideTime = new int[nCustomers];
         vehicleCapacity = new int[nVehicles];
@@ -222,6 +240,11 @@ public class Instance {
         stationRechargingRate = new double[nStations];
         this.travelTime = null;
         weightFactor = new double[2];
+
+        this.pickupLocationsId=new int[20]; // TODO: fix size and populate
+        this.dropoffLocationsId=new int[20]; // TODO: fix size and populate
+        this.pickupAndDropoffLocations=new ArrayList<>();
+        this.allPossibleLocationsId=new int[50]; // TODO: fix size and populate
 
     }
 
