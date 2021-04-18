@@ -52,12 +52,6 @@ public class Solution {
         excessRideTimeOfPassenger = new double [instance.getnCustomers()];
     }
 
-
-
-
-
-
-
     public int[][][] getVehicleSeqStopAtLocations() {
         return vehicleSeqStopAtLocations;
     }

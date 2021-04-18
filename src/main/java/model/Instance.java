@@ -10,24 +10,24 @@ public class Instance {
     private String name;
     private int nVehicles;
     private int nCustomers;
-    private double minBatteryRatioLvl; // r: final minimum battery level ratio
+    private double minBatteryRatioLvl;
 
     private int nOriginDepots;
     private int nDestinationDepots;
     private int nStations;
     private int nReplications;
     private double timeHorizon;
-    private List<Node> nodes; // V = N ∪ O ∪ F ∪ S: set of all possible locations
+    private List<Node> nodes;
     private final int[] commonOriginDepotId;
     private final int[] commonDestinationDepotId;
-    private final int[] artificialOriginDepotId; // O: set of origin depots for vehicles k ∈ K, the origin of vehicle k is denoted by ok
-    private final int[] artificialDestinationDepotId;
-    private final int[] chargingStationId; // S: set of all charging stations
+    private final int[] artificialOriginDepotId;
     private final int[] allAvailableDestinationDepotsId; // F: set of all available destination depots
-    private final int[] userMaxRideTime;    //u: Maximum ride-time for customer with pickup at i ∈ P
+    private final int[] artificialDestinationDepotId;
+    private final int[] chargingStationId;
+    private final int[] userMaxRideTime;
     private final int[] vehicleCapacity;
-    private final double[] vehicleInitBatteryInventory; // Bk0: initial battery capacity of vehicle k ∈ K
-    private final double[] vehicleBatteryCapacity; // Q: effective battery capacity
+    private final double[] vehicleInitBatteryInventory;
+    private final double[] vehicleBatteryCapacity;
     private final double[] minEndBatteryRatioLvl;
     private final double[] stationRechargingRate;
     private double vehicleDischargingRate;
@@ -41,6 +41,7 @@ public class Instance {
     private final double[][] m; // Mi,j = max{0, depi + di + ti,j − arrj}
     private final double[][] g; // Mi,j = max{0, depi + di + ti,j − arrj}
     private ArrayList<Node> chargingStationNodes;
+
 
     public ArrayList<Node> getChargingStationNodes() {
         return chargingStationNodes;
@@ -223,8 +224,13 @@ public class Instance {
     public ArrayList<Node> getPickupAndDropoffLocations() {
         return pickupAndDropoffLocations;
     }
+
     public void setPickupAndDropoffLocations(ArrayList<Node> pickupAndDropoffLocations) {
         this.pickupAndDropoffLocations = pickupAndDropoffLocations;
+    }
+
+    public int[] getAllPossibleLocationsId() {
+        return allPossibleLocationsId;
     }
 
     public double[][] getG() {
@@ -241,6 +247,8 @@ public class Instance {
         this.nDestinationDepots = nDestinationDepots;
         this.nStations = nStations;
         this.nReplications = nReplications;
+        this.pickupAndDropoffLocations=new ArrayList<>();
+
 
         commonOriginDepotId = new int[nOriginDepots];
         commonDestinationDepotId = new int[nDestinationDepots];
