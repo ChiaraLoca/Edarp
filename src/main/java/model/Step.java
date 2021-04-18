@@ -3,8 +3,8 @@ package model;
 public class Step{
     private Node startingNode;//i
     private Node arrivingNode;//j
-    private double departureTime;//T[i]
-    private double arrivalTime;//T[j]
+    private double startServiceTime;//T[i]
+    private double timeToArriveToNextNode;//T[j]
     private double startingNodeArrivingTime;//arr[i]
     private double startingNodeDepartureTime;//dep[i]
     private double arrivingNodeArrivingTime;//arr[j]
@@ -37,20 +37,20 @@ public class Step{
         this.arrivingNode = arrivingNode;
     }
 
-    public double getDepartureTime() {
-        return departureTime;
+    public double getStartServiceTime() {
+        return startServiceTime;
     }
 
-    public void setDepartureTime(double departureTime) {
-        this.departureTime = departureTime;
+    public void setStartServiceTime(double startServiceTime) {
+        this.startServiceTime = startServiceTime;
     }
 
-    public double getArrivalTime() {
-        return arrivalTime;
+    public double getTimeToArriveToNextNode() {
+        return timeToArriveToNextNode;
     }
 
-    public void setArrivalTime(double arrivalTime) {
-        this.arrivalTime = arrivalTime;
+    public void setTimeToArriveToNextNode(double timeToArriveToNextNode) {
+        this.timeToArriveToNextNode = timeToArriveToNextNode;
     }
 
     public double getStartingNodeArrivingTime() {

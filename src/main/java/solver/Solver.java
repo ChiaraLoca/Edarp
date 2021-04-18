@@ -11,6 +11,7 @@ import java.util.Set;
 public class Solver {
 
     private Instance instance;
+    private Solution solution;
 
     private List<Node> allNodes;
     private int nVehicles;
@@ -26,25 +27,38 @@ public class Solver {
         allNodes = instance.getNodes();
         nVehicles = instance.getnVehicles();
         travelTime = instance.getTravelTime();
+        notVisitedNodes = instance.getPickupAndDropoffLocations();
 
     };
 
-
-    public Solution solve()
+    public Solution solve2()
     {
-        Solution solution = new Solution(instance);
-
-        //inizializza la lista con tutte lw stazioni di pickup e dropoff
         for(Node n : allNodes) {
-            if (n.getNodeType().equals(NodeType.PICKUP) || n.getNodeType().equals(NodeType.DROPOFF))
-                notVisitedNodes.add(n);
-            else if(n.getNodeType().equals(NodeType.CHARGE))
+            if(n.getNodeType().equals(NodeType.CHARGE))
                 chargingStation.add(n);
         }
         //crea un numero di missioni pari al numero di veicoli
         for(int i=0;i<nVehicles;i++) {
             solution.getMissions().add(new Mission((i+1),instance.getArtificialOriginDepotId()[i],instance.getArtificialDestinationDepotId()[i],instance.getVehicleInitBatteryInventory()[i]));
+            solution.getTimeVehicleStartsAtLocation()[i][0]= 0;
         }
+    }
+
+
+    public Solution solve() throws Exception {
+         solution = new Solution(instance);
+
+        //inizializza la lista con tutte lw stazioni di pickup e dropoff
+        for(Node n : allNodes) {
+            if(n.getNodeType().equals(NodeType.CHARGE))
+                chargingStation.add(n);
+        }
+        //crea un numero di missioni pari al numero di veicoli
+        for(int i=0;i<nVehicles;i++) {
+            solution.getMissions().add(new Mission((i+1),instance.getArtificialOriginDepotId()[i],instance.getArtificialDestinationDepotId()[i],instance.getVehicleInitBatteryInventory()[i]));
+            solution.getTimeVehicleStartsAtLocation()[i][0]= 0;
+        }
+
 
         List<Mission> missions = solution.getMissions();
         Step step;
@@ -54,24 +68,22 @@ public class Solver {
         double consuption=0;
         while(notVisitedNodes.size()!=0)
         {
-
-            for(int i=0;i<nVehicles;i++) {
-                possibleNextNode.add(getNextNode(missions.get(i)));
-            }
-            if(allNodeAreDifferent(possibleNextNode))
-            {
-
-
                 for(int i=0;i<nVehicles;i++) {
+                    possibleNextNode.add(getNextNode(missions.get(i)));
                     mission = missions.get(i);
                     newStep =possibleNextNode.get(i);
                     currentNode =allNodes.get(mission.getCurrentPositionId()-1);
 
+                    solution.getTimeVehicleStartsAtLocation()[i][newStep.getId()-1] = mission.getTimeToArriveToNextNode();
+
                     step = new Step();
                     step.setStartingNode(currentNode);
-                    step.setArrivingNodo(newStep);
+                    step.setArrivingNode(newStep);
+                    step.setStartServiceTime(solution.getTimeVehicleStartsAtLocation()[i][mission.getCurrentPositionId()-1]);
+                    step.setTimeToArriveToNextNode(mission.getTimeToArriveToNextNode());
                     step.setBatteryLevel(mission.getCurrentCharge());
                     step.setTravelTime(travelTime[currentNode.getId()-1][newStep.getId()-1]);//si puo togliere
+
                     if(mission.getNextNodeType().equals(NodeType.CHARGE)){
                         mission.setCurrentCharge(instance.getVehicleInitBatteryInventory()[i]);
                     }
@@ -83,11 +95,7 @@ public class Solver {
                     mission.update(newStep.getId());
                 }
                 possibleNextNode.clear();
-            }
-            else
-            {
-                //ci sono nodi uguali;
-            }
+
 
         }
 
@@ -109,16 +117,29 @@ public class Solver {
 
             case PICKUP:{
                 nextStep = getClosestNode(mission);
+                if(nextStep==null)
+                    nextStep = allNodes.get(mission.getArtificialDestinationDepotId()-1);
                 break;}
             case DROPOFF:{
                 nextStep =getRightDropoffNode(mission);
                 break;}
-            case CHARGE:{break;}
+            case CHARGE:{
+                nextStep = getClosestChargingNode(mission);
+            double currentCharge = mission.getCurrentCharge();
+            double maxCharge = instance.getVehicleBatteryCapacity()[mission.getVehicleId()-1];
+            double charge = maxCharge-currentCharge;
+            double rechargingRate =instance.getStationRechargingRate()[mission.getVehicleId()-1];
+            double time = charge/rechargingRate;
+            double d= solution.getTimeVehicleStartsAtLocation()[mission.getVehicleId()-1][current-1]+travelTime[current-1][nextStep.getId()-1]+time;
+            mission.setTimeToArriveToNextNode(d);
+            return nextStep;
+            }
 
 
         }
-        charging=getClosestChargingNode(mission);
 
+
+        charging=getClosestChargingNode(mission);
         consumptionCharging = instance.getBatteryConsumption()[mission.getCurrentPositionId()-1][charging.getId()-1];
         consumptionNextStep = instance.getBatteryConsumption()[mission.getCurrentPositionId()-1][nextStep.getId()-1];
 
@@ -133,12 +154,20 @@ public class Solver {
     }
     private Node getClosestNode(Mission mission)
     {
-        double distance=Double.MAX_VALUE;
+        double value=Double.MAX_VALUE;
         Node node=null;
         for (Node n : notVisitedNodes) {
-            if(n.getNodeType().equals(mission.getNextNodeType())) {
-                if (travelTime[n.getId() - 1][mission.getVehicleId() - 1] < distance) {
-                    distance = travelTime[n.getId() - 1][mission.getVehicleId() - 1];
+            /*if(n.getNodeType().equals(mission.getNextNodeType())) {
+                if (travelTime[n.getId() - 1][mission.getVehicleId() - 1] < value && ifInTime(mission,n)) {
+                    value = travelTime[n.getId() - 1][mission.getVehicleId() - 1];
+                    node = n;
+                }
+            }*/
+            if(n.getNodeType().equals(mission.getNextNodeType()))
+            {
+                if(n.getDeparture()<value && ifInTime(mission,n))
+                {
+                    value = n.getDeparture();
                     node = n;
                 }
             }
@@ -167,7 +196,7 @@ public class Solver {
         }
         else
             return allNodes.get(mission.getCurrentPositionId()-1+instance.getnCustomers());
-    }
+}
 
     private boolean allNodeAreDifferent(ArrayList<Node> possibleNextNode)
     {
@@ -176,6 +205,22 @@ public class Solver {
            return false;
         }
         return true;
+    }
+
+    private boolean ifInTime(Mission mission,Node possibleNodo)
+    {
+        int i = mission.getCurrentPositionId();
+        int j = possibleNodo.getId();
+        Node nodeI =allNodes.get(i-1);
+
+        double tdij = solution.getTimeVehicleStartsAtLocation()[mission.getVehicleId()-1][i-1]+travelTime[i-1][j-1]+nodeI.getServiceTime();
+
+        if(tdij>nodeI.getArrival() && tdij<nodeI.getDeparture()) {
+            mission.setTimeToArriveToNextNode(tdij);
+            return true;
+        }
+        else
+            return false;
     }
 
 

@@ -15,6 +15,9 @@ public class Mission {
     private double expetedConsumption;
     private NodeType nextNodeType;
     private NodeType lastNodeType;
+
+    private double timeToArriveToNextNode;
+
     public List<Step> getSteps() {
         return steps;
     }
@@ -32,10 +35,8 @@ public class Mission {
     {
 
         if(nextNodeType.equals(NodeType.PICKUP)){
-
             nextNodeType = NodeType.DROPOFF;}
         else if(nextNodeType.equals(NodeType.DROPOFF)){
-
             nextNodeType = NodeType.PICKUP;}
         else if(nextNodeType.equals(NodeType.CHARGE)){
            if(steps.get(steps.size()-1).getStartingNode().getNodeType().equals(NodeType.PICKUP))
@@ -45,6 +46,14 @@ public class Mission {
         }
         this.currentPositionId = currentPositionId;
         this.currentCharge -=expetedConsumption;
+    }
+
+    public double getTimeToArriveToNextNode() {
+        return timeToArriveToNextNode;
+    }
+
+    public void setTimeToArriveToNextNode(double timeToArriveToNextNode) {
+        this.timeToArriveToNextNode = timeToArriveToNextNode;
     }
 
     public double getCurrentCharge() {
@@ -109,7 +118,7 @@ public class Mission {
         str.append("Veicolo numero: "+vehicleId+"\n");
         for(Step s:steps)
         {
-            str.append("["+s.getStartingNode().getId()+"\t- "+s.getArrivingNodo().getId()+" \t- "+s.getBatteryLevel()+" \t- "+ s.getTravelTime()+"]\n");
+            str.append("["+s.getStartingNode().getId()+"\t- "+s.getArrivingNode().getId()+" \t- "+s.getStartServiceTime()+" \t- "+s.getTimeToArriveToNextNode()+" \t- "+s.getBatteryLevel()+" \t- "+ s.getTravelTime()+"]\n");
         }
         return str.toString();
     }
