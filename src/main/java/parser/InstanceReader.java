@@ -69,6 +69,7 @@ public class InstanceReader {
                 if(n.getLoad()!=0) {
                     instance.getPickupAndDropoffLocations().add(n);
                 }
+
             }
             /**commonOriginDepotId*/
 
@@ -147,7 +148,9 @@ public class InstanceReader {
                     throw new ParseException("Charging station id", i);
             for(int k=0;k<nStations;k++)
             {
-                instance.getChargingStationId()[k]= Integer.parseInt(lines.get(i)[k+arrayPositionModifier]);
+                int id= Integer.parseInt(lines.get(i)[k+arrayPositionModifier]);
+                instance.getChargingStationId()[k]= id;
+                instance.getChargingStationNodes().add(nodes.get(id-1));
             }i++;
 
             /**userMaxRideTime*/

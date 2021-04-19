@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 public class Node {
     private int id;
     private double lat;
@@ -22,7 +24,7 @@ public class Node {
 
     @Override
     public String toString() {
-        return "{" +
+        return "Node{" +
                 "id=" + id +
                 ", lat=" + lat +
                 ", lon=" + lon +
@@ -30,9 +32,29 @@ public class Node {
                 ", load=" + load +
                 ", arrival=" + arrival +
                 ", departure=" + departure +
+                ", nodeType=" + nodeType +
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Node node = (Node) o;
+        return id == node.id &&
+                Double.compare(node.lat, lat) == 0 &&
+                Double.compare(node.lon, lon) == 0 &&
+                Double.compare(node.serviceTime, serviceTime) == 0 &&
+                Double.compare(node.load, load) == 0 &&
+                Double.compare(node.arrival, arrival) == 0 &&
+                Double.compare(node.departure, departure) == 0 &&
+                nodeType == node.nodeType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, lat, lon, serviceTime, load, arrival, departure, nodeType);
+    }
 
     public int getId() {
         return id;

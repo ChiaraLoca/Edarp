@@ -34,8 +34,15 @@ public class Instance {
     private double[][] travelTime;
     private double[][] batteryConsumption;
     private ArrayList<Node> pickupAndDropoffLocations;
+    private ArrayList<Node> chargingStationNodes;
 
+    public ArrayList<Node> getChargingStationNodes() {
+        return chargingStationNodes;
+    }
 
+    public void setChargingStationNodes(ArrayList<Node> chargingStationNodes) {
+        this.chargingStationNodes = chargingStationNodes;
+    }
 
     public String getTitle() {
         return title;
@@ -223,6 +230,7 @@ public class Instance {
         stationRechargingRate = new double[nStations];
         this.travelTime = null;
         weightFactor = new double[2];
+        chargingStationNodes = new ArrayList<>();
 
     }
 

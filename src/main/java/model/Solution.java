@@ -13,7 +13,7 @@ public class Solution {
     }
 
     private Instance instance;
-    private List<Mission> missions;
+
 
     // Decision variables:
     private int[][][] vehicleSeqStopAtLocations; // X: 1 if vehicle k sequentially stops at location i and j ∈ V, 0 otherwise X{K,V,V}
@@ -32,10 +32,10 @@ public class Solution {
 
     public Solution(Instance instance) {
         this.instance = instance;
-        this.missions= new ArrayList<>();
+
         int V = instance.getNodes().size();
         int K = instance.getnVehicles();
-        
+
         vehicleSeqStopAtLocations = new int[K][V][V];
         timeVehicleStartsAtLocation =  new double[K][V];
         loadOfVehicleAtLocation = new double [K][V];
@@ -44,22 +44,33 @@ public class Solution {
         excessRideTimeOfPassenger = new double [instance.getnCustomers()];
     }
 
-    public List<Mission> getMissions() {
-        return missions;
-    }
 
-    @Override
-    public String toString() {
-        StringBuilder str = new StringBuilder();
-        str.append("SOLUZIONE: "+instance.getTitle()+"\n");
-        for(Mission m:missions)
-        {
-            str.append(m.toString());
-        }
-        return str.toString();
+
+   
+
+
+
+    public int[][][] getVehicleSeqStopAtLocations() {
+        return vehicleSeqStopAtLocations;
     }
 
     public double[][] getTimeVehicleStartsAtLocation() {
         return timeVehicleStartsAtLocation;
+    }
+
+    public double[][] getLoadOfVehicleAtLocation() {
+        return loadOfVehicleAtLocation;
+    }
+
+    public double[][] getBatteryLoadOfVehicleAtLocation() {
+        return batteryLoadOfVehicleAtLocation;
+    }
+
+    public double[][] getChargingTimeOfVehicleAtStation() {
+        return chargingTimeOfVehicleAtStation;
+    }
+
+    public double[] getExcessRideTimeOfPassenger() {
+        return excessRideTimeOfPassenger;
     }
 }
