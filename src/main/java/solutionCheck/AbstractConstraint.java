@@ -37,7 +37,7 @@ public abstract class AbstractConstraint {
         return currencyList.toArray(new Integer[currencyList.size()]);
     }
 
-    protected static Integer[] toInteger(int[] a) {
+    private static Integer[] toInteger(int[] a) {
         Integer[] arr=new Integer[a.length];
         for(int i=0; i<a.length;i++) {
             arr[i]=a[i];
