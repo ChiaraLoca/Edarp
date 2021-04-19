@@ -17,7 +17,7 @@ public class Instance {
     private int nStations;
     private int nReplications;
     private double timeHorizon;
-    private List<Node> nodes;
+    private List<Node> nodes; // V = N ∪ O ∪ F ∪ S: set of all possible locations
     private final int[] commonOriginDepotId;
     private final int[] commonDestinationDepotId;
     private final int[] artificialOriginDepotId; // O: set of origin depots for vehicles k ∈ K, the origin of vehicle k is denoted by ok
@@ -279,6 +279,7 @@ public class Instance {
         this.pickupLocationsId=new int[20]; // TODO: fix size and populate
         this.dropoffLocationsId=new int[20]; // TODO: fix size and populate
         this.pickupAndDropoffLocations=new ArrayList<>();
+        this.allPossibleLocationsId=new int[50]; // TODO: fix size and populate
         this.rechargeRate=new double[30]; // TODO: fix size and populate
         this.allPossibleLocationsId=new int[50]; // TODO: fix size and populate
         this.rechargeRate=new double[30]; TODO: // TODO: fix size and populate
