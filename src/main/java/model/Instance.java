@@ -38,7 +38,6 @@ public class Instance {
     private final int[] pickupLocationsId; // P = {1,...,n}: set of pickup locations
     private final int[] dropoffLocationsId; // D = {n + 1,...,2n}: set of dropoff locations
     private final ArrayList<Node> pickupAndDropoffLocations; // N = P ∪ D: set of pickup and dropoff locations
-    private final int[] allPossibleLocationsId; // V = N ∪ O ∪ F ∪ S: set of all possible locations
     private final double[][] m; // Mi,j = max{0, depi + di + ti,j − arrj}
     private final double[][] g; // Mi,j = max{0, depi + di + ti,j − arrj}
 
@@ -217,7 +216,7 @@ public class Instance {
     }
 
     public int[] getAllPossibleLocationsId() {
-        return allPossibleLocationsId;
+        return null; // TODO: fix
     }
 
     public double[][] getM() {
@@ -258,7 +257,6 @@ public class Instance {
         this.pickupLocationsId=new int[20]; // TODO: fix size and populate
         this.dropoffLocationsId=new int[20]; // TODO: fix size and populate
         this.pickupAndDropoffLocations=new ArrayList<>();
-        this.allPossibleLocationsId=new int[50]; // TODO: fix size and populate
         this.rechargeRate=new double[30]; // TODO: fix size and populate
         this.batteryConsumption=new double[20][5]; // TODO: fix size and populate
         this.m=new double[5][5]; // TODO: fix size and populate
