@@ -10,7 +10,7 @@ public class Instance {
     private String name;
     private int nVehicles;
     private int nCustomers;
-    private double minBatteryRatioLvl;
+    private double minBatteryRatioLvl; // r: final minimum battery level ratio
 
     private int nOriginDepots;
     private int nDestinationDepots;
@@ -26,18 +26,21 @@ public class Instance {
     private final int[] allAvailableDestinationDepotsId; // F: set of all available destination depots
     private final int[] userMaxRideTime;
     private final int[] vehicleCapacity;
-    private final double[] vehicleInitBatteryInventory;
-    private final double[] vehicleBatteryCapacity;
+    private final double[] vehicleInitBatteryInventory; // Bk0: initial battery capacity of vehicle k ∈ K
+    private final double[] vehicleBatteryCapacity; // Q: effective battery capacity
     private final double[] minEndBatteryRatioLvl;
     private final double[] stationRechargingRate;
     private double vehicleDischargingRate;
     private final double[] weightFactor;
-    private double[][] travelTime;
+    private double[][] travelTime; // t: travel time from location i ∈ V to location j ∈ V
+    private final double[] rechargeRate; // αs: recharge rate at charging facility s ∈ S TODO: va bene il tipo?
+    private final double[][] batteryConsumption; // βi,j: battery consumption between nodes i, j ∈ V
     private final int[] pickupLocationsId; // P = {1,...,n}: set of pickup locations
     private final int[] dropoffLocationsId; // D = {n + 1,...,2n}: set of dropoff locations
     private final ArrayList<Node> pickupAndDropoffLocations; // N = P ∪ D: set of pickup and dropoff locations
     // TODO: perché è un Node e non un array di int?
     private final int[] allPossibleLocationsId; // V = N ∪ O ∪ F ∪ S: set of all possible locations
+    private final double[][] m; // Mi,j = max{0, depi + di + ti,j − arrj} TODO: fix type, 2 or 3?
 
     public String getTitle() {
         return title;
@@ -161,6 +164,10 @@ public class Instance {
         return vehicleInitBatteryInventory;
     }
 
+    public double[] getRechargeRate() {
+        return rechargeRate;
+    }
+
     public double[] getVehicleBatteryCapacity() {
         return vehicleBatteryCapacity;
     }
@@ -179,6 +186,10 @@ public class Instance {
 
     public void setVehicleDischargingRate(double vehicleDischargingRate) {
         this.vehicleDischargingRate = vehicleDischargingRate;
+    }
+
+    public double[][] getBatteryConsumption() {
+        return batteryConsumption;
     }
 
     public double[] getWeightFactor() {
@@ -207,6 +218,10 @@ public class Instance {
 
     public int[] getAllPossibleLocationsId() {
         return allPossibleLocationsId;
+    }
+
+    public double[][] getM() {
+        return m;
     }
 
     public Instance(String title, String name, int nVehicles, int nCustomers, int nOriginDepots, int nDestinationDepots, int nStations, int nReplication) {
@@ -245,7 +260,9 @@ public class Instance {
         this.dropoffLocationsId=new int[20]; // TODO: fix size and populate
         this.pickupAndDropoffLocations=new ArrayList<>();
         this.allPossibleLocationsId=new int[50]; // TODO: fix size and populate
-
+        this.rechargeRate=new double[30]; TODO: // TODO: fix size and populate
+        this.batteryConsumption=new double[20][5]; // TODO: fix size and populate
+        this.m=new double[5][5]; // TODO: fix size and populate
     }
 
     private String printMatrix(double[][] m){
