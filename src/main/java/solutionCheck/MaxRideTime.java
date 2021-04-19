@@ -18,8 +18,8 @@ public class MaxRideTime extends AbstractConstraint {
             for (int i: solution.getInstance().getPickupLocationsId()) {
                 double value = solution.getTimeVehicleStartsAtLocation()[k][n+i] -
                         solution.getTimeVehicleStartsAtLocation()[k][i] -
-                        0; //todo d[i]
-                if (value>0) // todo u[i]
+                        solution.getInstance().getNodes().get(i).getServiceTime();
+                if (value>solution.getInstance().getUserMaxRideTime()[i])
                     return false;
             }
         }
