@@ -227,6 +227,11 @@ public class Instance {
         this.pickupAndDropoffLocations = pickupAndDropoffLocations;
     }
 
+    public double[][] getG() {
+        return g;
+    }
+
+
     public Instance(String title, String name, int nVehicles, int nCustomers, int nOriginDepots, int nDestinationDepots, int nStations, int nReplication) {
         this.title = title;
         this.name = name;
@@ -263,6 +268,7 @@ public class Instance {
         this.pickupAndDropoffLocations=new ArrayList<>();
         this.rechargeRate=new double[30]; // TODO: fix size and populate
         this.batteryConsumption=new double[20][5]; // TODO: fix size and populate
+
         this.m=new double[5][5]; // TODO: fix size and populate
         this.g=new double[5][5]; // TODO: fix size and populate
         /*public double[][] getBatteryConsumption() {

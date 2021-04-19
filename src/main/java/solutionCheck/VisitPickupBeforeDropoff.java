@@ -4,6 +4,7 @@ package solutionCheck;
 // Guarantee that each pickup location i is visited before its dropoff location n + i,
 //  by means of the direct travel time between the two locations and service time at location i
 
+import model.Node;
 import model.Solution;
 
 public class VisitPickupBeforeDropoff extends AbstractConstraint{
@@ -13,6 +14,14 @@ public class VisitPickupBeforeDropoff extends AbstractConstraint{
 
     @Override
     boolean check() {
-        return false;
+        int n = solution.getInstance().getPickupLocationsId().length;
+        for (int k = 0; k < solution.getInstance().getnVehicles(); k++) {
+            for (int i :solution.getInstance().getPickupLocationsId() ) {
+                double sum = solution.getTimeVehicleStartsAtLocation()[k][i] + 0 + solution.getInstance().getTravelTime()[i][n+i];
+                if (sum>solution.getTimeVehicleStartsAtLocation()[k][i+n]) //todo: dove trovo di
+                    return false;
+            }
+        }
+        return true;
     }
 }

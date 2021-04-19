@@ -34,6 +34,7 @@ public abstract class AbstractConstraint {
             if(occ==1)
                 currencyList.add(i);
         }
+        currencyList.sort(Comparator.comparingInt(i -> i));
         return currencyList.toArray(new Integer[currencyList.size()]);
     }
 
