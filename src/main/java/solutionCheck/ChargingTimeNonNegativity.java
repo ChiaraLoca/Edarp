@@ -1,6 +1,6 @@
 package solutionCheck;
 
-// constraint 29: Eks ≥ 0   ∀k ∈ K, i ∈ V
+// constraint 29: Eks ≥ 0   ∀k ∈ K, s ∈ S
 // charging time of vehicle k at charging station s ∈ S non negativity constraint
 
 import model.Solution;
@@ -13,12 +13,12 @@ public class ChargingTimeNonNegativity extends AbstractConstraint {
 
     @Override
     boolean check() {
-        /*for(int k=0; k<solution.getList().size(); k++) {
-            for(int i=0; i<solution.getInstance().getPickupAndDropoffLocations().size(); i++) {
-                if(solution.getLoadOfVehicleAtLocation()[k][i]>Math.min(solution.getInstance().getVehicleCapacity()[k],solution.getInstance().getVehicleCapacity()[k]+solution.getInstance().getPickupAndDropoffLocations().get(i).getLoad()))
+        for(int k=0; k<solution.getList().size(); k++) {
+            for(int s=0; s<solution.getInstance().getChargingStationId().length;s++) {
+                if(solution.getChargingTimeOfVehicleAtStation()[k][s]<0)
                     return false;
             }
-        }*/
+        }
         return true;
     }
 }

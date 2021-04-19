@@ -13,12 +13,14 @@ public class Integrality extends AbstractConstraint {
 
     @Override
     boolean check() {
-        /*for(int k=0; k<solution.getList().size(); k++) {
-            for(int i=0; i<solution.getInstance().getPickupAndDropoffLocations().size(); i++) {
-                if(solution.getLoadOfVehicleAtLocation()[k][i]>Math.min(solution.getInstance().getVehicleCapacity()[k],solution.getInstance().getVehicleCapacity()[k]+solution.getInstance().getPickupAndDropoffLocations().get(i).getLoad()))
-                    return false;
+        for(int k=0; k<solution.getList().size(); k++) {
+            for(int i=0; i<solution.getInstance().getAllPossibleLocationsId().length; i++) {
+                for(int j=0; j<solution.getInstance().getAllPossibleLocationsId().length;j++) {
+                    if(solution.getVehicleSeqStopAtLocations()[k][i][j]!=0&&solution.getVehicleSeqStopAtLocations()[k][i][j]!=1)
+                        return false;
+                }
             }
-        }*/
+        }
         return true;
     }
 }
