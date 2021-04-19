@@ -38,7 +38,6 @@ public class Instance {
     private final int[] pickupLocationsId; // P = {1,...,n}: set of pickup locations
     private final int[] dropoffLocationsId; // D = {n + 1,...,2n}: set of dropoff locations
     private final ArrayList<Node> pickupAndDropoffLocations; // N = P ∪ D: set of pickup and dropoff locations
-    // TODO: perché è un Node e non un array di int?
     private final int[] allPossibleLocationsId; // V = N ∪ O ∪ F ∪ S: set of all possible locations
     private final double[][] m; // Mi,j = max{0, depi + di + ti,j − arrj}
     private final double[][] g; // Mi,j = max{0, depi + di + ti,j − arrj}
