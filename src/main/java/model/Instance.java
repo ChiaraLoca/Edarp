@@ -20,10 +20,10 @@ public class Instance {
     private List<Node> nodes;
     private final int[] commonOriginDepotId;
     private final int[] commonDestinationDepotId;
-    private final int[] artificialOriginDepotId;
-    private final int[] allAvailableDestinationDepotsId; // F: set of all available destination depots
+    private final int[] artificialOriginDepotId; // O: set of origin depots for vehicles k ∈ K, the origin of vehicle k is denoted by ok
     private final int[] artificialDestinationDepotId;
-    private final int[] chargingStationId;
+    private final int[] chargingStationId; // S: set of all charging stations
+    private final int[] allAvailableDestinationDepotsId; // F: set of all available destination depots
     private final int[] userMaxRideTime;
     private final int[] vehicleCapacity;
     private final double[] vehicleInitBatteryInventory;
@@ -238,6 +238,10 @@ public class Instance {
     }
 
 
+    public double[][] getM() {
+        return m;
+    }
+
     public Instance(String title, String name, int nVehicles, int nCustomers, int nOriginDepots, int nDestinationDepots, int nStations, int nReplication) {
         this.title = title;
         this.name = name;
@@ -275,6 +279,7 @@ public class Instance {
         this.dropoffLocationsId=new int[20]; // TODO: fix size and populate
         this.pickupAndDropoffLocations=new ArrayList<>();
         this.rechargeRate=new double[30]; // TODO: fix size and populate
+        this.allPossibleLocationsId=new int[50]; // TODO: fix size and populate
         this.batteryConsumption=new double[20][5]; // TODO: fix size and populate
 
         this.m=new double[5][5]; // TODO: fix size and populate

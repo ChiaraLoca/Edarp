@@ -5,6 +5,8 @@ package solutionCheck;
 
 import model.Solution;
 
+// TODO: todo
+
 public class RechargeTimeLowerBound extends AbstractConstraint {
 
     public RechargeTimeLowerBound(Solution solution) {

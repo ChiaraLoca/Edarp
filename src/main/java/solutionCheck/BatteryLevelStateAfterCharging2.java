@@ -5,6 +5,8 @@ package solutionCheck;
 
 import model.Solution;
 
+// TODO: todo
+
 public class BatteryLevelStateAfterCharging2 extends AbstractConstraint {
 
     public BatteryLevelStateAfterCharging2(Solution solution) {
