@@ -15,7 +15,7 @@ public class BatteryLevelUpperBound extends AbstractConstraint {
     boolean check() {
         for(int k=0; k<solution.getList().size(); k++) {
             for(int s=0; s<solution.getInstance().getChargingStationId().length;s++) {
-                if(solution.getInstance().getVehicleBatteryCapacity()[k]<solution.getBatteryLoadOfVehicleAtLocation()[k][s]+solution.getInstance().getRechargeRate()[s]*solution.getChargingTimeOfVehicleAtStation()[k][s])
+                if(solution.getInstance().getVehicleBatteryCapacity()[k]<solution.getBatteryLoadOfVehicleAtLocation()[k][solution.getInstance().getChargingStationId()[s]]+solution.getInstance().getRechargeRate()[solution.getInstance().getChargingStationId()[s]]*solution.getChargingTimeOfVehicleAtStation()[k][solution.getInstance().getChargingStationId()[s]])
                     return false;
             }
         }

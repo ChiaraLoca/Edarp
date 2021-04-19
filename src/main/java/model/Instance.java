@@ -10,30 +10,36 @@ public class Instance {
     private String name;
     private int nVehicles;
     private int nCustomers;
-    private double minBatteryRatioLvl;
+    private double minBatteryRatioLvl; // r: final minimum battery level ratio
 
     private int nOriginDepots;
     private int nDestinationDepots;
     private int nStations;
     private int nReplications;
     private double timeHorizon;
-    private List<Node> nodes;
+    private List<Node> nodes; // V = N ∪ O ∪ F ∪ S: set of all possible locations
     private final int[] commonOriginDepotId;
     private final int[] commonDestinationDepotId;
-    private final int[] artificialOriginDepotId;
+    private final int[] artificialOriginDepotId; // O: set of origin depots for vehicles k ∈ K, the origin of vehicle k is denoted by ok
     private final int[] artificialDestinationDepotId;
-    private final int[] chargingStationId;
+    private final int[] chargingStationId; // S: set of all charging stations
+    private final int[] allAvailableDestinationDepotsId; // F: set of all available destination depots
     private final int[] userMaxRideTime;
     private final int[] vehicleCapacity;
-    private final double[] vehicleInitBatteryInventory;
-    private final double[] vehicleBatteryCapacity;
+    private final double[] vehicleInitBatteryInventory; // Bk0: initial battery capacity of vehicle k ∈ K
+    private final double[] vehicleBatteryCapacity; // Q: effective battery capacity
     private final double[] minEndBatteryRatioLvl;
     private final double[] stationRechargingRate;
     private double vehicleDischargingRate;
-    private final double[] weightFactor;//TODO non abbiamo idea di che cazzo sia
-    private double[][] travelTime;
-    private double[][] batteryConsumption;
-    private ArrayList<Node> pickupAndDropoffLocations;
+    private final double[] weightFactor;
+    private double[][] travelTime; // t: travel time from location i ∈ V to location j ∈ V
+    private final double[] rechargeRate; // αs: recharge rate at charging facility s ∈ S TODO: va bene il tipo?
+    private double[][] batteryConsumption; // βi,j: battery consumption between nodes i, j ∈ V
+    private final int[] pickupLocationsId; // P = {1,...,n}: set of pickup locations
+    private final int[] dropoffLocationsId; // D = {n + 1,...,2n}: set of dropoff locations
+    private  ArrayList<Node> pickupAndDropoffLocations; // N = P ∪ D: set of pickup and dropoff locations
+    private final double[][] m; // Mi,j = max{0, depi + di + ti,j − arrj}
+    private final double[][] g; // Mi,j = max{0, depi + di + ti,j − arrj}
     private ArrayList<Node> chargingStationNodes;
 
     public ArrayList<Node> getChargingStationNodes() {
@@ -146,6 +152,10 @@ public class Instance {
         return artificialDestinationDepotId;
     }
 
+    public int[] getAllAvailableDestinationDepotsId() {
+        return allAvailableDestinationDepotsId;
+    }
+
     public int[] getChargingStationId() {
         return chargingStationId;
     }
@@ -160,6 +170,10 @@ public class Instance {
 
     public double[] getVehicleInitBatteryInventory() {
         return vehicleInitBatteryInventory;
+    }
+
+    public double[] getRechargeRate() {
+        return rechargeRate;
     }
 
     public double[] getVehicleBatteryCapacity() {
@@ -182,6 +196,10 @@ public class Instance {
         this.vehicleDischargingRate = vehicleDischargingRate;
     }
 
+    public double[][] getBatteryConsumption() {
+        return batteryConsumption;
+    }
+
     public double[] getWeightFactor() {
         return weightFactor;
     }
@@ -194,10 +212,17 @@ public class Instance {
         this.travelTime = travelTime;
     }
 
+    public int[] getPickupLocationsId() {
+        return pickupLocationsId;
+    }
+
+    public int[] getDropoffLocationsId() {
+        return dropoffLocationsId;
+    }
+
     public ArrayList<Node> getPickupAndDropoffLocations() {
         return pickupAndDropoffLocations;
     }
-
     public void setPickupAndDropoffLocations(ArrayList<Node> pickupAndDropoffLocations) {
         this.pickupAndDropoffLocations = pickupAndDropoffLocations;
     }
@@ -211,8 +236,6 @@ public class Instance {
         this.nDestinationDepots = nDestinationDepots;
         this.nStations = nStations;
         this.nReplications = nReplications;
-        this.pickupAndDropoffLocations=new ArrayList<>();
-
 
         commonOriginDepotId = new int[nOriginDepots];
         commonDestinationDepotId = new int[nDestinationDepots];
@@ -221,6 +244,10 @@ public class Instance {
             artificialDestinationDepotId= new int[nVehicles];
         else
             artificialDestinationDepotId= new int[5];
+        this.allAvailableDestinationDepotsId = new int[getCommonDestinationDepotId().length+getArtificialDestinationDepotId().length];
+        System.arraycopy(getCommonDestinationDepotId(),0,allAvailableDestinationDepotsId,0,getCommonDestinationDepotId().length);
+        System.arraycopy(getArtificialDestinationDepotId(),0,allAvailableDestinationDepotsId, getCommonDestinationDepotId().length,getArtificialDestinationDepotId().length);
+
         chargingStationId = new int[nStations];
         userMaxRideTime = new int[nCustomers];
         vehicleCapacity = new int[nVehicles];
@@ -230,16 +257,23 @@ public class Instance {
         stationRechargingRate = new double[nStations];
         this.travelTime = null;
         weightFactor = new double[2];
-        chargingStationNodes = new ArrayList<>();
 
-    }
-
-    public double[][] getBatteryConsumption() {
+        this.pickupLocationsId=new int[20]; // TODO: fix size and populate
+        this.dropoffLocationsId=new int[20]; // TODO: fix size and populate
+        this.pickupAndDropoffLocations=new ArrayList<>();
+        this.rechargeRate=new double[30]; // TODO: fix size and populate
+        this.batteryConsumption=new double[20][5]; // TODO: fix size and populate
+        this.m=new double[5][5]; // TODO: fix size and populate
+        this.g=new double[5][5]; // TODO: fix size and populate
+        /*public double[][] getBatteryConsumption() {
         return batteryConsumption;
     }
 
     public void setBatteryConsumption(double[][] batteryConsumption) {
         this.batteryConsumption = batteryConsumption;
+    }
+
+         */
     }
 
     private String printMatrix(double[][] m){

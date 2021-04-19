@@ -5,8 +5,6 @@ package solutionCheck;
 
 import model.Solution;
 
-// TODO: todo
-
 public class RechargeTimeLowerBound extends AbstractConstraint {
 
     public RechargeTimeLowerBound(Solution solution) {
@@ -15,12 +13,17 @@ public class RechargeTimeLowerBound extends AbstractConstraint {
 
     @Override
     boolean check() {
-        /*for(int k=0; k<solution.getList().size(); k++) {
-            for(int i=0; i<solution.getInstance().getPickupAndDropoffLocations().size(); i++) {
-                if(solution.getLoadOfVehicleAtLocation()[k][i]>Math.min(solution.getInstance().getVehicleCapacity()[k],solution.getInstance().getVehicleCapacity()[k]+solution.getInstance().getPickupAndDropoffLocations().get(i).getLoad()))
-                    return false;
+        Integer[] union=arrayUnion(solution.getInstance().getDropoffLocationsId(),solution.getInstance().getChargingStationId(),solution.getInstance().getArtificialOriginDepotId());
+        for(int k=0; k<solution.getList().size(); k++) {
+            for(int s=0; s<solution.getInstance().getChargingStationId().length;s++) {
+                for(int i=0; i<union.length; i++) {
+                    if(i==s)
+                        continue;
+                    if(solution.getChargingTimeOfVehicleAtStation()[k][solution.getInstance().getChargingStationId()[s]]<solution.getTimeVehicleStartsAtLocation()[k][solution.getInstance().getChargingStationId()[s]]-solution.getInstance().getTravelTime()[union[i]][solution.getInstance().getChargingStationId()[s]]-solution.getTimeVehicleStartsAtLocation()[k][union[i]]-solution.getInstance().getM()[union[i]][solution.getInstance().getChargingStationId()[s]]*(1-solution.getVehicleSeqStopAtLocations()[k][union[i]][solution.getInstance().getChargingStationId()[s]]))
+                        return false;
+                }
             }
-        }*/
+        }
         return true;
     }
 }
