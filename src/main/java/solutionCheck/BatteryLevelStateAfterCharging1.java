@@ -13,12 +13,13 @@ public class BatteryLevelStateAfterCharging1 extends AbstractConstraint {
 
     @Override
     boolean check() {
+        Integer[] union=arrayUnion(solution.getInstance().getPickupLocationsId(), solution.getInstance().getAllAvailableDestinationDepotsId(), solution.getInstance().getChargingStationId());
         for(int k=0; k<solution.getList().size(); k++) {
             for(int s=0; s<solution.getInstance().getChargingStationId().length; s++) {
-                for (int j=0; ;j++) { // TODO: fix
+                for (int j=0; j<union.length;j++) {
                    if(s==j)
                        continue;
-                    if(solution.getBatteryLoadOfVehicleAtLocation()[k][j]>solution.getBatteryLoadOfVehicleAtLocation()[k][s]+solution.getInstance().getRechargeRate()[s]*solution.getChargingTimeOfVehicleAtStation()[k][s]-solution.getInstance().getBatteryConsumption()[s][j]+solution.getInstance().getVehicleBatteryCapacity()[k]*(1-solution.getVehicleSeqStopAtLocations()[k][s][j]))
+                    if(solution.getBatteryLoadOfVehicleAtLocation()[k][union[j]]>solution.getBatteryLoadOfVehicleAtLocation()[k][solution.getInstance().getChargingStationId()[s]]+solution.getInstance().getRechargeRate()[solution.getInstance().getChargingStationId()[s]]*solution.getChargingTimeOfVehicleAtStation()[k][solution.getInstance().getChargingStationId()[s]]-solution.getInstance().getBatteryConsumption()[solution.getInstance().getChargingStationId()[s]][union[j]]+solution.getInstance().getVehicleBatteryCapacity()[k]*(1-solution.getVehicleSeqStopAtLocations()[k][solution.getInstance().getChargingStationId()[s]][union[j]]))
                         return false;
                 }
             }
