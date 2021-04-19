@@ -10,7 +10,7 @@ public class Instance {
     private String name;
     private int nVehicles;
     private int nCustomers;
-    private double minBatteryRatioLvl;
+    private double minBatteryRatioLvl; // r: final minimum battery level ratio
 
     private int nOriginDepots;
     private int nDestinationDepots;
@@ -26,20 +26,21 @@ public class Instance {
     private final int[] allAvailableDestinationDepotsId; // F: set of all available destination depots
     private final int[] userMaxRideTime;
     private final int[] vehicleCapacity;
-    private final double[] vehicleInitBatteryInventory;
-    private final double[] vehicleBatteryCapacity;
+    private final double[] vehicleInitBatteryInventory; // Bk0: initial battery capacity of vehicle k ∈ K
+    private final double[] vehicleBatteryCapacity; // Q: effective battery capacity
     private final double[] minEndBatteryRatioLvl;
     private final double[] stationRechargingRate;
     private double vehicleDischargingRate;
     private final double[] weightFactor;
     private double[][] travelTime; // t: travel time from location i ∈ V to location j ∈ V
     private final double[] rechargeRate; // αs: recharge rate at charging facility s ∈ S TODO: va bene il tipo?
-    private double[][] batteryConsumption; // βi,j: battery consumption between nodes i, j ∈ V
+    private final double[][] batteryConsumption; // βi,j: battery consumption between nodes i, j ∈ V
     private final int[] pickupLocationsId; // P = {1,...,n}: set of pickup locations
     private final int[] dropoffLocationsId; // D = {n + 1,...,2n}: set of dropoff locations
     private  ArrayList<Node> pickupAndDropoffLocations; // N = P ∪ D: set of pickup and dropoff locations
     private final double[][] m; // Mi,j = max{0, depi + di + ti,j − arrj}
     private final double[][] g; // Mi,j = max{0, depi + di + ti,j − arrj}
+    private final int[] allPossibleLocationsId; // V = N ∪ O ∪ F ∪ S: set
     private ArrayList<Node> chargingStationNodes;
 
 
@@ -280,8 +281,8 @@ public class Instance {
         this.pickupAndDropoffLocations=new ArrayList<>();
         this.rechargeRate=new double[30]; // TODO: fix size and populate
         this.allPossibleLocationsId=new int[50]; // TODO: fix size and populate
+        this.rechargeRate=new double[30]; TODO: // TODO: fix size and populate
         this.batteryConsumption=new double[20][5]; // TODO: fix size and populate
-
         this.m=new double[5][5]; // TODO: fix size and populate
         this.g=new double[5][5]; // TODO: fix size and populate
         /*public double[][] getBatteryConsumption() {
