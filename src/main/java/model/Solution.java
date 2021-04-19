@@ -21,7 +21,7 @@ public class Solution {
     private double[][] loadOfVehicleAtLocation; // L: load of vehicle k at location i ∈ V
     private double[][] batteryLoadOfVehicleAtLocation; // B: battery load of vehicle k at location i ∈ V
     private double[][] chargingTimeOfVehicleAtStation; // E: charging time of vehicle k at charging station s ∈ S
-    private double[][] excessRideTimeOfPassenger; // R: excess ride-time of passenger i ∈ P
+    private double[] excessRideTimeOfPassenger; // R: excess ride-time of passenger i ∈ P
 
     public Solution(Instance instance) {
         this.instance = instance;
@@ -52,7 +52,7 @@ public class Solution {
         return chargingTimeOfVehicleAtStation;
     }
 
-    public double[][] getExcessRideTimeOfPassenger() {
+    public double[] getExcessRideTimeOfPassenger() {
         return excessRideTimeOfPassenger;
     }
 }

@@ -13,6 +13,22 @@ public class VisitOnceOptionalDestination extends AbstractConstraint{
 
     @Override
     boolean check() {
-        return false;
+        Integer[] FSUnion = arrayUnion(solution.getInstance().getAllAvailableDestinationDepotsId(),
+                solution.getInstance().getPickupLocationsId());
+
+        for (int j:FSUnion) {
+            int sum=0;
+            for (int k = 0; k < solution.getInstance().getnVehicles(); k++) {
+                Integer[] DSOkUnion = arrayUnion(solution.getInstance().getDropoffLocationsId(),
+                        solution.getInstance().getChargingStationId(),
+                        new int[]{solution.getInstance().getArtificialDestinationDepotId()[k]});
+                for (int i:DSOkUnion) {
+                    sum+=solution.getVehicleSeqStopAtLocations()[k][i][j];
+                }
+            }
+            if(sum>1)
+                return false;
+        }
+        return true;
     }
 }
