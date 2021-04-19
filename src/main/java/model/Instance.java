@@ -17,7 +17,7 @@ public class Instance {
     private int nStations;
     private int nReplications;
     private double timeHorizon;
-    private List<Node> nodes;
+    private List<Node> nodes; // V = N ∪ O ∪ F ∪ S: set of all possible locations
     private final int[] commonOriginDepotId;
     private final int[] commonDestinationDepotId;
     private final int[] artificialOriginDepotId; // O: set of origin depots for vehicles k ∈ K, the origin of vehicle k is denoted by ok
@@ -40,7 +40,8 @@ public class Instance {
     private final ArrayList<Node> pickupAndDropoffLocations; // N = P ∪ D: set of pickup and dropoff locations
     // TODO: perché è un Node e non un array di int?
     private final int[] allPossibleLocationsId; // V = N ∪ O ∪ F ∪ S: set of all possible locations
-    private final double[][] m; // Mi,j = max{0, depi + di + ti,j − arrj} TODO: fix type, 2 or 3?
+    private final double[][] m; // Mi,j = max{0, depi + di + ti,j − arrj}
+    private final double[][] g; // Mi,j = max{0, depi + di + ti,j − arrj}
 
     public String getTitle() {
         return title;
@@ -241,7 +242,6 @@ public class Instance {
             artificialDestinationDepotId= new int[nVehicles];
         else
             artificialDestinationDepotId= new int[5];
-        // TODO: controllare se è giusto qua sotto
         this.allAvailableDestinationDepotsId = new int[getCommonDestinationDepotId().length+getArtificialDestinationDepotId().length];
         System.arraycopy(getCommonDestinationDepotId(),0,allAvailableDestinationDepotsId,0,getCommonDestinationDepotId().length);
         System.arraycopy(getArtificialDestinationDepotId(),0,allAvailableDestinationDepotsId, getCommonDestinationDepotId().length,getArtificialDestinationDepotId().length);
@@ -260,9 +260,10 @@ public class Instance {
         this.dropoffLocationsId=new int[20]; // TODO: fix size and populate
         this.pickupAndDropoffLocations=new ArrayList<>();
         this.allPossibleLocationsId=new int[50]; // TODO: fix size and populate
-        this.rechargeRate=new double[30]; TODO: // TODO: fix size and populate
+        this.rechargeRate=new double[30]; // TODO: fix size and populate
         this.batteryConsumption=new double[20][5]; // TODO: fix size and populate
         this.m=new double[5][5]; // TODO: fix size and populate
+        this.g=new double[5][5]; // TODO: fix size and populate
     }
 
     private String printMatrix(double[][] m){
