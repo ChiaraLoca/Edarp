@@ -17,7 +17,6 @@ public class Instance {
     private int nStations;
     private int nReplications;
     private double timeHorizon;
-    private List<Node> nodes; // V = N ∪ O ∪ F ∪ S: set of all possible locations
     private final int[] commonOriginDepotId;
     private final int[] commonDestinationDepotId;
     private final int[] artificialOriginDepotId; // O: set of origin depots for vehicles k ∈ K, the origin of vehicle k is denoted by ok
@@ -38,6 +37,7 @@ public class Instance {
     private final int[] pickupLocationsId; // P = {1,...,n}: set of pickup locations
     private final int[] dropoffLocationsId; // D = {n + 1,...,2n}: set of dropoff locations
     private final ArrayList<Node> pickupAndDropoffLocations; // N = P ∪ D: set of pickup and dropoff locations
+    private List<Node> nodes; // V = N ∪ O ∪ F ∪ S: set of all possible locations
     private final double[][] m; // Mi,j = max{0, depi + di + ti,j − arrj}
     private final double[][] g; // Mi,j = max{0, depi + di + ti,j − arrj}
 
@@ -213,10 +213,6 @@ public class Instance {
 
     public ArrayList<Node> getPickupAndDropoffLocations() {
         return pickupAndDropoffLocations;
-    }
-
-    public int[] getAllPossibleLocationsId() {
-        return null; // TODO: fix
     }
 
     public double[][] getM() {

@@ -11,13 +11,11 @@ public class MinimumBatteryLevelsReturningVehicles extends AbstractConstraint {
         super(solution);
     }
 
-    // TODO: check Q
-
     @Override
     boolean check() {
         for(int k=0; k<solution.getList().size(); k++) {
             for(int i=0; i<solution.getInstance().getAllAvailableDestinationDepotsId().length; i++) {
-                if(solution.getBatteryLoadOfVehicleAtLocation()[k][i]<solution.getInstance().getMinBatteryRatioLvl()*solution.getInstance().getVehicleBatteryCapacity()[k])
+                if(solution.getBatteryLoadOfVehicleAtLocation()[k][solution.getInstance().getAllAvailableDestinationDepotsId()[i]]<solution.getInstance().getMinBatteryRatioLvl()*solution.getInstance().getVehicleBatteryCapacity()[k])
                     return false;
             }
         }
