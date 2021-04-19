@@ -23,7 +23,7 @@ public class Instance {
     private final int[] artificialDestinationDepotId;
     private final int[] chargingStationId; // S: set of all charging stations
     private final int[] allAvailableDestinationDepotsId; // F: set of all available destination depots
-    private final int[] userMaxRideTime;
+    private final int[] userMaxRideTime;    //u: Maximum ride-time for customer with pickup at i ∈ P
     private final int[] vehicleCapacity;
     private final double[] vehicleInitBatteryInventory; // Bk0: initial battery capacity of vehicle k ∈ K
     private final double[] vehicleBatteryCapacity; // Q: effective battery capacity
@@ -272,9 +272,9 @@ public class Instance {
             return stringBuilder.toString();
         }
 
-        for (int i = 0; i < m.length; i++) {
+        for (double[] doubles : m) {
             for (int j = 0; j < m[0].length; j++) {
-                stringBuilder.append(""+m[i][j]+"\t");
+                stringBuilder.append(doubles[j]).append("\t");
             }
             stringBuilder.append("\n");
         }
