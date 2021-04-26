@@ -1,7 +1,11 @@
 package solutionCheck;
 
+import model.Instance;
 import model.Solution;
+import org.reflections.Reflections;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public abstract class AbstractConstraint {
@@ -46,4 +50,21 @@ public abstract class AbstractConstraint {
         return arr;
     }
 
+    public static void main(String[] args) {
+        Solution solution = new Solution(new Instance("","",0,0,0,0,0,0));
+        Reflections reflections = new Reflections("solutionCheck");
+        Set<Class<? extends AbstractConstraint>> classes = reflections.getSubTypesOf(AbstractConstraint.class);
+        for (Class<? extends AbstractConstraint> aClass : classes) {
+            System.out.println(aClass.getName());
+
+            try {
+                Constructor<?> constructor = aClass.getConstructor(Solution.class);
+
+                AbstractConstraint constraint = (AbstractConstraint) constructor.newInstance(solution);
+                constraint.check();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
