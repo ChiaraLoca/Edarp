@@ -13,7 +13,7 @@ public class VehiclesInitialBatteryLevels extends AbstractConstraint {
 
     @Override
     boolean check() {
-        for(int k=0; k<solution.getList().size(); k++) {
+        for(int k=0; k<solution.getInstance().getnVehicles(); k++) {
             for(int i=0; i<solution.getInstance().getArtificialOriginDepotId().length; i++) {
                 if(solution.getBatteryLoadOfVehicleAtLocation()[k][solution.getInstance().getArtificialOriginDepotId()[i]]!=solution.getInstance().getVehicleInitBatteryInventory()[k])
                     return false;

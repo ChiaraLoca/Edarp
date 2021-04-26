@@ -18,7 +18,7 @@ public class BatteryLevelStateLocToLoc2 extends AbstractConstraint {
     boolean check() {
         Integer[] union1=arrayDiff(nodeToArray(solution.getInstance().getNodes()),solution.getInstance().getChargingStationId());
         Integer[] union2=arrayDiff(nodeToArray(solution.getInstance().getNodes()),solution.getInstance().getArtificialOriginDepotId());
-        for(int k=0; k<solution.getList().size(); k++) {
+        for(int k=0; k<solution.getInstance().getnVehicles(); k++) {
             for(int i=0; i<union1.length; i++) {
                 for(int j=0; j<union2.length; j++) {
                     if(i==j)

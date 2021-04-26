@@ -34,7 +34,7 @@ public class Instance {
     private final double[] weightFactor;
     private double[][] travelTime; // t: travel time from location i ∈ V to location j ∈ V
     private final double[] rechargeRate; // αs: recharge rate at charging facility s ∈ S TODO: va bene il tipo?
-    private final double[][] batteryConsumption; // βi,j: battery consumption between nodes i, j ∈ V
+    private double[][] batteryConsumption; // βi,j: battery consumption between nodes i, j ∈ V
     private final int[] pickupLocationsId; // P = {1,...,n}: set of pickup locations
     private final int[] dropoffLocationsId; // D = {n + 1,...,2n}: set of dropoff locations
     private  ArrayList<Node> pickupAndDropoffLocations; // N = P ∪ D: set of pickup and dropoff locations
@@ -243,6 +243,10 @@ public class Instance {
         return m;
     }
 
+    public void setBatteryConsumption(double[][] batteryConsumption) {
+        this.batteryConsumption = batteryConsumption;
+    }
+
     public Instance(String title, String name, int nVehicles, int nCustomers, int nOriginDepots, int nDestinationDepots, int nStations, int nReplication) {
         this.title = title;
         this.name = name;
@@ -281,20 +285,10 @@ public class Instance {
         this.pickupAndDropoffLocations=new ArrayList<>();
         this.allPossibleLocationsId=new int[50]; // TODO: fix size and populate
         this.rechargeRate=new double[30]; // TODO: fix size and populate
-        this.allPossibleLocationsId=new int[50]; // TODO: fix size and populate
-        this.rechargeRate=new double[30]; TODO: // TODO: fix size and populate
         this.batteryConsumption=new double[20][5]; // TODO: fix size and populate
         this.m=new double[5][5]; // TODO: fix size and populate
         this.g=new double[5][5]; // TODO: fix size and populate
-        /*public double[][] getBatteryConsumption() {
-        return batteryConsumption;
-    }
 
-    public void setBatteryConsumption(double[][] batteryConsumption) {
-        this.batteryConsumption = batteryConsumption;
-    }
-
-         */
     }
 
     private String printMatrix(double[][] m){

@@ -14,7 +14,7 @@ public class MaxRideTime extends AbstractConstraint {
     @Override
     boolean check() {
         int n = solution.getInstance().getPickupLocationsId().length;
-        for(int k=0; k<solution.getList().size(); k++) {
+        for(int k=0; k<solution.getInstance().getnVehicles(); k++) {
             for (int i: solution.getInstance().getPickupLocationsId()) {
                 double value = solution.getTimeVehicleStartsAtLocation()[k][n+i] -
                         solution.getTimeVehicleStartsAtLocation()[k][i] -

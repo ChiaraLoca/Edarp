@@ -14,7 +14,7 @@ public class RechargeTimeUpperBound extends AbstractConstraint {
     @Override
     boolean check() {
         Integer[] union=arrayUnion(solution.getInstance().getDropoffLocationsId(),solution.getInstance().getChargingStationId(),solution.getInstance().getArtificialOriginDepotId());
-        for(int k=0; k<solution.getList().size(); k++) {
+        for(int k=0; k<solution.getInstance().getnVehicles(); k++) {
             for(int s=0; s<solution.getInstance().getChargingStationId().length;s++) {
                 for(int i=0; i<union.length; i++) {
                     if(i==s)

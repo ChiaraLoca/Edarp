@@ -14,7 +14,7 @@ public class BatteryLevelStateAfterCharging1 extends AbstractConstraint {
     @Override
     boolean check() {
         Integer[] union=arrayUnion(solution.getInstance().getPickupLocationsId(), solution.getInstance().getAllAvailableDestinationDepotsId(), solution.getInstance().getChargingStationId());
-        for(int k=0; k<solution.getList().size(); k++) {
+        for(int k=0; k<solution.getInstance().getnVehicles(); k++) {
             for(int s=0; s<solution.getInstance().getChargingStationId().length; s++) {
                 for (int j=0; j<union.length;j++) {
                    if(s==j)
