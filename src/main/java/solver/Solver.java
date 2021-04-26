@@ -47,8 +47,8 @@ public class Solver {
                     i + 1,
                     allNodes.get(instance.getArtificialOriginDepotId()[i]),
                     allNodes.get(instance.getArtificialDestinationDepotId()[i]),
-                    instance.getVehicleBatteryCapacity()[i],
-                    instance.getVehicleCapacity()[i]
+                    100,
+                    100
             ));
 
         }
@@ -545,12 +545,12 @@ public class Solver {
         double value;
         if (vehicleInfo.getPassengerDestination().size() == 0) {
 
-            while(pickupMap.size()==0) {
+            /*while(pickupMap.size()==0) {
                 pickupMap = getInTimePickupNodes(vehicleInfo, nodes, wait);
                 if(pickupMap.size()==0)
                     wait +=0.1;
-            }
-            ifInTime(vehicleInfo, node, wait);
+            }*/
+            ifInTime(vehicleInfo, node, -1);
             value = vehicleInfo.getPossibleTimeToArriveToNextNode();
 
         } else {
