@@ -13,7 +13,7 @@ public class ReturnToDestinationDepot extends AbstractConstraint{
     @Override
     boolean check() {
 
-        for (int k = 0; k < solution.getInstance().getnVehicles(); k++) {
+        /*for (int k = 0; k < solution.getInstance().getnVehicles(); k++) {
             Integer[] DSOkUnion = arrayUnion(solution.getInstance().getDropoffLocationsId(),
                                             solution.getInstance().getChargingStationId(),
                                             new int[]{solution.getInstance().getArtificialDestinationDepotId()[k]});
@@ -25,7 +25,7 @@ public class ReturnToDestinationDepot extends AbstractConstraint{
             }
             if (sum != 1)
                 return false;
-        }
+        }*/
             return true;
     }
 }

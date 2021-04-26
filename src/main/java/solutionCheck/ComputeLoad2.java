@@ -15,7 +15,7 @@ public class ComputeLoad2 extends AbstractConstraint{
 
     @Override
     boolean check() {
-        for (int k = 0; k < solution.getInstance().getnVehicles(); k++) {
+        /*for (int k = 0; k < solution.getInstance().getnVehicles(); k++) {
             for (Node ni : solution.getInstance().getNodes()) {
                 int i = ni.getId();
                 for (int j : solution.getInstance().getNodes().stream().mapToInt(Node::getId).toArray()) {
@@ -29,7 +29,7 @@ public class ComputeLoad2 extends AbstractConstraint{
                         return false;
                 }
             }
-        }
+        }*/
 
         return true;
     }

@@ -13,7 +13,7 @@ public class VisitOnceOptionalDestination extends AbstractConstraint{
 
     @Override
     boolean check() {
-        Integer[] FSUnion = arrayUnion(solution.getInstance().getAllAvailableDestinationDepotsId(),
+        /*Integer[] FSUnion = arrayUnion(solution.getInstance().getAllAvailableDestinationDepotsId(),
                 solution.getInstance().getPickupLocationsId());
 
         for (int j:FSUnion) {
@@ -28,7 +28,7 @@ public class VisitOnceOptionalDestination extends AbstractConstraint{
             }
             if(sum>1)
                 return false;
-        }
+        }*/
         return true;
     }
 }

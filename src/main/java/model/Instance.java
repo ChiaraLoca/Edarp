@@ -257,6 +257,7 @@ public class Instance {
         this.nStations = nStations;
         this.nReplications = nReplications;
         this.pickupAndDropoffLocations=new ArrayList<>();
+        this.chargingStationNodes = new ArrayList<>();
 
 
         commonOriginDepotId = new int[nOriginDepots];
