@@ -16,10 +16,12 @@ public class VehicleInfo{
     private List<Node> passengerDestination; //contiene gli id delle dropoff location corrispondenti alle personoe a bordo
     private double timeOfMission;
 
+
     private double possibleTimeToArriveToNextNode =Double.NaN;
     private double possibleBatteryLevel=0;
     private List<Node> possiblePassengerDestination;
     private double waitingTime=0;
+    private double possibleDistanceFromPossibleDestination;
 
     public VehicleInfo(int vehicleId, Node artificialOriginDepot, Node artificialDestinationDepot, double maxBatteryCapacity,int maxLoad) {
 
@@ -151,7 +153,7 @@ public class VehicleInfo{
 
         currentBatteryLevel= possibleBatteryLevel;
         waitingTime =0;
-        timeOfMission+= possibleTimeToArriveToNextNode;
+        timeOfMission= possibleTimeToArriveToNextNode;
     }
 
     public double getWaitingTime() {
@@ -172,5 +174,13 @@ public class VehicleInfo{
 
     public void setTimeOfMission(double timeOfMission) {
         this.timeOfMission = timeOfMission;
+    }
+
+    public double getPossibleDistanceFromPossibleDestination() {
+        return possibleDistanceFromPossibleDestination;
+    }
+
+    public void setPossibleDistanceFromPossibleDestination(double possibleDistanceFromPossibleDestination) {
+        this.possibleDistanceFromPossibleDestination = possibleDistanceFromPossibleDestination;
     }
 }
