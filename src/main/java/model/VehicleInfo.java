@@ -17,6 +17,9 @@ public class VehicleInfo{
     private double timeOfMission;
 
 
+    private boolean timeOver = false;
+
+
     private double possibleTimeToArriveToNextNode =Double.NaN;
     private double possibleBatteryLevel=0;
     private List<Node> possiblePassengerDestination;
@@ -54,6 +57,7 @@ public class VehicleInfo{
                 ", currentPosition=" + currentPosition.getId() +
                 ", passengerDestination=" + passengerDestination.size() +
                 ", timeOfMission=" + timeOfMission +
+                ", timeOver=" + timeOver +
                 '}';
     }
 
@@ -183,4 +187,20 @@ public class VehicleInfo{
     public void setPossibleDistanceFromPossibleDestination(double possibleDistanceFromPossibleDestination) {
         this.possibleDistanceFromPossibleDestination = possibleDistanceFromPossibleDestination;
     }
+
+    public boolean isFullyCharged() {
+        if(currentBatteryLevel<maxBatteryCapacity)
+            return false;
+        return true;
+    }
+
+    public boolean isTimeOver() {
+        return timeOver;
+    }
+
+    public void setTimeOver(boolean timeOver) {
+        System.out.println(getVehicleId()+ "time is over");
+        this.timeOver = timeOver;
+    }
+
 }

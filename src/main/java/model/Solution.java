@@ -14,6 +14,9 @@ public class Solution {
 
     private Instance instance;
 
+    private boolean solutionComplete =false;
+
+    private String details="";
 
     // Decision variables:
     private int[][][] vehicleSeqStopAtLocations; // X: 1 if vehicle k sequentially stops at location i and j ∈ V, 0 otherwise X{K,V,V}
@@ -72,5 +75,29 @@ public class Solution {
 
     public double[] getExcessRideTimeOfPassenger() {
         return excessRideTimeOfPassenger;
+    }
+
+    public boolean isSolutionComplete() {
+        return solutionComplete;
+    }
+
+    public void setSolutionComplete(boolean solutionComplete) {
+        this.solutionComplete = solutionComplete;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
+    @Override
+    public String toString() {
+        return "Solution{" +
+                "solutionComplete=" + solutionComplete +
+                ", details='" + details + '\'' +
+                '}';
     }
 }

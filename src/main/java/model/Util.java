@@ -2,15 +2,13 @@ package model;
 
 
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Util {
     public static boolean isTimeHorizonRespected(int id,double maxTime,double timeSpend,double wait) throws Exception {
         if ((timeSpend+wait)>maxTime)
-            throw new Exception(id+" Time is not enough: " + timeSpend+"wait: "+wait);
+            return false;
         return true;
     }
 
@@ -90,7 +88,6 @@ public class Util {
 
     }
 
-
     public static HashMap<Node,Node> orderNodeNodeMapBy(Map<Node,Node>map,Order order) {
 
         Map<Node,Node> result = null;
@@ -110,5 +107,15 @@ public class Util {
         return (HashMap<Node, Node>) result;
 
     }
+
+    public static boolean allNodeAreDifferent(Node[] possibleNextNode) {
+
+        Set<Node> set = new HashSet<Node>(new ArrayList<>(Arrays.asList(possibleNextNode)));
+        if (set.size() < possibleNextNode.length) {
+            return false;
+        }
+        return true;
+    }
+
 
 }

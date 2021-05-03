@@ -1,9 +1,6 @@
 package solver;
 
-import model.Instance;
-import model.Node;
-import model.NodeType;
-import model.Solution;
+import model.*;
 import org.junit.jupiter.api.Test;
 import parser.InstanceReader;
 
@@ -47,5 +44,16 @@ class SolverTest {
         System.out.println(nodeOrderMap2);*/
 
 
+    }
+
+
+    @Test
+    void allNodeAreDifferentTest()
+    {
+        Node node[] = new Node[2];
+        node[0]=null;
+        node[1]= null;
+
+        System.out.println(Util.allNodeAreDifferent(node));
     }
 }
