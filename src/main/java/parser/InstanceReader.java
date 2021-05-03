@@ -327,6 +327,8 @@ public class InstanceReader {
 
                 }
             }
+            instance.setM(calculateM(nodes.size(),instance));
+            instance.setG(calculateG(instance));
 
             instance.setBatteryConsumption(calculateBatteryConsumption(instance));
             if (lines.size() == i){
@@ -383,4 +385,59 @@ public class InstanceReader {
 
         return matrix;
     }
+
+    public double[][] calculateM(int V,Instance instance){
+        double arr[] = new double[instance.getNodes().size()];
+        int i =0;
+        for(Node n: instance.getNodes())
+        {
+            arr[i]= n.getArrival();
+            i++;
+        }
+        double dep[] = new double[instance.getNodes().size()];
+        i =0;
+        for(Node n: instance.getNodes())
+        {
+            dep[i]= n.getDeparture();
+            i++;
+        }
+        double d[] = new double[instance.getNodes().size()];
+        i=0;
+        for(Node n: instance.getNodes())
+        {
+            d[i]= n.getServiceTime();
+            i++;
+        }
+
+
+
+
+        double M[][] = new double[V][V];
+        for(int k =0;k<V;k++)
+        {
+            for(int j =0;j<V;j++) {
+                M[k][j] = (dep[k]+d[k]+instance.getTravelTime()[k][j] - arr[j])>0 ? (dep[k]+d[k]+instance.getTravelTime()[k][j] - arr[j]) :0;
+            }
+        }
+        return M;
+    }
+    public double[][] calculateG(Instance instance){
+        double G[][] = new double[instance.getnVehicles()][instance.getNodes().size()];
+        for(int k =0;k<instance.getnVehicles();k++)
+        {
+            for(int j = 0 ; j<instance.getNodes().size() ;j++)
+            {
+                if(instance.getVehicleCapacity()[k] < instance.getVehicleCapacity()[k] + instance.getNodes().get(j).getLoad())
+                {
+                    G[k][j] = instance.getVehicleCapacity()[k];
+                }
+                else {
+                    G[k][j] = instance.getVehicleCapacity()[k] + instance.getNodes().get(j).getLoad();
+                }
+            }
+        }
+        return G;
+
+    }
+
 }
