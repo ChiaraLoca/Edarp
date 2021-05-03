@@ -394,7 +394,7 @@ public class InstanceReader {
             arr[i]= n.getArrival();
             i++;
         }
-        double dep[] = new double[instance.getNodes().size()];
+        double dep[] = new double[instance.getNodes().size()];  
         i =0;
         for(Node n: instance.getNodes())
         {

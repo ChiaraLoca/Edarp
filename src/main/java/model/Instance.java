@@ -302,7 +302,13 @@ public class Instance {
         return stringBuilder.toString();
     }
 
+    public void setM(double[][] m) {
+        this.m = m;
+    }
 
+    public void setG(double[][] g) {
+        this.g = g;
+    }
 
     @Override
     public String toString() {
