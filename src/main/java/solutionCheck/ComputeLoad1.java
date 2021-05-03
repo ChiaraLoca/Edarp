@@ -11,6 +11,7 @@ public class ComputeLoad1 extends AbstractConstraint{
     public ComputeLoad1(Solution solution) {
         super(solution);
     }
+    // TODO: index-1
 
     @Override
     boolean check() {
