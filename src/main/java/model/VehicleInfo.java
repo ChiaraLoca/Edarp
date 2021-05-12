@@ -10,6 +10,7 @@ public class VehicleInfo{
     private final double maxBatteryCapacity;
     private final int maxLoad;
 
+
     private Node currentPosition;
     private double currentBatteryLevel;
     private double timeSpendAtCharging;
@@ -33,6 +34,7 @@ public class VehicleInfo{
         this.artificialDestinationDepot = artificialDestinationDepot;
         this.maxBatteryCapacity = maxBatteryCapacity;
         this.maxLoad = maxLoad;
+
 
         this.currentPosition = artificialOriginDepot;
         this.currentBatteryLevel = maxBatteryCapacity;
@@ -202,5 +204,6 @@ public class VehicleInfo{
         System.out.println(getVehicleId()+ "time is over");
         this.timeOver = timeOver;
     }
+
 
 }
