@@ -130,7 +130,44 @@ public class Util {
 
     public static void printRed(String s)
     {
-        System.out.println(TEXT_RED+s+TEXT_RESET);
+        System.out.print(TEXT_RED+s+TEXT_RESET);
+    }
+    public static void printBlack(String s)
+    {
+        System.out.print(TEXT_BLACK+s+TEXT_RESET);
+    }
+    public static void printGreen(String s)
+    {
+        System.out.print(TEXT_GREEN+s+TEXT_RESET);
+    }
+    public static void printYellow(String s)
+    {
+        System.out.print(TEXT_YELLOW+s+TEXT_RESET);
+    }
+    public static void printBlue(String s)
+    {
+        System.out.print(TEXT_BLUE+s+TEXT_RESET);
+    }
+    public static void printPurple(String s)
+    {
+        System.out.print(TEXT_PURPLE+s+TEXT_RESET);
+    }
+    public static void printCyan(String s)
+    {
+        System.out.print(TEXT_CYAN+s+TEXT_RESET);
+    }
+
+    public static void printStepinfo(int id,int iteration,double time,Map<Node,Node> nodes)
+    {
+
+        Util.printRed("\nVEICOLO NUMERO "+id+" iterazione: "+iteration+"------------------------------------------------------------\n");
+        Util.printRed("Nodi rimasti ");
+        for(Map.Entry e: nodes.entrySet() )
+        {
+
+            Util.printRed(((Node)e.getKey()).getId()+" - ");
+        }
+        Util.printRed("Tempo: "+time+"\n\n");
     }
 
 }

@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Solution {
     public Instance getInstance() {
@@ -25,6 +26,7 @@ public class Solution {
     private double[][] batteryLoadOfVehicleAtLocation; // B: battery load of vehicle k at location i ∈ V B{K,V}
     private double[][] chargingTimeOfVehicleAtStation; // E: charging time of vehicle k at charging station s ∈ S E{K,S}
     private double[] excessRideTimeOfPassenger; // R: excess ride-time of passenger i ∈ P  R{P};
+
 
 
 
@@ -92,6 +94,8 @@ public class Solution {
     public void setDetails(String details) {
         this.details = details;
     }
+
+
 
     @Override
     public String toString() {

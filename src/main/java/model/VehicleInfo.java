@@ -17,6 +17,8 @@ public class VehicleInfo{
     private List<Node> passengerDestination; //contiene gli id delle dropoff location corrispondenti alle personoe a bordo
     private double timeOfMission;
 
+    private double timeAvailableToCharge =0;
+
 
     private boolean timeOver = false;
 
@@ -205,5 +207,11 @@ public class VehicleInfo{
         this.timeOver = timeOver;
     }
 
+    public double getTimeAvailableToCharge() {
+        return timeAvailableToCharge;
+    }
 
+    public void setTimeAvailableToCharge(double timeAvailableToCharge) {
+        this.timeAvailableToCharge = timeAvailableToCharge;
+    }
 }

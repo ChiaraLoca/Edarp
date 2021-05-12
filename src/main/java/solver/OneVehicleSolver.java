@@ -4,130 +4,80 @@ import model.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
-public class IterationSolver implements ISolver{
-
-
+public class OneVehicleSolver {
 
     final private Instance instance;
     final private boolean batteryCheat;
+    final private int idVehicle;
 
-    final private List<Node> allNodes;
+
     final private int nVehicles;
     final private double[][] travelTime;
-    final private ArrayList<Node> notVisitedNodes;
     final private ArrayList<Node> chargingStation;
     final private int numberOfNodes;
-    final private Node[] possibleNextNode;//lista di lungezza n Veicoli che contiene per ogni veicolo il nodo piu vicino
-    final private WaitingTimeInstances[] chargingOccasions;
-    final private Node[] lastEmptyLocation;
+    private Node possibleNextNode;
 
     final private Solution solution;
 
-    private List<VehicleInfo> vehicleInfoList = new ArrayList<>();
-    private HashMap<Node, Node> notVisitedNodesMap = new HashMap<>();
+    private VehicleInfo vehicleInfo;
+    private HashMap<Node, Node> unvisitedNodesMap = new HashMap<>();
+    private TreeMap<Node, Node> priorityNodes = new TreeMap<>();
     private int nVisitedNode=0;
 
-    private HashMap<Node, Node> mulo = new HashMap<>();//TODO da cancellare
-
-    public IterationSolver(Instance instance, boolean batteryCheat) {
+    public OneVehicleSolver(Instance instance, boolean batteryCheat,int idVehicle,HashMap<Node,Node> unvisitedNodesMap,double timeAvailableToCharge) {
         this.instance = instance;
         this.batteryCheat = batteryCheat;
+        this.idVehicle = idVehicle;
+        this.unvisitedNodesMap = unvisitedNodesMap;
 
 
-        this.allNodes = instance.getNodes();
         this.nVehicles = instance.getnVehicles();
         this.travelTime = instance.getTravelTime();
-        this.notVisitedNodes = instance.getPickupAndDropoffLocations();
-        this.chargingStation = instance.getChargingStationNodes();
-        this.numberOfNodes = instance.getnCustomers()*2;
 
-        this.possibleNextNode = new Node[nVehicles];
-        this.chargingOccasions = new WaitingTimeInstances[nVehicles];
-        this.lastEmptyLocation = new Node[nVehicles];
+        this.chargingStation = instance.getChargingStationNodes();
+
+
+        this.possibleNextNode =null;
         this.solution = new Solution(instance);
 
+        vehicleInfo= new VehicleInfo(
+                idVehicle + 1,
+                instance.getNodes().get(instance.getArtificialOriginDepotId()[idVehicle]),
+                instance.getNodes().get(instance.getArtificialDestinationDepotId()[idVehicle]),
+                batteryCheat?100:instance.getVehicleBatteryCapacity()[idVehicle],
+                instance.getVehicleCapacity()[idVehicle]);
+
+        vehicleInfo.setTimeAvailableToCharge(timeAvailableToCharge);
+        this.numberOfNodes = unvisitedNodesMap.size()*2;
     }
 
 
-    @Override
-    public Solution solve() throws Exception {
 
-
-
-
-            for (int i = 0; i < nVehicles; i++) {
-
-                if (batteryCheat) {
-                    vehicleInfoList.add(new VehicleInfo(
-                            i + 1,
-                            allNodes.get(instance.getArtificialOriginDepotId()[i]),
-                            allNodes.get(instance.getArtificialDestinationDepotId()[i]),
-                            100,
-                            instance.getVehicleCapacity()[i]
-
-                    ));
-                } else {
-                    vehicleInfoList.add(new VehicleInfo(
-                            i + 1,
-                            allNodes.get(instance.getArtificialOriginDepotId()[i]),
-                            allNodes.get(instance.getArtificialDestinationDepotId()[i]),
-                            instance.getVehicleBatteryCapacity()[i],
-                            instance.getVehicleCapacity()[i]
-
-                    ));
-                }
-            }
-
-
-
-
-        for (Node n : notVisitedNodes) {
-            if (n.getNodeType().equals(NodeType.PICKUP))
-                notVisitedNodesMap.put(n, notVisitedNodes.get(n.getId() + instance.getnCustomers() - 1));
-        }
-        notVisitedNodesMap = Util.orderNodeNodeMapBy(notVisitedNodesMap,Order.DESTINATION_DEPARTURE);
-
-        int stopWhileOfDestinationChooser=0;
+    public void solve() throws Exception {
 
         for( nVisitedNode = 0; nVisitedNode< numberOfNodes;) {
-            VehicleInfo vehicleInfo;
-            Node nextNode;
 
             //seglie la tipologia di nodo a cui il veicolo è diretto e ci va.
             if(!deafultDestinationChooser()) {
-                System.out.println("all vehicle time is over");
+                Util.printPurple("Vehicol time is over, Finish\n");
                 solution.setSolutionComplete(false);
-                solution.setDetails("equalNodesDestinationChooser,number of location: "+ nVisitedNode);
-                return solution;
-            }
-            while (!Util.allNodeAreDifferent(possibleNextNode)) {
-                if(!equalNodesDestinationChooser())
-                {
-                    System.out.println("all vehicle time is over");
-                    solution.setSolutionComplete(false);
-                    solution.setDetails("equalNodesDestinationChooser, number of location: "+ nVisitedNode);
-                    return solution;
-                }
-                if (stopWhileOfDestinationChooser == 100)
-                    throw new Exception("stopWhileOfDestinationChooser");
-                stopWhileOfDestinationChooser++;
+                solution.setDetails("equalNodesDestinationChooser, number of location: "+ nVisitedNode);
+
+                return;
             }
 
-            for (int k = 0; k < nVehicles; k++) {
-
-                vehicleInfo = vehicleInfoList.get(k);
-                nextNode = possibleNextNode[k];
-                if(nextNode==null && vehicleInfo.isTimeOver())
+            Node nextNode = possibleNextNode;
+                if(nextNode==null && vehicleInfo.isTimeOver()) //TODO credo si possa togliere
                     continue;
-                solution.getVehicleSeqStopAtLocations()[k][vehicleInfo.getCurrentPosition().getId() - 1][nextNode.getId() - 1] = 1;
-                solution.getTimeVehicleStartsAtLocation()[k][nextNode.getId() - 1] = vehicleInfo.getPossibleTimeToArriveToNextNode();
-                solution.getLoadOfVehicleAtLocation()[k][nextNode.getId() - 1] = vehicleInfo.getPossiblePassengerDestination().size();
-                solution.getBatteryLoadOfVehicleAtLocation()[k][nextNode.getId() - 1] = vehicleInfo.getPossibleBatteryLevel();
+                solution.getVehicleSeqStopAtLocations()[idVehicle][vehicleInfo.getCurrentPosition().getId() - 1][nextNode.getId() - 1] = 1;
+                solution.getTimeVehicleStartsAtLocation()[idVehicle][nextNode.getId() - 1] = vehicleInfo.getPossibleTimeToArriveToNextNode();
+                solution.getLoadOfVehicleAtLocation()[idVehicle][nextNode.getId() - 1] = vehicleInfo.getPossiblePassengerDestination().size();
+                solution.getBatteryLoadOfVehicleAtLocation()[idVehicle][nextNode.getId() - 1] = vehicleInfo.getPossibleBatteryLevel();
                 if (nextNode.getNodeType().equals(NodeType.CHARGE))
-                    solution.getChargingTimeOfVehicleAtStation()[k][nextNode.getId() - (instance.getChargingStationId()[0])] = vehicleInfo.getTimeSpendAtCharging();
+                    solution.getChargingTimeOfVehicleAtStation()[idVehicle][nextNode.getId() - (instance.getChargingStationId()[0])] = vehicleInfo.getTimeSpendAtCharging();
                 //solution.getExcessRideTimeOfPassenger()
 
                 if (nextNode.getNodeType().equals(NodeType.PICKUP) || nextNode.getNodeType().equals(NodeType.DROPOFF)) {
@@ -135,161 +85,111 @@ public class IterationSolver implements ISolver{
                         nVisitedNode++;
                         if(nextNode.getNodeType().equals(NodeType.PICKUP))
                         {
-                            Node des =notVisitedNodesMap.remove(nextNode);
-                            mulo.put(nextNode,des);
+                            Node des = unvisitedNodesMap.remove(nextNode);
+
                         }
                     }
                 }
                 vehicleInfo.update(nextNode);
-                if(batteryCheat) {
-                    System.out.println("NVN:" + nVisitedNode +
-                            " VId:" + k +
+
+                    System.out.print("NVN:" + nVisitedNode +
+                            " VId:" + idVehicle +
                             " Tempo:" + String.format("%f", vehicleInfo.getTimeOfMission()) +
                             " Pos:" + vehicleInfo.getCurrentPosition().getId() +
                             " Passeggeri: " + vehicleInfo.getPassengerDestination());
-                    Util.printCyan(" Charge: " + (100-vehicleInfo.getCurrentBatteryLevel())+"\n");
+                    Util.printCyan(" Charge: " +
+                            (batteryCheat ? 100-vehicleInfo.getCurrentBatteryLevel() : vehicleInfo.getCurrentBatteryLevel())+"\n");
 
-                }
-                else
-                {
-
-                    System.out.println("NVN:" + nVisitedNode +
-                            " VId:" + k +
-                            " Tempo:" + String.format("%f", vehicleInfo.getTimeOfMission()) +
-                            " Pos:" + vehicleInfo.getCurrentPosition().getId() +
-                            " Passeggeri: " + vehicleInfo.getPassengerDestination());
-                    Util.printCyan(" Charge: " + (vehicleInfo.getCurrentBatteryLevel())+"\n");
-
-
-                }
-            }
-
-
-
+                    Util.printGreen("Nodi scaduti");
+                    for(Map.Entry e: unvisitedNodesMap.entrySet())
+                    {
+                        if(vehicleInfo.getTimeOfMission()>((Node)e.getValue()).getDeparture()) {
+                            Util.printGreen(" - " + ((Node)e.getValue()).getId());
+                            priorityNodes.put((Node)e.getKey(),(Node)e.getValue());
+                        }
+                    }
+                    System.out.println("\n");
         }
         solution.setSolutionComplete(true);
 
-
-
-
-
-        return solution;
+        return ;
     }
 
     private boolean deafultDestinationChooser() throws Exception {
-        System.out.println("deafultDestinationChooser");
-        int timeOverCounter=0;
-        VehicleInfo vehicleInfo;
-        Node nextNode;
-        for (int i = 0; i < nVehicles; i++) {
 
-            vehicleInfo = vehicleInfoList.get(i);
-            if(!vehicleInfo.isTimeOver()) {
+        NodeType nextNodeType = nodeTypeChooser();
+        if (!vehicleInfo.isTimeOver()) {
 
-                NodeType nextNodeType = nodeTypeChooser(vehicleInfo);
-                possibleNextNode[i] = (choseNextNode(vehicleInfo, nextNodeType, notVisitedNodesMap));
-            }
-            else
-            {
-                System.out.println(vehicleInfo.getVehicleId()+"time is over");
-                possibleNextNode[i] = null;
-                timeOverCounter++;
+            possibleNextNode = (choseNextNode(nextNodeType, unvisitedNodesMap));
+            return true;
+        } else {
 
-            }
-        }
-
-            if (timeOverCounter == 1) {
-                System.out.println("all vehicle times is over");
-                return false;
-            } else {
-                return true;
-            }
-
-    }
-
-    private boolean equalNodesDestinationChooser() throws Exception {
-
-
-        System.out.println("equalNodesDestinationChooser");
-
-        HashMap<Node,Node> newMap = new HashMap<>(notVisitedNodesMap);
-        if(vehicleInfoList.get(0).isTimeOver()&&vehicleInfoList.get(1).isTimeOver())
-        {
+            possibleNextNode = null;
             return false;
+
         }
-        else if (vehicleInfoList.get(0).isTimeOver()&&!vehicleInfoList.get(1).isTimeOver())
-        {
-            System.out.println();
-        }else if(!vehicleInfoList.get(0).isTimeOver()&&vehicleInfoList.get(1).isTimeOver())
-        {
-            System.out.println();
-        }
-        else {
-            if (vehicleInfoList.get(0).getPossibleDistanceFromPossibleDestination() < vehicleInfoList.get(1).getPossibleDistanceFromPossibleDestination()) {
-                if (possibleNextNode[0].getNodeType().equals(NodeType.PICKUP))
-                    newMap.remove(possibleNextNode[0]);
-                else if (possibleNextNode[0].getNodeType().equals(NodeType.DROPOFF))
-                    newMap.values().removeIf(value -> value.equals(possibleNextNode[0]));
-
-                vehicleInfoList.get(1).getPossiblePassengerDestination().clear();
-                vehicleInfoList.get(1).getPossiblePassengerDestination().addAll(vehicleInfoList.get(1).getPassengerDestination());
-                possibleNextNode[1] = choseNextNode(vehicleInfoList.get(1), nodeTypeChooser(vehicleInfoList.get(1)), newMap);
-            } else {
-                if (possibleNextNode[1].getNodeType().equals(NodeType.PICKUP))
-                    newMap.remove(possibleNextNode[1]);
-                else if (possibleNextNode[1].getNodeType().equals(NodeType.DROPOFF))
-                    newMap.values().removeIf(value -> value.equals(possibleNextNode[1]));
-
-                vehicleInfoList.get(0).getPossiblePassengerDestination().clear();
-                vehicleInfoList.get(0).getPossiblePassengerDestination().addAll(vehicleInfoList.get(0).getPassengerDestination());
-                possibleNextNode[0] = choseNextNode(vehicleInfoList.get(0), nodeTypeChooser(vehicleInfoList.get(0)), newMap);
-            }
-        }
-        return true;
-
-
-
     }
 
-    private NodeType nodeTypeChooser(VehicleInfo vehicleInfo){
+    private NodeType nodeTypeChooser(){
+        Util.printBlue("TimeAvailableToCharge: "+vehicleInfo.getTimeAvailableToCharge()+"\n");
         NodeType nextNodeType = NodeType.NONE;
         //Node fartherChargingNode = getFartherChargingNode(vehicleInfo.getCurrentPosition());
         //if (getBatteryConsumptionFrom(vehicleInfo.getCurrentPosition(), fartherChargingNode) < vehicleInfo.getCurrentBatteryLevel()) {
-        if (vehicleInfo.getCurrentBatteryLevel()>=1) {
+        if (vehicleInfo.getCurrentBatteryLevel()>=1.6) {
             if (vehicleInfo.getPassengerDestination().size() == 0) {
                 nextNodeType = NodeType.PICKUP;
-                lastEmptyLocation[vehicleInfo.getVehicleId()-1] = vehicleInfo.getCurrentPosition();
             }
             else if (vehicleInfo.getPassengerDestination().size() == vehicleInfo.getMaxLoad())
                 nextNodeType = NodeType.DROPOFF;
             else
                 nextNodeType = NodeType.PICKUP_DROPOFF;
         } else {
-            nextNodeType = NodeType.CHARGE;
+            if(vehicleInfo.getTimeAvailableToCharge()<=0)
+            {
+                if(vehicleInfo.getPassengerDestination().size()==0)
+                {
+                    //nextNodeType = NodeType.CHARGE;
+                    vehicleInfo.setTimeOver(true);
+                }
+                else
+                    nextNodeType = NodeType.DROPOFF;
+            }
+            else
+            {
+                if(vehicleInfo.getPassengerDestination().size()==0) {
+                    nextNodeType = NodeType.CHARGE;
+
+                }
+                else
+                    nextNodeType = NodeType.DROPOFF;
+            }
+
+
+
         }
         return nextNodeType;
     }
 
-    private Node choseNextNode(VehicleInfo vehicleInfo, NodeType nextNodeType, HashMap<Node,Node> nodes) throws Exception {
+    private Node choseNextNode(NodeType nextNodeType, HashMap<Node,Node> nodes) throws Exception {
         PairNodeDouble pairNodeDouble=null;
         Node nextNode = null;
 
         switch (nextNodeType) {
             case PICKUP: {
-                pairNodeDouble = getPickupNode(vehicleInfo, nodes);
+                pairNodeDouble = getPickupNode(nodes);
                 break;
             }
             case DROPOFF: {
-                pairNodeDouble = getDropoffNode(vehicleInfo,nodes);
+                pairNodeDouble = getDropoffNode(nodes);
                 break;
             }
             case CHARGE: {
-                pairNodeDouble = getChargingNode(vehicleInfo,nodes);
-
+                pairNodeDouble = getChargingNode();
+                vehicleInfo.setTimeAvailableToCharge(0);
                 break;
             }
             case PICKUP_DROPOFF: {
-                pairNodeDouble = getPickupDropoffNode(vehicleInfo, nodes);
+                pairNodeDouble = getPickupDropoffNode(nodes);
             }
         }
         if(pairNodeDouble==null && vehicleInfo.isTimeOver())
@@ -301,12 +201,12 @@ public class IterationSolver implements ISolver{
         return nextNode;
     }
 
-    private PairNodeDouble getPickupNode(VehicleInfo vehicleInfo, HashMap<Node,Node> nodes ) throws Exception {
+    private PairNodeDouble getPickupNode(HashMap<Node,Node> nodes ) throws Exception {
         if(vehicleInfo.isTimeOver())
             return null;
 
         int vehicleId = vehicleInfo.getVehicleId();
-        System.out.println(vehicleId+"-->getPickupNode");
+
 
 
         HashMap<PairOfNodes, Double> mapPair = new HashMap<>();
@@ -314,7 +214,7 @@ public class IterationSolver implements ISolver{
         double wait = 0;
 
         while (mapPair.size() == 0) {
-            mapPair= getInTimePickupNodes(vehicleInfo,nodes,wait);
+            mapPair= getInTimePickupNodes(nodes,wait);
             if(vehicleInfo.isTimeOver())
                 return null;
 
@@ -322,15 +222,15 @@ public class IterationSolver implements ISolver{
                 wait += 0.1;
         }
 
-        Util.printGreen("Wait: "+wait+"\n");
-        if(wait>0 && batteryCheat)
+        //Util.printGreen("Wait: "+wait+"\n");
+        /*if(wait>0 && batteryCheat)
         {
             if(chargingOccasions[vehicleId-1]==null)
                 chargingOccasions[vehicleId-1]=new WaitingTimeInstances(vehicleInfo.getCurrentPosition(),wait,lastEmptyLocation[vehicleId-1]);
 
-        }
+        }*/
 
-        PairOfNodesDouble pairOfNodesDouble = getBestPickupNode(vehicleInfo,mapPair,wait);
+        PairOfNodesDouble pairOfNodesDouble = getBestPickupNode(mapPair,wait);
         vehicleInfo.getPossiblePassengerDestination().add(pairOfNodesDouble.getPairOfNodes().getDropoff());
         vehicleInfo.setPossibleDistanceFromPossibleDestination(pairOfNodesDouble.getValue());
         return new PairNodeDouble(pairOfNodesDouble.getPairOfNodes().getPickup(),pairOfNodesDouble.getValue());
@@ -338,36 +238,37 @@ public class IterationSolver implements ISolver{
 
     }
 
-    private PairNodeDouble getDropoffNode(VehicleInfo vehicleInfo,HashMap<Node,Node> nodes) throws Exception {
+    private PairNodeDouble getDropoffNode(HashMap<Node,Node> nodes) throws Exception {
         if(vehicleInfo.isTimeOver())
             return null;
 
-        int vehicleId = vehicleInfo.getVehicleId();
-        System.out.println(vehicleId+"-->getDropoffNode");
+
+        System.out.println(vehicleInfo.getVehicleId()+"-->getDropoffNode");
 
         HashMap<Node, Double> mapDestination = new HashMap<Node, Double>();
 
         double wait = 0;
 
         while (mapDestination.size() == 0) {
-            mapDestination = getInTimeDropoffNodes(vehicleInfo,wait);
-
+            mapDestination = getInTimeDropoffNodes(wait);
+            if(vehicleInfo.isTimeOver())
+                return null;
             if (mapDestination.size() == 0)
                 wait += 0.1;
         }
-        Util.printGreen("Wait: "+wait+"\n");
-        if(wait>0 && batteryCheat)
+        //Util.printGreen("Wait: "+wait+"\n");
+        /*if(wait>0 && batteryCheat)
         {
             if(chargingOccasions[vehicleId-1]==null)
                 chargingOccasions[vehicleId-1]=new WaitingTimeInstances(vehicleInfo.getCurrentPosition(),wait,lastEmptyLocation[vehicleId-1]);
-        }
+        }*/
 
         /*if(wait>0 && !vehicleInfo.isFullyCharged()) {
             PairNodeDouble chargingOccasion = chargingOccasion(vehicleInfo,wait,mapDestination);
             if((chargingOccasion!=null))
                 return chargingOccasion(vehicleInfo,wait,mapDestination);
         }*/
-        PairNodeDouble pairNodeDouble = getBestDropoffNode(vehicleInfo, mapDestination, wait);
+        PairNodeDouble pairNodeDouble = getBestDropoffNode(mapDestination, wait);
         vehicleInfo.getPossiblePassengerDestination().remove(pairNodeDouble.getNode());
         return pairNodeDouble;
 
@@ -376,11 +277,11 @@ public class IterationSolver implements ISolver{
 
     }
 
-    private PairNodeDouble getPickupDropoffNode(VehicleInfo vehicleInfo, HashMap<Node,Node> nodes) throws Exception {
+    private PairNodeDouble getPickupDropoffNode( HashMap<Node,Node> nodes) throws Exception {
         if(vehicleInfo.isTimeOver())
             return null;
         int vehicleId = vehicleInfo.getVehicleId();
-        System.out.println(vehicleId+"-->getPickupDropoffNode"+nVisitedNode);
+
 
         Node node = null;
 
@@ -395,13 +296,13 @@ public class IterationSolver implements ISolver{
         double wait = 0;
         while (mapDestination.size()+mapStarts.size() == 0) {
 
-            mapStarts = getInTimePickupNodes(vehicleInfo,nodes,wait);
+            mapStarts = getInTimePickupNodes(nodes,wait);
             if(vehicleInfo.isTimeOver())
                 return null;
 
 
             if(vehicleInfo.getPassengerDestination().size()!=0){
-                mapDestination = getInTimeDropoffNodes(vehicleInfo,wait);
+                mapDestination = getInTimeDropoffNodes(wait);
                 if(vehicleInfo.isTimeOver())
                     return null;
 
@@ -410,12 +311,12 @@ public class IterationSolver implements ISolver{
             if (mapDestination.size() +mapStarts.size() == 0)
                 wait += 0.1;
         }
-        Util.printGreen("Wait: "+wait+"\n");
-        if(wait>0 && batteryCheat)
+        //Util.printGreen("Wait: "+wait+"\n");
+        /*if(wait>0 && batteryCheat)
         {
             if(chargingOccasions[vehicleId-1]==null)
                 chargingOccasions[vehicleId-1]=new WaitingTimeInstances(vehicleInfo.getCurrentPosition(),wait,lastEmptyLocation[vehicleId-1]);
-        }
+        }*/
         /*if(mapDestination.size()!=0 && wait>0 && !vehicleInfo.isFullyCharged()) {
 
             PairNodeDouble chargingOccasion = chargingOccasion(vehicleInfo,wait,mapDestination);
@@ -430,21 +331,21 @@ public class IterationSolver implements ISolver{
         PairNodeDouble dropoff = null;
         if(mapDestination.size()==0)
         {
-            pickup = getBestPickupNode(vehicleInfo,mapStarts,wait);
+            pickup = getBestPickupNode(mapStarts,wait);
             node = pickup.getPairOfNodes().getPickup();
             vehicleInfo.getPossiblePassengerDestination().add(pickup.getPairOfNodes().getDropoff());
             return new PairNodeDouble(node,pickup.getValue());
         }
         else if(mapStarts.size()==0)
         {
-            dropoff  = getBestDropoffNode(vehicleInfo,mapDestination,wait);
+            dropoff  = getBestDropoffNode(mapDestination,wait);
             node = dropoff.getNode();
             vehicleInfo.getPossiblePassengerDestination().remove(node);
             return dropoff;
         }
         else {
-            pickup = getBestPickupNode(vehicleInfo, mapStarts,wait);
-            dropoff = getBestDropoffNode(vehicleInfo, mapDestination, wait);
+            pickup = getBestPickupNode(mapStarts,wait);
+            dropoff = getBestDropoffNode(mapDestination, wait);
 
 
             map.put(pickup.getPairOfNodes().getPickup(), pickup.getValue());
@@ -469,7 +370,7 @@ public class IterationSolver implements ISolver{
 
             if (!favoriteDestination.equals(possibleDestination)) {
                 double d = distanceOfFavoritedestination +
-                        computeTimeToArriveToNextNode(vehicleId, favoriteDestination, possibleDestination, wait) +
+                        computeTimeToArriveToNextNode(favoriteDestination, possibleDestination, wait) +
                         DistanceOfPossibledestination;
 
                 if (d > possibleDestination.getDeparture()) {
@@ -487,46 +388,16 @@ public class IterationSolver implements ISolver{
         }
     }
 
-    private PairNodeDouble getChargingNode(VehicleInfo vehicleInfo, HashMap<Node,Node> nodes) throws Exception {
-        int vehicleId = vehicleInfo.getVehicleId();
+    private PairNodeDouble getChargingNode() throws Exception {
+
         if(vehicleInfo.isTimeOver())
             return null;
-        PairNodeDouble closestChargingNode = getClosestChargingNode(vehicleInfo);
-        HashMap <Node,Double> mapDestination = new HashMap<>();
-        if(vehicleInfo.getPassengerDestination().size()!=0)
-        {
-            double wait = 0;
-            while (mapDestination.size() == 0) {
-                mapDestination = getInTimeDropoffNodes(vehicleInfo,0);
-                if(vehicleInfo.isTimeOver())
-                    return null;
-                if (mapDestination.size() == 0)
-                    wait += 0.1;
-            }
-            Util.printGreen("Wait: "+wait+"\n");
-            if(wait>0 && batteryCheat)
-            {
-                if(chargingOccasions[vehicleId-1]==null)
-                    chargingOccasions[vehicleId-1]=new WaitingTimeInstances(vehicleInfo.getCurrentPosition(),wait,lastEmptyLocation[vehicleId-1]);
-            }
-            /*PairNodeDouble chargingOccasion = chargingOccasion(vehicleInfo,wait,mapDestination);
-            if((chargingOccasion!=null))
-                return chargingOccasion(vehicleInfo,wait,mapDestination);*/
-        }
-        else
-
-            ifInTime(vehicleInfo,closestChargingNode.getNode(),5);
+        PairNodeDouble closestChargingNode = getClosestChargingNode();
+        ifInTime(closestChargingNode.getNode(),vehicleInfo.getTimeAvailableToCharge());
         return new PairNodeDouble(closestChargingNode.getNode(),vehicleInfo.getPossibleTimeToArriveToNextNode());
-
-
-
-
-
-
-
     }
 
-    private PairNodeDouble getClosestChargingNode(VehicleInfo vehicleInfo) throws Exception {
+    private PairNodeDouble getClosestChargingNode() throws Exception {
         Node node = null;
         HashMap<Node, Double> passeggerDestinationMap = new HashMap<Node, Double>();
         HashMap<PairOfNodes, Double> pickupMap = new HashMap<PairOfNodes, Double>();
@@ -542,7 +413,7 @@ public class IterationSolver implements ISolver{
         return new PairNodeDouble(node,distance);
     }
 
-    private HashMap<PairOfNodes,Double> getInTimePickupNodes(VehicleInfo vehicleInfo,HashMap<Node,Node> map,double wait) throws Exception {
+    private HashMap<PairOfNodes,Double> getInTimePickupNodes(HashMap<Node,Node> map,double wait) throws Exception {
         HashMap<PairOfNodes,Double> mapPair = new HashMap<>();
         Node start;
         Node destination;
@@ -557,16 +428,16 @@ public class IterationSolver implements ISolver{
             start = (Node) e.getKey();
             destination =(Node) e.getValue();
 
-            ifInTime(vehicleInfo, start,0);
+            ifInTime(start,0);
             double timeToPickup = vehicleInfo.getPossibleTimeToArriveToNextNode();
-            double timeTodropoff = computeTimeToArriveToNextNode(vehicleInfo.getVehicleId(),start,destination,wait);
+            double timeTodropoff = computeTimeToArriveToNextNode(start,destination,wait);
             double userMaxRideTime = instance.getUserMaxRideTime()[start.getId()-1];
 
             double d1=(timeToPickup+timeTodropoff+wait);
             double d2=(timeToPickup+timeTodropoff+wait+userMaxRideTime);
             double d3=(destination.getArrival());
             //Util.printRed(""+d1+", "+d2+", "+d3);
-            if((timeToPickup+timeTodropoff+wait)<destination.getDeparture() && (wait+timeToPickup+timeTodropoff+userMaxRideTime)>destination.getArrival())
+            if((timeToPickup+timeTodropoff+wait+vehicleInfo.getTimeOfMission())<destination.getDeparture() && (wait+timeToPickup+timeTodropoff+userMaxRideTime+vehicleInfo.getTimeOfMission())>destination.getArrival())
             {
                 //Util.printRed("---"+d1+", "+d2+", "+d3);
                 mapPair.put(new PairOfNodes(start,destination),timeToPickup+timeTodropoff);
@@ -579,7 +450,7 @@ public class IterationSolver implements ISolver{
         return mapPair;
     }
 
-    private HashMap<Node,Double> getInTimeDropoffNodes(VehicleInfo vehicleInfo,double wait) throws Exception {
+    private HashMap<Node,Double> getInTimeDropoffNodes(double wait) throws Exception {
 
         HashMap<Node,Double> mapDestination = new HashMap<>();
         if(!Util.isTimeHorizonRespected(vehicleInfo.getVehicleId(),instance.getTimeHorizon(),vehicleInfo.getTimeOfMission(),wait))
@@ -589,13 +460,14 @@ public class IterationSolver implements ISolver{
         }
         vehicleInfo.setWaitingTime(wait);
         for (Node n : vehicleInfo.getPassengerDestination()) {
-            if (ifInTime(vehicleInfo, n, 0))
+            double time= computeTimeToArriveToNextNode(vehicleInfo.getCurrentPosition(),n,wait);
+            if (time<n.getDeparture())
                 mapDestination.put(n, vehicleInfo.getPossibleTimeToArriveToNextNode());
         }
         return mapDestination;
     }
 
-    private PairOfNodesDouble getBestPickupNode(VehicleInfo vehicleInfo,HashMap<PairOfNodes,Double> mapPair,double wait) {
+    private PairOfNodesDouble getBestPickupNode(HashMap<PairOfNodes,Double> mapPair,double wait) {
         int vehicleId = vehicleInfo.getVehicleId();
         Node node = null;
         HashMap<PairOfNodes, Double> resultPairDistance;
@@ -625,17 +497,14 @@ public class IterationSolver implements ISolver{
 
             if (!possiblePairOfNodes.equals(favouritePairOfNodes)) {
                 double d = distanceBetweenFavouritePairOfNodes +
-                        computeTimeToArriveToNextNode(vehicleId, favouritePairOfNodes.getDropoff(), possiblePairOfNodes.getPickup(), wait) +
-                        distanceBetweenPossiblePairOfNodes;
+                        computeTimeToArriveToNextNode(favouritePairOfNodes.getDropoff(), possiblePairOfNodes.getPickup(), wait) +
+                        computeTimeToArriveToNextNode(possiblePairOfNodes.getPickup(), possiblePairOfNodes.getDropoff(), wait);
+
                 if (d > possiblePairOfNodes.getDropoff().getDeparture()) {
                     favouritePairOfNodes = possiblePairOfNodes;
                     distanceBetweenFavouritePairOfNodes = distanceBetweenPossiblePairOfNodes;
                 }
-                else
-                {
-                    favouritePairOfNodes = possiblePairOfNodes;
-                    distanceBetweenFavouritePairOfNodes = distanceBetweenPossiblePairOfNodes;
-                }
+
             }
 
             node = favouritePairOfNodes.getPickup();
@@ -647,7 +516,7 @@ public class IterationSolver implements ISolver{
         }
     }
 
-    private PairNodeDouble getBestDropoffNode(VehicleInfo vehicleInfo,HashMap<Node,Double> mapDestination,double wait) {
+    private PairNodeDouble getBestDropoffNode(HashMap<Node,Double> mapDestination,double wait) {
 
         Node node = null;
         int vehicleId = vehicleInfo.getVehicleId();
@@ -675,7 +544,7 @@ public class IterationSolver implements ISolver{
             if(!favoriteDestination.equals(possibleDestination))
             {
                 double d = distanceOfFavoritedestination+
-                        computeTimeToArriveToNextNode(vehicleId,favoriteDestination,possibleDestination,wait)+
+                        computeTimeToArriveToNextNode(favoriteDestination,possibleDestination,wait)+
                         DistanceOfPossibledestination;
 
                 if(d>possibleDestination.getDeparture()){
@@ -691,38 +560,15 @@ public class IterationSolver implements ISolver{
         }
     }
 
-    /*PairNodeDouble chargingOccasion(VehicleInfo vehicleInfo,double wait,HashMap<Node,Double> mapDestination) throws Exception {
-
-        mapDestination = Util.orderNodeDoubleMapBy(mapDestination,Order.DEPARTURE);
-        Node nextDestination = (Node) mapDestination.keySet().toArray()[0];
-        double timeToNextDestination= (double) mapDestination.values().toArray()[0];
-
-        PairNodeDouble closestChargingNode = getClosestChargingNode(vehicleInfo);
-
-
-        double d = closestChargingNode.getValue()+ computeTimeToArriveToNextNode(vehicleInfo.getVehicleId(),closestChargingNode.getNode(),nextDestination,wait);
-        if((d+vehicleInfo.getTimeOfMission())<nextDestination.getArrival())
-        {
-            double timeForCharge = nextDestination.getArrival()-d-vehicleInfo.getTimeOfMission();
-            System.out.println("mi carico di: "+ timeForCharge);
-
-            ifInTime(vehicleInfo,closestChargingNode.getNode(),timeForCharge);
-            return new PairNodeDouble(closestChargingNode.getNode(),vehicleInfo.getPossibleTimeToArriveToNextNode());
-        }
-
-
-        return null;
-    }*/
-
-    private double computeTimeToArriveToNextNode(int vehicleId, Node start, Node arrive, double wait) {
-        double standardTime = solution.getTimeVehicleStartsAtLocation()[vehicleId - 1][start.getId() - 1];
+    private double computeTimeToArriveToNextNode( Node start, Node arrive, double wait) {
+        double standardTime = solution.getTimeVehicleStartsAtLocation()[idVehicle][start.getId() - 1];
         double travelTime = getTravelTimeFrom(start, arrive) + wait;
         double additionalTime = start.getServiceTime();
         double tdij = standardTime + travelTime + additionalTime;
         return tdij;
     }
 
-    private boolean ifInTime(VehicleInfo vehicleInfo, Node possibleNode, double time) {
+    private boolean ifInTime(Node possibleNode, double time) {
 
 
         double standardTime = solution.getTimeVehicleStartsAtLocation()[vehicleInfo.getVehicleId() - 1][vehicleInfo.getCurrentPosition().getId() - 1];
@@ -780,5 +626,17 @@ public class IterationSolver implements ISolver{
         vehicleInfo.setTimeSpendAtCharging(timeinCharging);
 
         return timeinCharging;
+    }
+
+    public VehicleInfo getVehicleInfo() {
+        return vehicleInfo;
+    }
+
+    public Solution getSolution() {
+        return solution;
+    }
+
+    public HashMap<Node, Node> getUnvisitedNodesMap() {
+        return unvisitedNodesMap;
     }
 }
