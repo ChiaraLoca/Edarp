@@ -49,6 +49,36 @@ public class VehicleInfo{
         this.possiblePassengerDestination = new ArrayList<>();
     }
 
+    public VehicleInfo(VehicleInfo vi)
+    {
+        this.vehicleId = vi.getVehicleId();
+        this.artificialOriginDepot = vi.getArtificialOriginDepot();
+        this.artificialDestinationDepot = vi.getArtificialDestinationDepot();
+        this.maxBatteryCapacity = vi.getMaxBatteryCapacity();
+        this.maxLoad = vi.getMaxLoad();
+
+
+        this.currentPosition =vi.getCurrentPosition();
+        this.currentBatteryLevel =vi.getCurrentBatteryLevel();
+        this.timeSpendAtCharging = vi.getTimeSpendAtCharging();
+        this.passengerDestination = new ArrayList<>(vi.getPassengerDestination()); //contiene gli id delle dropoff location corrispondenti alle personoe a bordo
+        this.timeOfMission = vi.getTimeOfMission();
+
+        this.timeAvailableToCharge =vi.getTimeAvailableToCharge();
+        this.lastTimeAtEmpty =vi.getLastTimeAtEmpty();
+
+        this.timeOver = vi.isTimeOver();
+
+
+        this.possibleTimeToArriveToNextNode = vi.getPossibleTimeToArriveToNextNode();
+        this.possibleBatteryLevel=vi.getPossibleBatteryLevel();
+        this.possiblePassengerDestination = new ArrayList<>(vi.getPossiblePassengerDestination());
+        this.waitingTime=vi.getWaitingTime();
+        this.possibleDistanceFromPossibleDestination = vi.getPossibleDistanceFromPossibleDestination();
+
+
+    }
+
     public double getMissingCharge()
     {
         return maxBatteryCapacity-getCurrentBatteryLevel();
