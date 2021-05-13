@@ -91,7 +91,8 @@ public class OneVehicleSolver {
                         }
                     }
                 }
-                vehicleInfo.update(nextNode);
+                //vehicleInfo.update(nextNode);
+                    moveToNextNode(vehicleInfo,nextNode,vehicleInfo.getWaitingTime());
 
                     System.out.print("NVN:" + nVisitedNode +
                             " VId:" + idVehicle +
@@ -121,8 +122,8 @@ public class OneVehicleSolver {
                                         pairOfNodes,
                                         null));
                             }
-                            Util.printPurple("Nodo scaduto\n");
-                            vehicleInfo.setTimeOver(true);
+                            //Util.printPurple("Nodo scaduto\n");
+                            //vehicleInfo.setTimeOver(true);
                         }
                     }
                     System.out.println("\n");
@@ -157,10 +158,10 @@ public class OneVehicleSolver {
                 vehicleInfo.setLastTimeAtEmpty(vehicleInfo.getCurrentPosition());
                 nextNodeType = NodeType.PICKUP;
             }
-            else if (vehicleInfo.getPassengerDestination().size() == vehicleInfo.getMaxLoad())
+            else /*if (vehicleInfo.getPassengerDestination().size() == vehicleInfo.getMaxLoad())*/
                 nextNodeType = NodeType.DROPOFF;
-            else
-                nextNodeType = NodeType.PICKUP_DROPOFF;
+            /*else
+                nextNodeType = NodeType.PICKUP_DROPOFF;*/
         } else {
             if(vehicleInfo.getTimeAvailableToCharge()<=0)
             {
@@ -213,7 +214,7 @@ public class OneVehicleSolver {
         if(pairNodeDouble==null && vehicleInfo.isTimeOver())
             return null;
         nextNode = pairNodeDouble.getNode();
-        vehicleInfo.setPossibleTimeToArriveToNextNode(pairNodeDouble.getValue());
+        //vehicleInfo.setPossibleTimeToArriveToNextNode(pairNodeDouble.getValue());
 
 
         return nextNode;
@@ -228,8 +229,8 @@ public class OneVehicleSolver {
         double wait = 0;
         if(priortyNodes!=null
                 &&priortyNodes.size()>0
-                && (priortyNodes.get(0).getLastEmptyAtNode()!=null
-                        && vehicleInfo.getCurrentPosition().equals(priortyNodes.get(0).getLastEmptyAtNode()))
+                //&& (priortyNodes.get(0).getLastEmptyAtNode()!=null
+                        //&& vehicleInfo.getCurrentPosition().equals(priortyNodes.get(0).getLastEmptyAtNode()))
                 && !expiredNodes.contains(priortyNodes.get(0)))
         {
 
@@ -255,6 +256,9 @@ public class OneVehicleSolver {
             }
 
         }
+        System.out.println();
+        //albero
+
         //Util.printGreen("Wait: "+wait+"\n");
         /*if(wait>0 && batteryCheat)
         {
@@ -264,8 +268,9 @@ public class OneVehicleSolver {
         }*/
 
         PairOfNodesDouble pairOfNodesDouble = getBestPickupNode(mapPair,wait);
+        ifInTime(pairOfNodesDouble.getPairOfNodes().getPickup(),wait);
         vehicleInfo.getPossiblePassengerDestination().add(pairOfNodesDouble.getPairOfNodes().getDropoff());
-        vehicleInfo.setPossibleDistanceFromPossibleDestination(pairOfNodesDouble.getValue());
+        //vehicleInfo.setPossibleDistanceFromPossibleDestination(pairOfNodesDouble.getValue());
         return new PairNodeDouble(pairOfNodesDouble.getPairOfNodes().getPickup(),pairOfNodesDouble.getValue());
 
 
@@ -274,9 +279,6 @@ public class OneVehicleSolver {
     private PairNodeDouble getDropoffNode(HashMap<Node,Node> nodes) throws Exception {
         if(vehicleInfo.isTimeOver())
             return null;
-
-
-        System.out.println(vehicleInfo.getVehicleId()+"-->getDropoffNode");
 
         HashMap<Node, Double> mapDestination = new HashMap<Node, Double>();
 
@@ -290,18 +292,9 @@ public class OneVehicleSolver {
                 wait += 0.1;
         }
         //Util.printGreen("Wait: "+wait+"\n");
-        /*if(wait>0 && batteryCheat)
-        {
-            if(chargingOccasions[vehicleId-1]==null)
-                chargingOccasions[vehicleId-1]=new WaitingTimeInstances(vehicleInfo.getCurrentPosition(),wait,lastEmptyLocation[vehicleId-1]);
-        }*/
 
-        /*if(wait>0 && !vehicleInfo.isFullyCharged()) {
-            PairNodeDouble chargingOccasion = chargingOccasion(vehicleInfo,wait,mapDestination);
-            if((chargingOccasion!=null))
-                return chargingOccasion(vehicleInfo,wait,mapDestination);
-        }*/
         PairNodeDouble pairNodeDouble = getBestDropoffNode(mapDestination, wait);
+        ifInTime(pairNodeDouble.getNode(),wait);
         vehicleInfo.getPossiblePassengerDestination().remove(pairNodeDouble.getNode());
         return pairNodeDouble;
 
@@ -446,6 +439,23 @@ public class OneVehicleSolver {
         return new PairNodeDouble(node,distance);
     }
 
+    private Node getClosestChargingNode(Node start) throws Exception {
+        Node node = null;
+        HashMap<Node, Double> passeggerDestinationMap = new HashMap<Node, Double>();
+        HashMap<PairOfNodes, Double> pickupMap = new HashMap<PairOfNodes, Double>();
+
+        double distance = Double.MAX_VALUE;
+        for (Node n : chargingStation) {
+            if (travelTime[n.getId() - 1][start.getId() - 1] < distance) {
+                distance = travelTime[n.getId() - 1][start.getId() - 1];
+                node = n;
+            }
+
+        }
+        return node;
+    }
+
+
     private HashMap<PairOfNodes,Double> getInTimePickupNodes(HashMap<Node,Node> map,double wait) throws Exception {
         HashMap<PairOfNodes,Double> mapPair = new HashMap<>();
         Node start;
@@ -461,7 +471,10 @@ public class OneVehicleSolver {
             start = (Node) e.getKey();
             destination =(Node) e.getValue();
 
-            ifInTime(start,0);
+            if(isPossibleNode(new PairOfNodes(start,destination),wait))
+                mapPair.put(new PairOfNodes(start,destination), 0.0);
+
+            /*ifInTime(start,0);
             double timeToPickup = vehicleInfo.getPossibleTimeToArriveToNextNode();
             double timeTodropoff = computeTimeToArriveToNextNode(start,destination,wait);
             double userMaxRideTime = instance.getUserMaxRideTime()[start.getId()-1];
@@ -475,7 +488,7 @@ public class OneVehicleSolver {
                 //Util.printRed("---"+d1+", "+d2+", "+d3);
                 mapPair.put(new PairOfNodes(start,destination),timeToPickup+timeTodropoff);
 
-            }
+            }*/
 
 
 
@@ -691,5 +704,43 @@ public class OneVehicleSolver {
 
     public void setPriortyNodes(List<ExpiredNodesTime> priortyNodes) {
         this.priortyNodes = priortyNodes;
+    }
+
+    public boolean isPossibleNode(PairOfNodes pairOfNodes, double wait) throws Exception {
+        //nodo non scaduto, raggiungibile in tempo ora->pik->drop, pick->drop in 8 minuti , ora->pik->drop->char,
+
+        if(vehicleInfo.getTimeOfMission()>pairOfNodes.getDropoff().getDeparture())
+            return false;
+
+        double d = computeTimeToArriveToNextNode(vehicleInfo.getCurrentPosition(),pairOfNodes.getPickup(),wait)+
+                computeTimeToArriveToNextNode(pairOfNodes.getPickup(),pairOfNodes.getDropoff(),wait);
+        if(vehicleInfo.getTimeOfMission()+d>pairOfNodes.getDropoff().getDeparture())
+            return false;
+
+        double c= computeTimeToArriveToNextNode(pairOfNodes.getDropoff(),getClosestChargingNode(pairOfNodes.getDropoff()),wait);
+        double charge = (vehicleInfo.getTimeOfMission()+d+c) * instance.getVehicleDischargingRate();
+        if(charge>vehicleInfo.getCurrentBatteryLevel())
+            return false;
+
+        double e = vehicleInfo.getTimeOfMission()+
+                computeTimeToArriveToNextNode(vehicleInfo.getCurrentPosition(),pairOfNodes.getPickup(),wait);
+        if(e<pairOfNodes.getDropoff().getArrival())
+            return false;
+        return true;
+    }
+
+    public void moveToNextNode(VehicleInfo vehicleInfo, Node nextNode,double wait)
+    {
+        double time = computeTimeToArriveToNextNode(vehicleInfo.getCurrentPosition(),nextNode,wait);
+        vehicleInfo.setTimeOfMission(time);
+
+        vehicleInfo.setCurrentBatteryLevel(vehicleInfo.getCurrentBatteryLevel()-time*instance.getVehicleDischargingRate());
+
+        vehicleInfo.getPassengerDestination().clear();
+        vehicleInfo.getPassengerDestination().addAll(vehicleInfo.getPossiblePassengerDestination());
+        vehicleInfo.setWaitingTime(0);
+
+        vehicleInfo.setCurrentPosition(nextNode);
+
     }
 }

@@ -81,13 +81,14 @@ public class SolverV2 implements ISolver {
         }*/
 
         step(0,0,0,unvisitedNodesMap,null);
-        step(1,0,0,unvisitedNodesMap,null);
-        List<ExpiredNodesTime> tmp = oneVehicleSolvers.get(0).getExpiredNodes();
+        step(1,0,0,oneVehicleSolvers.get(0).getUnvisitedNodesMap(),null);
+
+        /*List<ExpiredNodesTime> tmp = oneVehicleSolvers.get(0).getExpiredNodes();
         tmp.sort((o1, o2) -> o1.getExpiredNode().getDropoff().getArrival()>o2.getExpiredNode().getDropoff().getArrival() ? 1:-1 );
         step(0,0,0,unvisitedNodesMap,tmp);
         tmp = oneVehicleSolvers.get(1).getExpiredNodes();
         tmp.sort((o1, o2) -> o1.getExpiredNode().getDropoff().getArrival()>o2.getExpiredNode().getDropoff().getArrival() ? 1:-1 );
-        step(1,0,0,unvisitedNodesMap,tmp);
+        step(1,0,0,oneVehicleSolvers.get(2).getUnvisitedNodesMap(),tmp);*/
 
 
 

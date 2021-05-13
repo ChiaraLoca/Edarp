@@ -153,7 +153,7 @@ public class VehicleInfo{
     }
     public void update(Node nextNode)
     {
-        setCurrentPosition(nextNode);
+        /*setCurrentPosition(nextNode);
         passengerDestination.clear();
         passengerDestination.addAll(possiblePassengerDestination);
 
@@ -161,7 +161,7 @@ public class VehicleInfo{
 
         currentBatteryLevel= possibleBatteryLevel;
         waitingTime =0;
-        timeOfMission= possibleTimeToArriveToNextNode;
+        timeOfMission= possibleTimeToArriveToNextNode;*/
     }
 
     public double getWaitingTime() {
