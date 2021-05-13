@@ -5,23 +5,24 @@ import java.util.List;
 
 public class Charger {
     private BruteSolver bruteSolver;
+    private List<List<Node>> optimized= new ArrayList<>();
 
     public Charger(BruteSolver bruteSolver) {
         this.bruteSolver = bruteSolver;
     }
 
-    public void optimizeVehicle(List<Node> solution, int vehicleId){
+    public List<Node> optimizeVehicle(List<Node> solution, int vehicleId){
         List<Node> newSolution= new ArrayList<>(solution);
         for(Node n : solution){
             if(worthChargingAt(n, vehicleId, newSolution))
                 charge(n, vehicleId, newSolution);
         }
-
+        return newSolution;
     }
 
     private void charge(Node present, int vehicleId, List<Node> solution) {
 
-        Node chargingStation= getBestChargingStation(present, solution.indexOf(present)+1);
+        Node chargingStation= getBestChargingStation(present, solution.get(solution.indexOf(present)+1));
         double inTime = bruteSolver.computeTimeToArriveToNextNode(present,chargingStation,0, bruteSolver.getVehicleInfos().get(vehicleId));
         double outTime = bruteSolver.computeTimeToArriveToNextNode(chargingStation,solution.get(solution.indexOf(present)+1),0, bruteSolver.getVehicleInfos().get(vehicleId));
         double charginTime= bruteSolver.getWaits().get(vehicleId).get(((int)(solution.indexOf(present)/2)+1)).getWaitTime()-inTime-outTime;
@@ -42,11 +43,14 @@ public class Charger {
     private boolean worthChargingAt(Node present, int vehicleId, List<Node> solution) {
         if (present.getNodeType()!=NodeType.DROPOFF)
             return false;
-        Node chargingStation= getBestChargingStation(present, solution.indexOf(present)+1);
+        if((solution.indexOf(present))+1>=(solution.size()))
+            return false;
+        Node chargingStation= getBestChargingStation(present, solution.get(solution.indexOf(present)+1));
 
         double inTime = bruteSolver.computeTimeToArriveToNextNode(present,chargingStation,0, bruteSolver.getVehicleInfos().get(vehicleId));
         double outTime = bruteSolver.computeTimeToArriveToNextNode(chargingStation,solution.get(solution.indexOf(present)+1),0, bruteSolver.getVehicleInfos().get(vehicleId));
-
+        if((solution.indexOf(present)/2)+1>= (solution.size()/2))
+            return false;
         if(bruteSolver.getWaits().get(vehicleId).get(((int)(solution.indexOf(present)/2)+1)).getWaitTime()<(inTime+outTime))
             return false;
 
@@ -60,10 +64,14 @@ public class Charger {
 
 
 
-    public void optimize(){
+    public List<List<Node>> optimize(){
 
+        for (int i = 0; i < bruteSolver.getnVehicles(); i++) {
+            optimized.add(optimizeVehicle(bruteSolver.getSolution().get(i), i));
+        }
+        return optimized;
     }
-}
+
 
     public Node getBestChargingStation(Node start, Node destination)
     {
@@ -88,22 +96,6 @@ public class Charger {
     }
 }
 
-/*
-private Node getClosestChargingNode(Node start) throws Exception {
-        Node node = null;
-        HashMap<Node, Double> passeggerDestinationMap = new HashMap<Node, Double>();
-        HashMap<PairOfNodes, Double> pickupMap = new HashMap<PairOfNodes, Double>();
-
-        double distance = Double.MAX_VALUE;
-        for (Node n : instance.getChargingStationNodes()) {
-            if (getTravelTimeFrom(n, start) < distance) {
-                distance = getTravelTimeFrom(n, start);
-                node = n;
-            }
-
-        }
-        return node;
-    }
 
 
-* */
+

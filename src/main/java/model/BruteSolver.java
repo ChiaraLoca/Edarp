@@ -133,7 +133,7 @@ public class BruteSolver {
                     solve(modifiedMap, vehicleId + 1);
                     depth--;
                     if (found){
-                        waits.get(vehicleId).add(new WaitingInfo(wait, e.getValue(), batteryCharge));
+                        waits.get(vehicleId).add(0,new WaitingInfo(wait, e.getValue(), batteryCharge));
                         return;
 
                     }
@@ -243,7 +243,5 @@ public class BruteSolver {
         return false;
     }
 
-    public Instance getInstance() {
-        return instance;
-    }
+
 }
