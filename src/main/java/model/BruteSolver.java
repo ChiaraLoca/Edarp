@@ -30,6 +30,70 @@ public class BruteSolver {
     }
 
 
+    public List<VehicleInfo> getVehicleInfos() {
+        return vehicleInfos;
+    }
+
+    public void setVehicleInfos(List<VehicleInfo> vehicleInfos) {
+        this.vehicleInfos = vehicleInfos;
+    }
+
+    public List<List<Node>> getSolution() {
+        return solution;
+    }
+
+    public void setSolution(List<List<Node>> solution) {
+        this.solution = solution;
+    }
+
+    public Instance getInstance() {
+        return instance;
+    }
+
+    public void setInstance(Instance instance) {
+        this.instance = instance;
+    }
+
+    public int getnVehicles() {
+        return nVehicles;
+    }
+
+    public void setnVehicles(int nVehicles) {
+        this.nVehicles = nVehicles;
+    }
+
+    public boolean isFound() {
+        return found;
+    }
+
+    public void setFound(boolean found) {
+        this.found = found;
+    }
+
+    public Map<Node, Node> getOriginalUnsolved() {
+        return originalUnsolved;
+    }
+
+    public void setOriginalUnsolved(Map<Node, Node> originalUnsolved) {
+        this.originalUnsolved = originalUnsolved;
+    }
+
+    public static int getDepth() {
+        return depth;
+    }
+
+    public static void setDepth(int depth) {
+        BruteSolver.depth = depth;
+    }
+
+    public List<List<WaitingInfo>> getWaits() {
+        return waits;
+    }
+
+    public void setWaits(List<List<WaitingInfo>> waits) {
+        this.waits = waits;
+    }
+
     //nodi da risolvere
     public void solve(Map<Node, Node> unsolved, int vehicleId) throws Exception {
         depth++;

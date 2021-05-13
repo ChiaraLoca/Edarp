@@ -10,5 +10,29 @@ public class WaitingInfo {
         this.battery = battery;
     }
 
+    public double getWaitTime() {
+        return waitTime;
+    }
+
+    public void setWaitTime(double waitTime) {
+        this.waitTime = waitTime;
+    }
+
+    public Node getWaitLocation() {
+        return waitLocation;
+    }
+
+    public void setWaitLocation(Node waitLocation) {
+        this.waitLocation = waitLocation;
+    }
+
+    public double getBattery() {
+        return battery;
+    }
+
+    public void setBattery(double battery) {
+        this.battery = battery;
+    }
+
     private double battery;
 }
