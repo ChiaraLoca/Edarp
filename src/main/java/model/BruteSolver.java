@@ -175,7 +175,7 @@ public class BruteSolver {
         return tdij;
     }
 
-    private double getTravelTimeFrom(Node startNode, Node arriveNode) {
+    public double getTravelTimeFrom(Node startNode, Node arriveNode) {
         return instance.getTravelTime()[startNode.getId() - 1][arriveNode.getId() - 1];
     }
 
@@ -241,5 +241,9 @@ public class BruteSolver {
                 return true;
         }
         return false;
+    }
+
+    public Instance getInstance() {
+        return instance;
     }
 }
