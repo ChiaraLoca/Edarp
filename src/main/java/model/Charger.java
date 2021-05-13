@@ -49,7 +49,7 @@ public class Charger {
 
         double inTime = bruteSolver.computeTimeToArriveToNextNode(present,chargingStation,0, bruteSolver.getVehicleInfos().get(vehicleId));
         double outTime = bruteSolver.computeTimeToArriveToNextNode(chargingStation,solution.get(solution.indexOf(present)+1),0, bruteSolver.getVehicleInfos().get(vehicleId));
-        if((solution.indexOf(present)/2)+1>= (solution.size()/2))
+        if((solution.indexOf(present)/2)+1>= bruteSolver.getWaits().get(vehicleId).size())
             return false;
         if(bruteSolver.getWaits().get(vehicleId).get(((int)(solution.indexOf(present)/2)+1)).getWaitTime()<(inTime+outTime))
             return false;
