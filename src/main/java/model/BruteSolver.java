@@ -31,6 +31,8 @@ public class BruteSolver {
     //nodi da risolvere
     public void solve(Map<Node, Node> unsolved, int vehicleId) throws Exception {
         depth++;
+        if(nodePermanentlyLost(unsolved))
+            return;
         System.out.println(depth);
         if(unsolved.isEmpty()){
             found=true;
@@ -48,7 +50,7 @@ public class BruteSolver {
                     VehicleInfo saved = new VehicleInfo(vehicleInfos.get(vehicleId));
                     //veicolo va al nuovo punto
                     moveToNextNode(vehicleInfos.get(vehicleId), e.getKey(), wait);
-                    moveToNextNode(vehicleInfos.get(vehicleId), e.getValue(), wait);
+                    moveToNextNode(vehicleInfos.get(vehicleId), e.getValue(), 0);
                     //aggiungo i nodi alla soluzione
                     solution.get(vehicleId).add(e.getKey());
                     solution.get(vehicleId).add(e.getValue());
@@ -79,7 +81,7 @@ public class BruteSolver {
     public void moveToNextNode(VehicleInfo vehicleInfo, Node nextNode,double wait)
     {
         double time = computeTimeToArriveToNextNode(vehicleInfo.getCurrentPosition(),nextNode,wait, vehicleInfo);
-        vehicleInfo.setTimeOfMission(time);
+        vehicleInfo.setTimeOfMission(time+vehicleInfo.getTimeOfMission());
 
         vehicleInfo.setCurrentBatteryLevel(vehicleInfo.getCurrentBatteryLevel()-time*instance.getVehicleDischargingRate());
 
@@ -95,7 +97,7 @@ public class BruteSolver {
         double standardTime = vehicleInfo.getTimeOfMission();
         double travelTime = getTravelTimeFrom(start, arrive) + wait;
         double additionalTime = start.getServiceTime();
-        double tdij = standardTime + travelTime + additionalTime;
+        double tdij = travelTime + additionalTime;
         return tdij;
     }
 
@@ -111,18 +113,18 @@ public class BruteSolver {
             return false;
 
         double d = computeTimeToArriveToNextNode(vehicleInfo.getCurrentPosition(),pairOfNodes.getPickup(),wait, vehicleInfo)+
-                computeTimeToArriveToNextNode(pairOfNodes.getPickup(),pairOfNodes.getDropoff(),wait, vehicleInfo);
+                computeTimeToArriveToNextNode(pairOfNodes.getPickup(),pairOfNodes.getDropoff(),0, vehicleInfo);
         if(vehicleInfo.getTimeOfMission()+d>pairOfNodes.getDropoff().getDeparture())
             return false;
 
-        double c= computeTimeToArriveToNextNode(pairOfNodes.getDropoff(),getClosestChargingNode(pairOfNodes.getDropoff()),wait, vehicleInfo);
+        double c= computeTimeToArriveToNextNode(pairOfNodes.getDropoff(),getClosestChargingNode(pairOfNodes.getDropoff()),0, vehicleInfo);
         double charge = (vehicleInfo.getTimeOfMission()+d+c) * instance.getVehicleDischargingRate();
         if(charge>vehicleInfo.getCurrentBatteryLevel())
             return false;
 
         double e = vehicleInfo.getTimeOfMission()+
                 computeTimeToArriveToNextNode(vehicleInfo.getCurrentPosition(),pairOfNodes.getPickup(),wait, vehicleInfo)+
-                computeTimeToArriveToNextNode(pairOfNodes.getPickup(),pairOfNodes.getDropoff(),wait, vehicleInfo);
+                computeTimeToArriveToNextNode(pairOfNodes.getPickup(),pairOfNodes.getDropoff(),0, vehicleInfo);
         if(e<pairOfNodes.getDropoff().getArrival())
             return false;
         return true;
@@ -150,5 +152,20 @@ public class BruteSolver {
             System.out.println(l);
 
         }
+    }
+    public boolean nodePermanentlyLost(Map<Node, Node> map){
+        boolean response= true;
+        for (int i = 0; i < nVehicles; i++) {
+            response=response&&vehicleLostNode(vehicleInfos.get(i), map);
+        }
+        return response;
+    }
+
+    public boolean vehicleLostNode(VehicleInfo vehicleInfo, Map<Node, Node> map){
+        for (Map.Entry<Node, Node> e: map.entrySet()) {
+            if(vehicleInfo.getTimeOfMission()>e.getValue().getDeparture())
+                return true;
+        }
+        return false;
     }
 }
