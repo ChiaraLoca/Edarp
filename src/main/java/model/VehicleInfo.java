@@ -18,7 +18,7 @@ public class VehicleInfo{
     private double timeOfMission;
 
     private double timeAvailableToCharge =0;
-
+    private Node lastTimeAtEmpty =null;
 
     private boolean timeOver = false;
 
@@ -213,5 +213,13 @@ public class VehicleInfo{
 
     public void setTimeAvailableToCharge(double timeAvailableToCharge) {
         this.timeAvailableToCharge = timeAvailableToCharge;
+    }
+
+    public Node getLastTimeAtEmpty() {
+        return lastTimeAtEmpty;
+    }
+
+    public void setLastTimeAtEmpty(Node lastTimeAtEmpty) {
+        this.lastTimeAtEmpty = lastTimeAtEmpty;
     }
 }

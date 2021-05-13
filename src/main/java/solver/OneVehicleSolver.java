@@ -2,10 +2,7 @@ package solver;
 
 import model.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class OneVehicleSolver {
 
@@ -24,10 +21,12 @@ public class OneVehicleSolver {
 
     private VehicleInfo vehicleInfo;
     private HashMap<Node, Node> unvisitedNodesMap = new HashMap<>();
-    private TreeMap<Node, Node> priorityNodes = new TreeMap<>();
+    private List<ExpiredNodesTime> expiredNodes = new ArrayList<>();
+    private List<ExpiredNodesTime> priortyNodes = new ArrayList<>();
+
     private int nVisitedNode=0;
 
-    public OneVehicleSolver(Instance instance, boolean batteryCheat,int idVehicle,HashMap<Node,Node> unvisitedNodesMap,double timeAvailableToCharge) {
+    public OneVehicleSolver(Instance instance, boolean batteryCheat,int idVehicle,HashMap<Node,Node> unvisitedNodesMap,double timeAvailableToCharge,List<ExpiredNodesTime> priorityNodes) {
         this.instance = instance;
         this.batteryCheat = batteryCheat;
         this.idVehicle = idVehicle;
@@ -52,6 +51,8 @@ public class OneVehicleSolver {
 
         vehicleInfo.setTimeAvailableToCharge(timeAvailableToCharge);
         this.numberOfNodes = unvisitedNodesMap.size()*2;
+        this.priortyNodes = priorityNodes;
+
     }
 
 
@@ -105,7 +106,23 @@ public class OneVehicleSolver {
                     {
                         if(vehicleInfo.getTimeOfMission()>((Node)e.getValue()).getDeparture()) {
                             Util.printGreen(" - " + ((Node)e.getValue()).getId());
-                            priorityNodes.put((Node)e.getKey(),(Node)e.getValue());
+
+                            PairOfNodes pairOfNodes = new PairOfNodes((Node)e.getKey(),(Node)e.getValue());
+                            boolean contains =false;
+                            for(ExpiredNodesTime ent :expiredNodes)
+                            {
+                                if(ent.getExpiredNode().equals(pairOfNodes)){
+                                    contains = true;
+                                    break;
+                                }
+                            }
+                            if(!contains) {
+                                expiredNodes.add(new ExpiredNodesTime(
+                                        pairOfNodes,
+                                        null));
+                            }
+                            Util.printPurple("Nodo scaduto\n");
+                            vehicleInfo.setTimeOver(true);
                         }
                     }
                     System.out.println("\n");
@@ -137,6 +154,7 @@ public class OneVehicleSolver {
         //if (getBatteryConsumptionFrom(vehicleInfo.getCurrentPosition(), fartherChargingNode) < vehicleInfo.getCurrentBatteryLevel()) {
         if (vehicleInfo.getCurrentBatteryLevel()>=1.6) {
             if (vehicleInfo.getPassengerDestination().size() == 0) {
+                vehicleInfo.setLastTimeAtEmpty(vehicleInfo.getCurrentPosition());
                 nextNodeType = NodeType.PICKUP;
             }
             else if (vehicleInfo.getPassengerDestination().size() == vehicleInfo.getMaxLoad())
@@ -204,24 +222,39 @@ public class OneVehicleSolver {
     private PairNodeDouble getPickupNode(HashMap<Node,Node> nodes ) throws Exception {
         if(vehicleInfo.isTimeOver())
             return null;
-
         int vehicleId = vehicleInfo.getVehicleId();
-
-
-
         HashMap<PairOfNodes, Double> mapPair = new HashMap<>();
 
         double wait = 0;
+        if(priortyNodes!=null
+                &&priortyNodes.size()>0
+                && (priortyNodes.get(0).getLastEmptyAtNode()!=null
+                        && vehicleInfo.getCurrentPosition().equals(priortyNodes.get(0).getLastEmptyAtNode()))
+                && !expiredNodes.contains(priortyNodes.get(0)))
+        {
 
-        while (mapPair.size() == 0) {
-            mapPair= getInTimePickupNodes(nodes,wait);
-            if(vehicleInfo.isTimeOver())
-                return null;
 
-            if (mapPair.size() == 0)
-                wait += 0.1;
+            while (!mapPair.containsKey(priortyNodes.get(0).getExpiredNode())) {
+                mapPair = getInTimePickupNodes(nodes, wait);
+                if (vehicleInfo.isTimeOver())
+                    return null;
+
+                if (!mapPair.containsKey(priortyNodes.get(0).getExpiredNode()))
+                    wait += 0.1;
+            }
         }
+        else {
 
+            while (mapPair.size() == 0) {
+                mapPair = getInTimePickupNodes(nodes, wait);
+                if (vehicleInfo.isTimeOver())
+                    return null;
+
+                if (mapPair.size() == 0)
+                    wait += 0.1;
+            }
+
+        }
         //Util.printGreen("Wait: "+wait+"\n");
         /*if(wait>0 && batteryCheat)
         {
@@ -476,6 +509,8 @@ public class OneVehicleSolver {
         resultPairDistance = Util.orderPairOfNodesDoubleMapBy(mapPair,Order.DISTANCE);
 
 
+
+
         if(resultPairDistance.size()==1)
         {
             node = ((PairOfNodes)resultPairDistance.keySet().toArray()[0]).getPickup();
@@ -487,32 +522,42 @@ public class OneVehicleSolver {
         }
         else
         {
-            resultPairDeparture = Util.orderPairOfNodesDoubleMapBy(mapPair,Order.DESTINATION_DEPARTURE);
+            if(priortyNodes!=null &&priortyNodes.size()>0 && resultPairDistance.containsKey(priortyNodes.get(0).getExpiredNode()))
+            {
 
-            PairOfNodes favouritePairOfNodes= (PairOfNodes)resultPairDistance.keySet().toArray()[0];
-            double distanceBetweenFavouritePairOfNodes = (Double) resultPairDistance.values().toArray()[0];
+                node = priortyNodes.get(0).getExpiredNode().getPickup();
+                PairOfNodesDouble tmp = new PairOfNodesDouble(priortyNodes.get(0).getExpiredNode(),computeTimeToArriveToNextNode(vehicleInfo.getCurrentPosition(),node,wait));
+                priortyNodes.remove(0);
+                return tmp;
+            }
+            else {
+                resultPairDeparture = Util.orderPairOfNodesDoubleMapBy(mapPair, Order.DESTINATION_DEPARTURE);
 
-            PairOfNodes possiblePairOfNodes = (PairOfNodes) resultPairDeparture.keySet().toArray()[0];
-            double distanceBetweenPossiblePairOfNodes = (Double) resultPairDeparture.values().toArray()[0];
+                PairOfNodes favouritePairOfNodes = (PairOfNodes) resultPairDistance.keySet().toArray()[0];
+                double distanceBetweenFavouritePairOfNodes = (Double) resultPairDistance.values().toArray()[0];
 
-            if (!possiblePairOfNodes.equals(favouritePairOfNodes)) {
-                double d = distanceBetweenFavouritePairOfNodes +
-                        computeTimeToArriveToNextNode(favouritePairOfNodes.getDropoff(), possiblePairOfNodes.getPickup(), wait) +
-                        computeTimeToArriveToNextNode(possiblePairOfNodes.getPickup(), possiblePairOfNodes.getDropoff(), wait);
+                PairOfNodes possiblePairOfNodes = (PairOfNodes) resultPairDeparture.keySet().toArray()[0];
+                double distanceBetweenPossiblePairOfNodes = (Double) resultPairDeparture.values().toArray()[0];
 
-                if (d > possiblePairOfNodes.getDropoff().getDeparture()) {
-                    favouritePairOfNodes = possiblePairOfNodes;
-                    distanceBetweenFavouritePairOfNodes = distanceBetweenPossiblePairOfNodes;
+                if (!possiblePairOfNodes.equals(favouritePairOfNodes)) {
+                    double d = distanceBetweenFavouritePairOfNodes +
+                            computeTimeToArriveToNextNode(favouritePairOfNodes.getDropoff(), possiblePairOfNodes.getPickup(), wait) +
+                            computeTimeToArriveToNextNode(possiblePairOfNodes.getPickup(), possiblePairOfNodes.getDropoff(), wait);
+
+                    if (d > possiblePairOfNodes.getDropoff().getDeparture()) {
+                        favouritePairOfNodes = possiblePairOfNodes;
+                        distanceBetweenFavouritePairOfNodes = distanceBetweenPossiblePairOfNodes;
+                    }
+
                 }
 
-            }
 
-            node = favouritePairOfNodes.getPickup();
+                node = favouritePairOfNodes.getPickup();
             /*vehicleInfo.getPossiblePassengerDestination().add(favouritePairOfNodes.getDropoff());
             vehicleInfo.setPossibleDistanceFromPossibleDestination(distanceBetweenFavouritePairOfNodes);*/
-            //return new PairNodeDouble(node,distanceBetweenFavouritePairOfNodes);
-            return new PairOfNodesDouble(favouritePairOfNodes,distanceBetweenFavouritePairOfNodes);
-
+                //return new PairNodeDouble(node,distanceBetweenFavouritePairOfNodes);
+                return new PairOfNodesDouble(favouritePairOfNodes, distanceBetweenFavouritePairOfNodes);
+            }
         }
     }
 
@@ -638,5 +683,13 @@ public class OneVehicleSolver {
 
     public HashMap<Node, Node> getUnvisitedNodesMap() {
         return unvisitedNodesMap;
+    }
+
+    public List<ExpiredNodesTime> getExpiredNodes() {
+        return expiredNodes;
+    }
+
+    public void setPriortyNodes(List<ExpiredNodesTime> priortyNodes) {
+        this.priortyNodes = priortyNodes;
     }
 }
