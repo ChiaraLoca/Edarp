@@ -20,7 +20,7 @@ class SolverTest {
     void bruteTest() throws Exception {
         Instance instance = InstanceReader.getInstanceReader().read(new File("src/test/resources/instances/u2-16-0.7.txt"),true);
         List<VehicleInfo> vehicleInfos = new ArrayList<>();
-        boolean batteryCheat = true;
+        boolean batteryCheat = false;
         for (int i = 0; i < instance.getnVehicles(); i++) {
             vehicleInfos.add(new VehicleInfo(
                     i + 1,
