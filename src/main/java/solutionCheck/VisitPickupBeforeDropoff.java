@@ -14,7 +14,6 @@ public class VisitPickupBeforeDropoff extends AbstractConstraint{
 
     @Override
     boolean check() {
-        /*
         int n = solution.getInstance().getPickupLocationsId().length;
         for (int k = 0; k < solution.getInstance().getnVehicles(); k++) {
             for (int i :solution.getInstance().getPickupLocationsId() ) {
@@ -24,7 +23,7 @@ public class VisitPickupBeforeDropoff extends AbstractConstraint{
                 if (sum>solution.getTimeVehicleStartsAtLocation()[k][i+n])
                     return false;
             }
-        }*/
+        }
         return true;
     }
 }

@@ -13,12 +13,12 @@ public class EmptyVehiclesAtDepotsAndStation extends AbstractConstraint {
     @Override
     boolean check() {
         Integer[] union = arrayUnion(solution.getInstance().getArtificialOriginDepotId(),solution.getInstance().getAllAvailableDestinationDepotsId(),solution.getInstance().getChargingStationId());
-        /*for(int k=0; k<solution.getInstance().getnVehicles(); k++) {
+        for(int k=0; k<solution.getInstance().getnVehicles(); k++) {
             for(int i=0; i<union.length; i++) {
                 if(solution.getLoadOfVehicleAtLocation()[k][union[i]]!=0)
                     return false;
             }
-        }*/
+        }
         return true;
     }
 }

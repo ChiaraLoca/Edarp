@@ -17,7 +17,7 @@ public class ControlPath extends AbstractConstraint {
                                         solution.getInstance().getChargingStationId(),
                                         solution.getInstance().getAllAvailableDestinationDepotsId());
 
-        /*for (int k = 0; k < solution.getInstance().getnVehicles(); k++) {
+        for (int k = 0; k < solution.getInstance().getnVehicles(); k++) {
             int sum = 0;
             for (int j : PSFUnion) {
                 sum += solution.getVehicleSeqStopAtLocations()[k]
@@ -26,7 +26,7 @@ public class ControlPath extends AbstractConstraint {
             }
             if (sum != 1)
                 return false;
-        }*/
+        }
 
         return true;
     }

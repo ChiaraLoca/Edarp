@@ -15,7 +15,7 @@ public class FlowConservation extends AbstractConstraint{
 
     @Override
     boolean check() {
-        /*int[] N = solution.getInstance().getPickupAndDropoffLocations()
+        int[] N = solution.getInstance().getPickupAndDropoffLocations()
                 .stream().mapToInt(Node::getId).toArray();
         Integer[] NSUnion = arrayUnion(N,
                 solution.getInstance().getChargingStationId());
@@ -36,7 +36,7 @@ public class FlowConservation extends AbstractConstraint{
                 }
             }
 
-        }*/
+        }
         return true;
     }
 }

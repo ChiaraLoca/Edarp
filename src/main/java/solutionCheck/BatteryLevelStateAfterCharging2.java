@@ -15,7 +15,6 @@ public class BatteryLevelStateAfterCharging2 extends AbstractConstraint {
 
     @Override
     boolean check() {
-        /*
         Integer[] union=arrayUnion(solution.getInstance().getPickupLocationsId(), solution.getInstance().getAllAvailableDestinationDepotsId(), solution.getInstance().getChargingStationId());
         for(int k=0; k<solution.getInstance().getnVehicles(); k++) {
             for(int s=0; s<solution.getInstance().getChargingStationId().length; s++) {
@@ -24,7 +23,7 @@ public class BatteryLevelStateAfterCharging2 extends AbstractConstraint {
                         continue;
                     if(solution.getBatteryLoadOfVehicleAtLocation()[k][union[j]]
                             <solution.getBatteryLoadOfVehicleAtLocation()[k][solution.getInstance().getChargingStationId()[s]]
-                            +solution.getInstance().getRechargeRate()[solution.getInstance().getChargingStationId()[s]]
+                            +solution.getInstance().getStationRechargingRate()[solution.getInstance().getChargingStationId()[s]]
                             *solution.getChargingTimeOfVehicleAtStation()[k][solution.getInstance().getChargingStationId()[s]]
                             -solution.getInstance().getBatteryConsumption()[solution.getInstance().getChargingStationId()[s]][union[j]]
                             -solution.getInstance().getVehicleBatteryCapacity()[k]
@@ -32,7 +31,7 @@ public class BatteryLevelStateAfterCharging2 extends AbstractConstraint {
                         return false;
                 }
             }
-        }*/
+        }
         return true;
     }
 }

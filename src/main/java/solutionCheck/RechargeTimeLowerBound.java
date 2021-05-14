@@ -16,16 +16,21 @@ public class RechargeTimeLowerBound extends AbstractConstraint {
     @Override
     boolean check() {
         Integer[] union=arrayUnion(solution.getInstance().getDropoffLocationsId(),solution.getInstance().getChargingStationId(),solution.getInstance().getArtificialOriginDepotId());
-        /*for(int k=0; k<solution.getInstance().getnVehicles(); k++) {
+        for(int k=0; k<solution.getInstance().getnVehicles(); k++) {
             for(int s=0; s<solution.getInstance().getChargingStationId().length;s++) {
                 for(int i=0; i<union.length; i++) {
                     if(i==s)
                         continue;
-                    if(solution.getChargingTimeOfVehicleAtStation()[k][solution.getInstance().getChargingStationId()[s]]<solution.getTimeVehicleStartsAtLocation()[k][solution.getInstance().getChargingStationId()[s]]-solution.getInstance().getTravelTime()[union[i]][solution.getInstance().getChargingStationId()[s]]-solution.getTimeVehicleStartsAtLocation()[k][union[i]]-solution.getInstance().getM()[union[i]][solution.getInstance().getChargingStationId()[s]]*(1-solution.getVehicleSeqStopAtLocations()[k][union[i]][solution.getInstance().getChargingStationId()[s]]))
+                    if(solution.getChargingTimeOfVehicleAtStation()[k][solution.getInstance().getChargingStationId()[s]]
+                            <solution.getTimeVehicleStartsAtLocation()[k][solution.getInstance().getChargingStationId()[s]]
+                            -solution.getInstance().getTravelTime()[union[i]][solution.getInstance().getChargingStationId()[s]]
+                            -solution.getTimeVehicleStartsAtLocation()[k][union[i]]
+                            -solution.getInstance().getM()[union[i]][solution.getInstance().getChargingStationId()[s]]
+                            *(1-solution.getVehicleSeqStopAtLocations()[k][union[i]][solution.getInstance().getChargingStationId()[s]]))
                         return false;
                 }
             }
-        }*/
+        }
         return true;
     }
 }
