@@ -84,17 +84,6 @@ public class VehicleInfo{
         return maxBatteryCapacity-getCurrentBatteryLevel();
     }
 
-    @Override
-    public String toString() {
-        return "VehicleInfo{" +
-                "vehicleId=" + vehicleId +
-                ", currentPosition=" + currentPosition.getId() +
-                ", passengerDestination=" + passengerDestination.size() +
-                ", timeOfMission=" + timeOfMission +
-                ", timeOver=" + timeOver +
-                '}';
-    }
-
     public int getVehicleId() {
         return vehicleId;
     }
@@ -247,6 +236,17 @@ public class VehicleInfo{
 
     public Node getLastTimeAtEmpty() {
         return lastTimeAtEmpty;
+    }
+
+    @Override
+    public String toString() {
+        return "VehicleInfo{" +
+                "currentPosition=" + currentPosition +
+                ", currentBatteryLevel=" + currentBatteryLevel +
+                ", timeSpendAtCharging=" + timeSpendAtCharging +
+                ", load=" + passengerDestination.size() +
+                ", timeOfMission=" + timeOfMission +
+                "}\n";
     }
 
     public void setLastTimeAtEmpty(Node lastTimeAtEmpty) {

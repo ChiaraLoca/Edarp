@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class BruteSolver {
     private List<VehicleInfo> vehicleInfos;
-    private List<List<Node>> solution;
+    private List<List<VehicleInfo>> solution;
     private Instance instance;
     private int nVehicles;
     private boolean found=false;
@@ -38,11 +38,11 @@ public class BruteSolver {
         this.vehicleInfos = vehicleInfos;
     }
 
-    public List<List<Node>> getSolution() {
+    public List<List<VehicleInfo>> getSolution() {
         return solution;
     }
 
-    public void setSolution(List<List<Node>> solution) {
+    public void setSolution(List<List<VehicleInfo>> solution) {
         this.solution = solution;
     }
 
@@ -116,11 +116,10 @@ public class BruteSolver {
                     VehicleInfo saved = new VehicleInfo(vehicleInfos.get(vehicleId));
                     //veicolo va al nuovo punto
                     moveToNextNode(vehicleInfos.get(vehicleId), e.getKey(), wait);
-                    moveToNextNode(vehicleInfos.get(vehicleId), e.getValue(), 0);
                     //aggiungo i nodi alla soluzione
-                    solution.get(vehicleId).add(e.getKey());
-                    solution.get(vehicleId).add(e.getValue());
-
+                    solution.get(vehicleId).add(new VehicleInfo(vehicleInfos.get(vehicleId)));
+                    moveToNextNode(vehicleInfos.get(vehicleId), e.getValue(), 0);
+                    solution.get(vehicleId).add(new VehicleInfo(vehicleInfos.get(vehicleId)));
                     double batteryCharge = vehicleInfos.get(vehicleId).getCurrentBatteryLevel();
 
                     modifiedMap.remove(e.getKey());
@@ -152,6 +151,12 @@ public class BruteSolver {
     }
     public void moveToNextNode(VehicleInfo vehicleInfo, Node nextNode,double wait)
     {
+        if(nextNode.getNodeType().equals(NodeType.PICKUP))
+            vehicleInfo.getPassengerDestination().add(instance.getNodes().get(nextNode.getId()+ instance.getnCustomers()-1));
+        else if(nextNode.getNodeType().equals(NodeType.DROPOFF))
+            vehicleInfo.getPassengerDestination().remove(nextNode);
+
+
         double time = computeTimeToArriveToNextNode(vehicleInfo.getCurrentPosition(),nextNode,wait, vehicleInfo);
         vehicleInfo.setTimeOfMission(time+vehicleInfo.getTimeOfMission());
 
@@ -159,8 +164,6 @@ public class BruteSolver {
 
         vehicleInfo.setCurrentBatteryLevel(vehicleInfo.getCurrentBatteryLevel()-movingTime*instance.getVehicleDischargingRate());
 
-        vehicleInfo.getPassengerDestination().clear();
-        vehicleInfo.getPassengerDestination().addAll(vehicleInfo.getPossiblePassengerDestination());
         vehicleInfo.setWaitingTime(0);
 
         vehicleInfo.setCurrentPosition(nextNode);
@@ -170,7 +173,7 @@ public class BruteSolver {
     public double computeTimeToArriveToNextNode( Node start, Node arrive, double wait, VehicleInfo vehicleInfo) {
         double standardTime = vehicleInfo.getTimeOfMission();
         double travelTime = getTravelTimeFrom(start, arrive) + wait;
-        double additionalTime = start.getServiceTime();
+        double additionalTime = start.getNodeType().equals(NodeType.CHARGE) ? 0: start.getServiceTime();
         double tdij = travelTime + additionalTime;
         return tdij;
     }
@@ -222,8 +225,8 @@ public class BruteSolver {
 
     public void start() throws Exception {
         solve(originalUnsolved, 0);
-        for (List<Node> l: solution) {
-            System.out.println(l);
+        for (List<VehicleInfo> v: solution) {
+            System.out.println(v);
 
         }
     }
