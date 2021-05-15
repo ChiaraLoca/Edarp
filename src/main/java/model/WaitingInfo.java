@@ -30,6 +30,15 @@ public class WaitingInfo {
         return battery;
     }
 
+    @Override
+    public String toString() {
+        return "WaitingInfo{" +
+                "waitTime=" + waitTime +
+                ", waitLocation=" + waitLocation +
+                ", battery=" + battery +
+                '}';
+    }
+
     public void setBattery(double battery) {
         this.battery = battery;
     }

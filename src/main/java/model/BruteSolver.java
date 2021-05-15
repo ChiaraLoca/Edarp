@@ -1,10 +1,10 @@
 package model;
 
+import scorer.WaitsScorer;
+
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.Timer;
 
 public class BruteSolver {
     private List<VehicleInfo> vehicleInfos;
@@ -15,9 +15,11 @@ public class BruteSolver {
     private Map<Node, Node> originalUnsolved;
     private static int depth=0;
     private List<List<WaitingInfo>> waits = new ArrayList<>();
-    private List<List<List<VehicleInfo>>> solutionList= new ArrayList<>();
+    private List<SolutionHolder> solutionList= new ArrayList<>();
+    private int minutes;
+    private double startTime=0;
 
-    public BruteSolver(List<VehicleInfo> vehicleInfos, Instance instance, Map<Node, Node> originalUnsolved) {
+    public BruteSolver(List<VehicleInfo> vehicleInfos, Instance instance, Map<Node, Node> originalUnsolved, int minutes) {
         this.vehicleInfos = vehicleInfos;
         this.instance = instance;
         nVehicles= instance.getnVehicles();
@@ -26,7 +28,7 @@ public class BruteSolver {
             solution.add(new ArrayList<>());
             waits.add(new ArrayList<>());
         }
-
+        this.minutes=minutes;
         this.originalUnsolved= originalUnsolved;
     }
 
@@ -97,7 +99,10 @@ public class BruteSolver {
 
     //nodi da risolvere
     public void solve(Map<Node, Node> unsolved, int vehicleId) throws Exception {
+
         depth++;
+        if(isComputeTimeOver())
+            return;
         if(nodePermanentlyLost(unsolved))
             return;
         System.out.println(depth);
@@ -118,26 +123,23 @@ public class BruteSolver {
                     //veicolo va al nuovo punto
                     moveToNextNode(vehicleInfos.get(vehicleId), e.getKey(), wait);
                     //aggiungo i nodi alla soluzione
+
                     solution.get(vehicleId).add(new VehicleInfo(vehicleInfos.get(vehicleId)));
                     moveToNextNode(vehicleInfos.get(vehicleId), e.getValue(), 0);
                     solution.get(vehicleId).add(new VehicleInfo(vehicleInfos.get(vehicleId)));
                     double batteryCharge = vehicleInfos.get(vehicleId).getCurrentBatteryLevel();
-
+                    WaitingInfo currentWaitingInfo= new WaitingInfo(wait, e.getValue(), batteryCharge);
+                    waits.get(vehicleId).add(currentWaitingInfo);
                     modifiedMap.remove(e.getKey());
-                    /*for (List<Node> l: solution) {
-                        System.out.println(l);
-
-                    }
-                    System.out.println();*/
 
                     solve(modifiedMap, vehicleId + 1);
                     depth--;
                     if (found){
-                        waits.get(vehicleId).add(0,new WaitingInfo(wait, e.getValue(), batteryCharge));
-                        return;
-
+                        //solutionList.add(new SolutionHolder(new ArrayList<>(solution), new ArrayList<>(waits)));
+                        addSolution();
+                        found=false;
                     }
-
+                    waits.get(vehicleId).remove(currentWaitingInfo);
                     vehicleInfos.set(vehicleId, new VehicleInfo(saved));
                     solution.get(vehicleId).remove(e.getKey());
                     solution.get(vehicleId).remove(e.getValue());
@@ -150,6 +152,21 @@ public class BruteSolver {
 
 
     }
+
+    private boolean isComputeTimeOver() {
+        return System.currentTimeMillis()-startTime > minutes*60*1000;
+    }
+
+    private void addSolution() {
+        List<List<VehicleInfo>> sol= new ArrayList<>();
+        for(List<VehicleInfo> l : solution)
+            sol.add(List.copyOf(l));
+        List<List<WaitingInfo>> waitingInfo= new ArrayList<>();
+        for(List<WaitingInfo> w : waits)
+            waitingInfo.add(List.copyOf(w));
+        solutionList.add(new SolutionHolder(sol, waitingInfo, new WaitsScorer()));
+    }
+
     public void moveToNextNode(VehicleInfo vehicleInfo, Node nextNode,double wait)
     {
         if(nextNode.getNodeType().equals(NodeType.PICKUP))
@@ -225,10 +242,20 @@ public class BruteSolver {
     }
 
     public void start() throws Exception {
-
+        startTime= System.currentTimeMillis();
         solve(originalUnsolved, 0);
-        for (List<VehicleInfo> v: solution) {
+        /*for (List<VehicleInfo> v: solution) {
             System.out.println(v);
+
+        }*/
+        solutionList.sort(Comparator.comparingDouble(SolutionHolder::getScore));
+
+        for (List<VehicleInfo> v: solutionList.get(0).getSolution()) {
+            System.out.println(v);
+
+        }
+        for (List<WaitingInfo> w: solutionList.get(0).getWaitingInfos()) {
+            System.out.println(w);
 
         }
     }
