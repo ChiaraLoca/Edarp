@@ -15,6 +15,7 @@ public class BruteSolver {
     private Map<Node, Node> originalUnsolved;
     private static int depth=0;
     private List<List<WaitingInfo>> waits = new ArrayList<>();
+    private List<List<List<VehicleInfo>>> solutionList= new ArrayList<>();
 
     public BruteSolver(List<VehicleInfo> vehicleInfos, Instance instance, Map<Node, Node> originalUnsolved) {
         this.vehicleInfos = vehicleInfos;
@@ -224,6 +225,7 @@ public class BruteSolver {
     }
 
     public void start() throws Exception {
+
         solve(originalUnsolved, 0);
         for (List<VehicleInfo> v: solution) {
             System.out.println(v);
