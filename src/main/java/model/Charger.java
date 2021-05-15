@@ -110,6 +110,9 @@ public class Charger {
 
         return bruteSolver.getInstance().getChargingStationNodes().get(index);
     }
+
+
+
 }
 
 
