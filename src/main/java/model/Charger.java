@@ -4,38 +4,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Charger {
-    private BruteSolver bruteSolver;
-    private List<List<VehicleInfo>> optimized= new ArrayList<>();
 
-    public Charger(BruteSolver bruteSolver) {
-        this.bruteSolver = bruteSolver;
+    private final Instance instance;
+    private List<List<List<VehicleInfo>>>  optimized= new ArrayList<>();
+    private List<SolutionHolder> notOptimizedSolution = new ArrayList<>();
+
+    public Charger(Instance instance,List<SolutionHolder> notOptimizedSolution) {
+        this.instance = instance;
+        this.notOptimizedSolution = notOptimizedSolution;
+
+
     }
 
-    public List<VehicleInfo> optimizeVehicle(List<VehicleInfo> solution, int vehicleId){
+    public List<VehicleInfo> optimizeVehicle(List<VehicleInfo> solution , int vehicleId,List<WaitingInfo> waitingInfos){
         List<VehicleInfo> newSolution= new ArrayList<>(solution);
         for(VehicleInfo n : solution){
-            if(worthChargingAt(n, vehicleId, newSolution))
-                charge(n, vehicleId, newSolution);
+            if(worthChargingAt(n, vehicleId, newSolution,waitingInfos))
+                charge(n, vehicleId, newSolution,waitingInfos);
         }
         return newSolution;
     }
 
-    private void charge(VehicleInfo present, int vehicleId, List<VehicleInfo> solution) {
+    private void charge(VehicleInfo present, int vehicleId, List<VehicleInfo> solution,List<WaitingInfo> waitingInfos) {
 
         Node chargingStation= getBestChargingStation(present.getCurrentPosition(), solution.get(solution.indexOf(present)+1).getCurrentPosition());
-        double inTime = bruteSolver.computeTimeToArriveToNextNode(present.getCurrentPosition(),chargingStation,0, bruteSolver.getVehicleInfos().get(vehicleId));
-        double outTime = bruteSolver.computeTimeToArriveToNextNode(chargingStation,solution.get(solution.indexOf(present)+1).getCurrentPosition(),0, bruteSolver.getVehicleInfos().get(vehicleId));
-        double charginTime= bruteSolver.getWaits().get(vehicleId).get(((int)(solution.indexOf(present)/2)+1)).getWaitTime()-inTime-outTime;
-        double rechargeRate = bruteSolver.getInstance().getStationRechargingRate()[chargingStation.getId()-bruteSolver.getInstance().getChargingStationId()[0]];
+        double inTime = Util.computeTimeToArriveToNextNode(present.getCurrentPosition(),chargingStation,0, instance);
+        double outTime = Util.computeTimeToArriveToNextNode(chargingStation,solution.get(solution.indexOf(present)+1).getCurrentPosition(),0, instance);
+        double charginTime= waitingInfos.get(((int)(solution.indexOf(present)/2)+1)).getWaitTime()-inTime-outTime;
+        double rechargeRate = instance.getStationRechargingRate()[chargingStation.getId()-instance.getChargingStationId()[0]];
         double amountCharged = rechargeRate*charginTime;
         VehicleInfo preCharge= new VehicleInfo(present);
-        if(inTime*bruteSolver.getInstance().getVehicleDischargingRate()+outTime*bruteSolver.getInstance().getVehicleDischargingRate()>amountCharged)
+        if(inTime*instance.getVehicleDischargingRate()+outTime*instance.getVehicleDischargingRate()>amountCharged)
             return;
-        bruteSolver.moveToNextNode(preCharge, chargingStation, 0);
+        Util.moveToNextNode(preCharge, chargingStation, 0,instance);
         preCharge.setCurrentBatteryLevel(preCharge.getCurrentBatteryLevel()+amountCharged);
         preCharge.setTimeSpendAtCharging(preCharge.getTimeSpendAtCharging()+charginTime);
         solution.add(solution.indexOf(present)+1, new VehicleInfo(preCharge));
-        bruteSolver.moveToNextNode(preCharge, solution.get(solution.indexOf(present)+2).getCurrentPosition(), charginTime);
+        Util.moveToNextNode(preCharge, solution.get(solution.indexOf(present)+2).getCurrentPosition(), charginTime,instance);
 
         VehicleInfo oldInfo= new VehicleInfo(solution.get(solution.indexOf(present)+2));
         solution.set(solution.indexOf(present)+2, new VehicleInfo(preCharge));
@@ -49,7 +54,7 @@ public class Charger {
 
     }
 
-    private boolean worthChargingAt(VehicleInfo present, int vehicleId, List<VehicleInfo> solution) {
+    private boolean worthChargingAt(VehicleInfo present, int vehicleId, List<VehicleInfo> solution,List<WaitingInfo> waitingInfos) {
         if (present.getCurrentPosition().getNodeType()!=NodeType.DROPOFF)
             return false;
         if((solution.indexOf(present))+1>=(solution.size()))
@@ -57,11 +62,11 @@ public class Charger {
         VehicleInfo copy = new VehicleInfo(present);
         Node chargingStation= getBestChargingStation(present.getCurrentPosition(), solution.get(solution.indexOf(present)+1).getCurrentPosition());
 
-        double inTime = bruteSolver.computeTimeToArriveToNextNode(copy.getCurrentPosition(),chargingStation,0, copy);
-        double outTime = bruteSolver.computeTimeToArriveToNextNode(chargingStation,solution.get(solution.indexOf(present)+1).getCurrentPosition(),0, copy);
-        if((solution.indexOf(present)/2)+1>= bruteSolver.getWaits().get(vehicleId).size())
+        double inTime = Util.computeTimeToArriveToNextNode(copy.getCurrentPosition(),chargingStation,0,instance);
+        double outTime = Util.computeTimeToArriveToNextNode(chargingStation,solution.get(solution.indexOf(present)+1).getCurrentPosition(),0, instance);
+        if((solution.indexOf(present)/2)+1>= waitingInfos.size())
             return false;
-        if(bruteSolver.getWaits().get(vehicleId).get(((int)(solution.indexOf(present)/2)+1)).getWaitTime()<(inTime+outTime))
+        if(waitingInfos.get(((int)(solution.indexOf(present)/2)+1)).getWaitTime()<(inTime+outTime))
             return false;
 
 
@@ -74,19 +79,35 @@ public class Charger {
 
 
 
-    public List<List<VehicleInfo>> optimize(){
+    public List<List<VehicleInfo>>  optimize(SolutionHolder solutionHolder,int nSolution){
 
-        for (int i = 0; i < bruteSolver.getnVehicles(); i++) {
-            optimized.add(optimizeVehicle(bruteSolver.getSolution().get(i), i));
+        List<List<VehicleInfo>> tmp = new ArrayList<>();
+
+
+        for (int i = 0; i < instance.getnVehicles(); i++) {
+            List<VehicleInfo> vi =optimizeVehicle(solutionHolder.getSolution().get(i), i,solutionHolder.getWaitingInfos().get(i));
+            tmp.add(new ArrayList<>(vi));
         }
+
         System.out.println("\n\n\n");
         System.out.println("OPTIMIZED");
-        for (List<VehicleInfo> v: optimized) {
-            System.out.println(v);
 
-        }
-        return optimized;
+        return tmp;
     }
+
+    public List<List<List<VehicleInfo>>> optimizeAll()
+    {
+        List<List<VehicleInfo>> llv;
+        for (int i = 0; i < notOptimizedSolution.size(); i++)
+        {
+            llv = optimize(notOptimizedSolution.get(i),i);
+            optimized.add(new ArrayList<>(llv));
+        }
+
+        return optimized;
+
+    }
+
 
 
     public Node getBestChargingStation(Node start, Node destination)
@@ -94,9 +115,9 @@ public class Charger {
 
         List<Double> sumOfDistance= new ArrayList<>();
 
-        for (Node n : bruteSolver.getInstance().getChargingStationNodes()) {
-            sumOfDistance.add(bruteSolver.getTravelTimeFrom(start, n)+
-                    bruteSolver.getTravelTimeFrom(n, destination)+ start.getServiceTime());
+        for (Node n : instance.getChargingStationNodes()) {
+            sumOfDistance.add(Util.getTravelTimeFrom(start, n,instance)+
+                    Util.getTravelTimeFrom(n, destination,instance)+ start.getServiceTime());
         }
         double min = Double.MAX_VALUE;
         int index=0;
@@ -108,7 +129,7 @@ public class Charger {
             }
         }
 
-        return bruteSolver.getInstance().getChargingStationNodes().get(index);
+        return instance.getChargingStationNodes().get(index);
     }
 
 

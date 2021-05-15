@@ -9,13 +9,14 @@ public class InstanceSolver {
 
     private final Instance instance;
 
-    private List<List<List<VehicleInfo>>> listOfPossibleSolution;
+    private List<SolutionHolder> listOfPossibleSolution = new ArrayList<>();
     private List<List<List<VehicleInfo>>> listOfPossibleSolutionOptimized;
     private List<Solution> listOfSolution;
     private Solution theSolution;
 
     public InstanceSolver(Instance instance) {
         this.instance = instance;
+        listOfPossibleSolution = new ArrayList<>();
     }
 
     public void solve() throws Exception {
@@ -37,8 +38,17 @@ public class InstanceSolver {
         }
         unvisitedNodesMap = Util.orderNodeNodeMapBy(unvisitedNodesMap,Order.DESTINATION_DEPARTURE);
         BruteSolver bruteSolver = new BruteSolver(vehicleInfos, instance, unvisitedNodesMap);
-        listOfPossibleSolution = bruteSolver.start();
+        bruteSolver.start();
 
+
+
+        listOfPossibleSolution.add(new SolutionHolder(bruteSolver.getSolution(),bruteSolver.getWaits(),0));
+        listOfPossibleSolution.add(new SolutionHolder(bruteSolver.getSolution(),bruteSolver.getWaits(),0));
+
+        Charger charger = new Charger(instance,listOfPossibleSolution);
+        listOfPossibleSolutionOptimized = charger.optimizeAll();
+
+        System.out.println();
 
     }
 }

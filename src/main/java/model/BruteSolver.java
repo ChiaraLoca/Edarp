@@ -224,13 +224,14 @@ public class BruteSolver {
         return node;
     }
 
-    public void start() throws Exception {
+    public List<SolutionHolder> start() throws Exception {
 
         solve(originalUnsolved, 0);
-        for (List<VehicleInfo> v: solution) {
+        /*for (List<VehicleInfo> v: solution) {
             System.out.println(v);
 
-        }
+        }*/
+        return null;
     }
     public boolean nodePermanentlyLost(Map<Node, Node> map){
         boolean response= true;

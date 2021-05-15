@@ -170,4 +170,35 @@ public class Util {
         Util.printRed("Tempo: "+time+"\n\n");
     }
 
+    public static double computeTimeToArriveToNextNode( Node start, Node arrive, double wait,Instance instance) {
+
+        double travelTime = getTravelTimeFrom(start, arrive,instance) + wait;
+        double additionalTime = start.getNodeType().equals(NodeType.CHARGE) ? 0: start.getServiceTime();
+        double tdij = travelTime + additionalTime;
+        return tdij;
+    }
+    public static double getTravelTimeFrom(Node startNode, Node arriveNode,Instance instance) {
+        return instance.getTravelTime()[startNode.getId() - 1][arriveNode.getId() - 1];
+    }
+
+    public static  void moveToNextNode(VehicleInfo vehicleInfo, Node nextNode,double wait,Instance instance)
+    {
+        if(nextNode.getNodeType().equals(NodeType.PICKUP))
+            vehicleInfo.getPassengerDestination().add(instance.getNodes().get(nextNode.getId()+ instance.getnCustomers()-1));
+        else if(nextNode.getNodeType().equals(NodeType.DROPOFF))
+            vehicleInfo.getPassengerDestination().remove(nextNode);
+
+
+        double time = computeTimeToArriveToNextNode(vehicleInfo.getCurrentPosition(),nextNode,wait, instance);
+        vehicleInfo.setTimeOfMission(time+vehicleInfo.getTimeOfMission());
+
+        double movingTime = computeTimeToArriveToNextNode(vehicleInfo.getCurrentPosition(),nextNode,0, instance);
+
+        vehicleInfo.setCurrentBatteryLevel(vehicleInfo.getCurrentBatteryLevel()-movingTime*instance.getVehicleDischargingRate());
+
+        vehicleInfo.setWaitingTime(0);
+
+        vehicleInfo.setCurrentPosition(nextNode);
+
+    }
 }
