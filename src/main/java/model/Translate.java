@@ -7,6 +7,7 @@ public class Translate {
 
     private Instance instance;
     private List<List<List<VehicleInfo>>> allVehicleInfoList;
+    List<Solution> solutions = new ArrayList<>();
 
     private int K;
     private int V;
@@ -22,9 +23,11 @@ public class Translate {
 
     public List<Solution> translateAll(){
 
-        List<Solution> solutions = new ArrayList<>();
+
         for(List<List<VehicleInfo>> vehicleInfoList : allVehicleInfoList)
             solutions.add(translate(vehicleInfoList));
+
+        sort();
 
         return solutions;
     }
@@ -97,4 +100,31 @@ public class Translate {
 
     }
 
+    public void sort()
+    {
+        List<Double> maxTime = new ArrayList<>();
+        for (Solution s:solutions) {
+            double tmp =Double.MIN_VALUE;
+            int indexK=0;
+            int indexJ=0;
+            for(int k = 0; k<K; k++)
+            {
+                for(int j = 0; j<s.getTimeVehicleStartsAtLocation()[k].length; j++)
+                {
+                    if(s.getTimeVehicleStartsAtLocation()[k][j]>tmp) {
+                        tmp = s.getTimeVehicleStartsAtLocation()[k][j];
+                        indexK =k;
+                        indexJ =j;
+                    }
+
+
+                }
+            }
+
+            maxTime.add(s.getTimeVehicleStartsAtLocation()[indexK][indexJ]);
+
+        }
+
+        System.out.println();
+    }
 }

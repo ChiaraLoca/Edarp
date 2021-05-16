@@ -112,7 +112,7 @@ public class BruteSolver {
         while(Util.isTimeHorizonRespected(vehicleId, instance.getTimeHorizon(), vehicleInfos.get(vehicleId).getTimeOfMission(), wait)){
             for (Map.Entry<Node, Node> e : unsolved.entrySet()) {
                 if (isPossibleNode(new PairOfNodes(e.getKey(), e.getValue()), wait, vehicleInfos.get(vehicleId))) {
-                    //System.out.println("" + vehicleId + '\t' + e.getKey() + '\t' + e.getValue());
+                        //System.out.println("" + vehicleId + '\t' + e.getKey() + '\t' + e.getValue());
                     Map<Node, Node> modifiedMap = new HashMap<>(unsolved);
                     VehicleInfo saved = new VehicleInfo(vehicleInfos.get(vehicleId));
                     //veicolo va al nuovo punto
