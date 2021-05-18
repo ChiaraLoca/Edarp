@@ -16,6 +16,7 @@ public class BruteSolver {
     private static int depth=0;
     private List<List<WaitingInfo>> waits = new ArrayList<>();
     private List<List<List<VehicleInfo>>> solutionList= new ArrayList<>();
+    private List<Integer> chargingWaits = new ArrayList<>();
 
     public BruteSolver(List<VehicleInfo> vehicleInfos, Instance instance, Map<Node, Node> originalUnsolved) {
         this.vehicleInfos = vehicleInfos;
@@ -25,6 +26,7 @@ public class BruteSolver {
         for (int i = 0; i < nVehicles; i++) {
             solution.add(new ArrayList<>());
             waits.add(new ArrayList<>());
+            chargingWaits.add(2);
         }
 
         this.originalUnsolved= originalUnsolved;
@@ -113,6 +115,13 @@ public class BruteSolver {
             for (Map.Entry<Node, Node> e : unsolved.entrySet()) {
                 if (isPossibleNode(new PairOfNodes(e.getKey(), e.getValue()), wait, vehicleInfos.get(vehicleId))) {
                     //System.out.println("" + vehicleId + '\t' + e.getKey() + '\t' + e.getValue());
+                    boolean chargeWaited = false;
+                    if(wait>0 && isPossibleNode(new PairOfNodes(e.getKey(), e.getValue()), wait+14, vehicleInfos.get(vehicleId)) && chargingWaits.get(vehicleId)>0){
+                        wait= wait+14;
+                        chargingWaits.set(vehicleId, chargingWaits.get(vehicleId)-1);
+                        chargeWaited=true;
+                    }
+
                     Map<Node, Node> modifiedMap = new HashMap<>(unsolved);
                     VehicleInfo saved = new VehicleInfo(vehicleInfos.get(vehicleId));
                     //veicolo va al nuovo punto
@@ -136,6 +145,9 @@ public class BruteSolver {
                         waits.get(vehicleId).add(0,new WaitingInfo(wait, e.getValue(), batteryCharge));
                         return;
 
+                    }
+                    if(chargeWaited){
+                        chargingWaits.set(vehicleId, chargingWaits.get(vehicleId)+1);
                     }
 
                     vehicleInfos.set(vehicleId, new VehicleInfo(saved));
@@ -227,6 +239,7 @@ public class BruteSolver {
     public List<SolutionHolder> start() throws Exception {
 
         solve(originalUnsolved, 0);
+
         /*for (List<VehicleInfo> v: solution) {
             System.out.println(v);
 
