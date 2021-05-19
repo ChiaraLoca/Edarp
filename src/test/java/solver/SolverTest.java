@@ -35,7 +35,7 @@ class SolverTest {
                 unvisitedNodesMap.put(n, instance.getPickupAndDropoffLocations().get(n.getId() + instance.getnCustomers() - 1));
         }
         unvisitedNodesMap = Util.orderNodeNodeMapBy(unvisitedNodesMap,Order.DESTINATION_DEPARTURE);
-        BruteSolver bruteSolver = new BruteSolver(vehicleInfos, instance, unvisitedNodesMap, 10);
+        BruteSolver bruteSolver = new BruteSolver(vehicleInfos, instance, unvisitedNodesMap);
         bruteSolver.start();
         System.out.println();
     }

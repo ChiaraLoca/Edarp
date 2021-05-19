@@ -5,8 +5,8 @@ import model.WaitingInfo;
 
 import java.util.List;
 
-public class WaitsScorer implements Scorer{
-    @Override
+public class WaitsScorer {
+
     public double score(List<List<VehicleInfo>> solution, List<List<WaitingInfo>> waits) {
         double score= Double.MAX_VALUE;
         for(List<WaitingInfo> list : waits){

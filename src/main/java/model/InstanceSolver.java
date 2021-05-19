@@ -9,7 +9,9 @@ public class InstanceSolver {
 
     private final Instance instance;
 
-    private List<SolutionHolder> listOfPossibleSolution = new ArrayList<>();
+    private List<List<List<VehicleInfo>>> listOfPossibleSolution = new ArrayList<>();
+    private List<List<List<WaitingInfo>>> infos = new ArrayList<>();
+
     private List<List<List<VehicleInfo>>> listOfPossibleSolutionOptimized;
     private List<Solution> listOfSolution;
     private Solution theSolution;
@@ -41,11 +43,11 @@ public class InstanceSolver {
         bruteSolver.start();
 
 
+        listOfPossibleSolution.add(bruteSolver.getSolution());
+        infos.add(bruteSolver.getWaits());
 
-        listOfPossibleSolution.add(new SolutionHolder(bruteSolver.getSolution(),bruteSolver.getWaits(),0));
 
-
-        Charger charger = new Charger(instance,listOfPossibleSolution);
+        Charger charger = new Charger(instance,listOfPossibleSolution,infos);
         listOfPossibleSolutionOptimized = charger.optimizeAll();
 
         Translate translate = new Translate(instance, listOfPossibleSolutionOptimized);

@@ -27,9 +27,7 @@ public class Solution {
     private double[][] chargingTimeOfVehicleAtStation; // E: charging time of vehicle k at charging station s ∈ S E{K,S}
     private double[] excessRideTimeOfPassenger; // R: excess ride-time of passenger i ∈ P  R{P};
 
-
-
-
+    private double score;
 
 
 
@@ -95,7 +93,13 @@ public class Solution {
         this.details = details;
     }
 
+    public double getScore() {
+        return score;
+    }
 
+    public void setScore(double score) {
+        this.score = score;
+    }
 
     @Override
     public String toString() {

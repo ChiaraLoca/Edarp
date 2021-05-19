@@ -1,5 +1,8 @@
 package model;
 
+import scorer.Scorer;
+import scorer.TravelScorer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +16,7 @@ public class Translate {
     private int V;
     private int C;
 
+    private Scorer scorer = new TravelScorer();
     public Translate(Instance instance, List<List<List<VehicleInfo>>> allVehicleInfoList ) {
         this.instance = instance;
         this.allVehicleInfoList = allVehicleInfoList;
@@ -24,10 +28,12 @@ public class Translate {
     public List<Solution> translateAll(){
 
 
-        for(List<List<VehicleInfo>> vehicleInfoList : allVehicleInfoList)
-            solutions.add(translate(vehicleInfoList));
+        for(List<List<VehicleInfo>> vehicleInfoList : allVehicleInfoList) {
+            Solution s = translate(vehicleInfoList);
+            s.setScore(scorer.score(s));
+            solutions.add(s);
+        }
 
-        sort();
 
         return solutions;
     }

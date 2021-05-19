@@ -7,11 +7,13 @@ public class Charger {
 
     private final Instance instance;
     private List<List<List<VehicleInfo>>>  optimized= new ArrayList<>();
-    private List<SolutionHolder> notOptimizedSolution = new ArrayList<>();
+    private List<List<List<VehicleInfo>>> notOptimizedSolution = new ArrayList<>();
+    private List<List<List<WaitingInfo>>> infos = new ArrayList<>();
 
-    public Charger(Instance instance,List<SolutionHolder> notOptimizedSolution) {
+    public Charger(Instance instance,List<List<List<VehicleInfo>>> notOptimizedSolution,List<List<List<WaitingInfo>>> infos) {
         this.instance = instance;
         this.notOptimizedSolution = notOptimizedSolution;
+        this.infos = infos;
 
 
     }
@@ -83,13 +85,13 @@ public class Charger {
 
 
 
-    public List<List<VehicleInfo>>  optimize(SolutionHolder solutionHolder,int nSolution){
+    public List<List<VehicleInfo>>  optimize(List<List<VehicleInfo>> solutionHolder,List<List<WaitingInfo>> infos,int nSolution){
 
         List<List<VehicleInfo>> tmp = new ArrayList<>();
 
 
         for (int i = 0; i < instance.getnVehicles(); i++) {
-            List<VehicleInfo> vi =optimizeVehicle(solutionHolder.getSolution().get(i), i,solutionHolder.getWaitingInfos().get(i));
+            List<VehicleInfo> vi =optimizeVehicle(solutionHolder.get(i), i,infos.get(i));
             tmp.add(new ArrayList<>(vi));
         }
 
@@ -104,7 +106,7 @@ public class Charger {
         List<List<VehicleInfo>> llv;
         for (int i = 0; i < notOptimizedSolution.size(); i++)
         {
-            llv = optimize(notOptimizedSolution.get(i),i);
+            llv = optimize(notOptimizedSolution.get(i),infos.get(i),i);
             optimized.add(new ArrayList<>(llv));
         }
 
