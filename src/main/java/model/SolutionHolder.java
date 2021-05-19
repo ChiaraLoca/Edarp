@@ -1,13 +1,31 @@
 package model;
 
+import scorer.Scorer;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class SolutionHolder {
     private List<List<VehicleInfo>> solution;
-    private List<List<WaitingInfo>> waitingInfos;
+    private Scorer scorer;
     private double score;
+
+    public List<List<WaitingInfo>> getWaitingInfos() {
+        return waitingInfos;
+    }
+
+    public void setWaitingInfos(List<List<WaitingInfo>> waitingInfos) {
+        this.waitingInfos = waitingInfos;
+    }
+
+    public SolutionHolder(List<List<VehicleInfo>> solution, List<List<WaitingInfo>> waitingInfos, Scorer scorer) {
+        this.solution = solution;
+        this.waitingInfos = waitingInfos;
+        this.score= scorer.score(solution, waitingInfos);
+    }
+
+    private List<List<WaitingInfo>> waitingInfos;
 
     public List<List<VehicleInfo>> getSolution() {
         return solution;
