@@ -26,7 +26,7 @@ public class BruteSolver {
         for (int i = 0; i < nVehicles; i++) {
             solution.add(new ArrayList<>());
             waits.add(new ArrayList<>());
-            chargingWaits.add(2);
+            chargingWaits.add(3);
         }
 
         this.originalUnsolved= originalUnsolved;
@@ -116,8 +116,18 @@ public class BruteSolver {
                 if (isPossibleNode(new PairOfNodes(e.getKey(), e.getValue()), wait, vehicleInfos.get(vehicleId))) {
                     //System.out.println("" + vehicleId + '\t' + e.getKey() + '\t' + e.getValue());
                     boolean chargeWaited = false;
-                    if(wait>0 && isPossibleNode(new PairOfNodes(e.getKey(), e.getValue()), wait+14, vehicleInfos.get(vehicleId)) && chargingWaits.get(vehicleId)>0){
-                        wait= wait+14;
+
+
+                    if(vehicleInfos.get(vehicleId).getCurrentBatteryLevel()<(vehicleInfos.get(vehicleId).getMaxBatteryCapacity()/2) && wait>0 /*&& isPossibleNode(new PairOfNodes(e.getKey(), e.getValue()), wait+14, vehicleInfos.get(vehicleId))*/&& chargingWaits.get(vehicleId)>0){
+
+
+                        Node ccn = getClosestChargingNode(vehicleInfos.get(vehicleId).getCurrentPosition());
+                        double rechargeRate = instance.getStationRechargingRate()[ccn.getId()-instance.getChargingStationId()[0]];
+
+                        double maxChargingTime = (vehicleInfos.get(vehicleId).getMaxBatteryCapacity()-vehicleInfos.get(vehicleId).getCurrentBatteryLevel())/ rechargeRate;
+
+                        wait= wait+maxChargingTime;
+                        wait= wait+40;
                         chargingWaits.set(vehicleId, chargingWaits.get(vehicleId)-1);
                         chargeWaited=true;
                     }
@@ -125,11 +135,14 @@ public class BruteSolver {
                     Map<Node, Node> modifiedMap = new HashMap<>(unsolved);
                     VehicleInfo saved = new VehicleInfo(vehicleInfos.get(vehicleId));
                     //veicolo va al nuovo punto
-                    moveToNextNode(vehicleInfos.get(vehicleId), e.getKey(), wait);
+                    Util.moveToNextNode(vehicleInfos.get(vehicleId), e.getKey(), wait,instance);
                     //aggiungo i nodi alla soluzione
-                    solution.get(vehicleId).add(new VehicleInfo(vehicleInfos.get(vehicleId)));
-                    moveToNextNode(vehicleInfos.get(vehicleId), e.getValue(), 0);
-                    solution.get(vehicleId).add(new VehicleInfo(vehicleInfos.get(vehicleId)));
+                    VehicleInfo pickupNode = new VehicleInfo(vehicleInfos.get(vehicleId));
+                    solution.get(vehicleId).add(pickupNode);
+
+                    Util.moveToNextNode(vehicleInfos.get(vehicleId), e.getValue(), 0,instance);
+                    VehicleInfo dropoffNode = new VehicleInfo(vehicleInfos.get(vehicleId));
+                    solution.get(vehicleId).add(dropoffNode);
                     double batteryCharge = vehicleInfos.get(vehicleId).getCurrentBatteryLevel();
 
                     modifiedMap.remove(e.getKey());
@@ -151,8 +164,8 @@ public class BruteSolver {
                     }
 
                     vehicleInfos.set(vehicleId, new VehicleInfo(saved));
-                    solution.get(vehicleId).remove(e.getKey());
-                    solution.get(vehicleId).remove(e.getValue());
+                    solution.get(vehicleId).remove(pickupNode);
+                    solution.get(vehicleId).remove(dropoffNode);
                 }
 
             }
@@ -239,7 +252,6 @@ public class BruteSolver {
     public List<SolutionHolder> start() throws Exception {
 
         solve(originalUnsolved, 0);
-
         /*for (List<VehicleInfo> v: solution) {
             System.out.println(v);
 

@@ -43,7 +43,7 @@ public class InstanceSolver {
 
 
         listOfPossibleSolution.add(new SolutionHolder(bruteSolver.getSolution(),bruteSolver.getWaits(),0));
-        listOfPossibleSolution.add(new SolutionHolder(bruteSolver.getSolution(),bruteSolver.getWaits(),0));
+
 
         Charger charger = new Charger(instance,listOfPossibleSolution);
         listOfPossibleSolutionOptimized = charger.optimizeAll();

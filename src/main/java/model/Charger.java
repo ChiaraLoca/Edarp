@@ -32,7 +32,11 @@ public class Charger {
         double outTime = Util.computeTimeToArriveToNextNode(chargingStation,solution.get(solution.indexOf(present)+1).getCurrentPosition(),0, instance);
         double charginTime= waitingInfos.get(((int)(solution.indexOf(present)/2)+1)).getWaitTime()-inTime-outTime;
         double rechargeRate = instance.getStationRechargingRate()[chargingStation.getId()-instance.getChargingStationId()[0]];
+        double maxChargingTime = (present.getMaxBatteryCapacity()-present.getCurrentBatteryLevel())/ rechargeRate;
+        if(charginTime>maxChargingTime)
+            charginTime = maxChargingTime;
         double amountCharged = rechargeRate*charginTime;
+
         VehicleInfo preCharge= new VehicleInfo(present);
         if(inTime*instance.getVehicleDischargingRate()+outTime*instance.getVehicleDischargingRate()>amountCharged)
             return;

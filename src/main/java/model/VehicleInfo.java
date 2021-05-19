@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class VehicleInfo{
     private final int vehicleId;
@@ -251,5 +252,35 @@ public class VehicleInfo{
 
     public void setLastTimeAtEmpty(Node lastTimeAtEmpty) {
         this.lastTimeAtEmpty = lastTimeAtEmpty;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof VehicleInfo)) return false;
+        VehicleInfo that = (VehicleInfo) o;
+        return getVehicleId() == that.getVehicleId() &&
+                Double.compare(that.getMaxBatteryCapacity(), getMaxBatteryCapacity()) == 0 &&
+                getMaxLoad() == that.getMaxLoad() &&
+                Double.compare(that.getCurrentBatteryLevel(), getCurrentBatteryLevel()) == 0 &&
+                Double.compare(that.getTimeSpendAtCharging(), getTimeSpendAtCharging()) == 0 &&
+                Double.compare(that.getTimeOfMission(), getTimeOfMission()) == 0 &&
+                Double.compare(that.getTimeAvailableToCharge(), getTimeAvailableToCharge()) == 0 &&
+                isTimeOver() == that.isTimeOver() &&
+                Double.compare(that.getPossibleTimeToArriveToNextNode(), getPossibleTimeToArriveToNextNode()) == 0 &&
+                Double.compare(that.getPossibleBatteryLevel(), getPossibleBatteryLevel()) == 0 &&
+                Double.compare(that.getWaitingTime(), getWaitingTime()) == 0 &&
+                Double.compare(that.getPossibleDistanceFromPossibleDestination(), getPossibleDistanceFromPossibleDestination()) == 0 &&
+                Objects.equals(getArtificialOriginDepot(), that.getArtificialOriginDepot()) &&
+                Objects.equals(getArtificialDestinationDepot(), that.getArtificialDestinationDepot()) &&
+                Objects.equals(getCurrentPosition(), that.getCurrentPosition()) &&
+                Objects.equals(getPassengerDestination(), that.getPassengerDestination()) &&
+                Objects.equals(getLastTimeAtEmpty(), that.getLastTimeAtEmpty()) &&
+                Objects.equals(getPossiblePassengerDestination(), that.getPossiblePassengerDestination());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getVehicleId(), getArtificialOriginDepot(), getArtificialDestinationDepot(), getMaxBatteryCapacity(), getMaxLoad(), getCurrentPosition(), getCurrentBatteryLevel(), getTimeSpendAtCharging(), getPassengerDestination(), getTimeOfMission(), getTimeAvailableToCharge(), getLastTimeAtEmpty(), isTimeOver(), getPossibleTimeToArriveToNextNode(), getPossibleBatteryLevel(), getPossiblePassengerDestination(), getWaitingTime(), getPossibleDistanceFromPossibleDestination());
     }
 }
