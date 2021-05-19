@@ -51,6 +51,7 @@ public class InstanceWriter {
         writeKeyValueParam("Ok",instance.getArtificialOriginDepotId());
         writeSet("S",instance.getChargingStationId());//set S = Charging stations*/
 
+        //TODO controllare
         int[] res2 =new int[instance.getCommonDestinationDepotId().length+ instance.getArtificialDestinationDepotId().length];
         System.arraycopy(instance.getCommonDestinationDepotId(),0,res2,0,instance.getCommonDestinationDepotId().length);
         System.arraycopy(instance.getArtificialDestinationDepotId(),0,res2,instance.getCommonDestinationDepotId().length,instance.getArtificialDestinationDepotId().length);
@@ -105,8 +106,7 @@ public class InstanceWriter {
 
         writeKeyValueParam("Binit",instance.getVehicleInitBatteryInventory());//*param Binit{K};		# Initial battery capacity of vehicle K*/
 
-        writeSingleParam("r",instance.getMinBatteryRatioLvl());//* param r;			# Final minimum battery level ratio*/
-
+        writeSingleParam("r",instance.getMinEndBatteryRatioLvl()[0]);//* param r;			# Final minimum battery level ratio*/
 
         writeMatrixParam("beta",instance.getBatteryConsumption(),V,V);//*param beta{V,V};	# Battery consumption between nodes i, j in V*/
 
