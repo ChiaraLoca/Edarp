@@ -1,5 +1,7 @@
 package model;
 
+import solutionCheck.SolutionChecker;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +55,12 @@ public class InstanceSolver {
         Translate translate = new Translate(instance, listOfPossibleSolutionOptimized);
 
         listOfSolution = translate.translateAll();
+
+
+        SolutionChecker solutionChecker = new SolutionChecker(listOfSolution.get(0));
+        solutionChecker.checkAll();
+
+
 
         System.out.println();
     }

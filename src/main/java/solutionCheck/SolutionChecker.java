@@ -25,7 +25,7 @@ public class SolutionChecker {
                 AbstractConstraint constraint = (AbstractConstraint) constructor.newInstance(solution);
                 if(!constraint.check()) {
                     System.err.println("Error constraint: "+aClass.getSimpleName());
-                    return false;
+                    //return false;
                 }
             } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
                 e.printStackTrace();
