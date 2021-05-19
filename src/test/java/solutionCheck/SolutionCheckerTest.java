@@ -34,7 +34,7 @@ public class SolutionCheckerTest {
         assert solution!=null;
         System.out.println(solution);
 
-        AbstractConstraint check=new BatteryLevelStateAfterCharging1(solution);
+        AbstractConstraint check=new VisitPickupBeforeDropoff(solution);
         assertTrue(check.check());
 
     }

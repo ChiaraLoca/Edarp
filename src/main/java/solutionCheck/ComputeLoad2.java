@@ -21,11 +21,12 @@ public class ComputeLoad2 extends AbstractConstraint{
                 for (int j : solution.getInstance().getNodes().stream().mapToInt(Node::getId).toArray()) {
                     if (i == j)
                         continue;
-                    double v1 = solution.getLoadOfVehicleAtLocation()[k][i] +
+                    double v1 = solution.getLoadOfVehicleAtLocation()[k][i-1] +
                             ni.getLoad();
-                    double v2 = solution.getInstance().getG()[k][i] * (1 - solution.getVehicleSeqStopAtLocations()[k][i][j]);
+                    double v2 = solution.getInstance().getG()[k][i-1]
+                            * (1 - solution.getVehicleSeqStopAtLocations()[k][i-1][j-1]);
 
-                    if (v1 + v2 < solution.getLoadOfVehicleAtLocation()[k][i])
+                    if (v1 + v2 < solution.getLoadOfVehicleAtLocation()[k][i-1])
                         return false;
                 }
             }
