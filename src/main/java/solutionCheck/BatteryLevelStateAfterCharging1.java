@@ -19,13 +19,13 @@ public class BatteryLevelStateAfterCharging1 extends AbstractConstraint {
                 for (int j=0; j<union.length;j++) {
                    if(s==j)
                        continue;
-                    if(solution.getBatteryLoadOfVehicleAtLocation()[k][union[j]]
-                            >solution.getBatteryLoadOfVehicleAtLocation()[k][solution.getInstance().getChargingStationId()[s]]
-                            +solution.getInstance().getStationRechargingRate()[solution.getInstance().getChargingStationId()[s]]
-                            *solution.getChargingTimeOfVehicleAtStation()[k][solution.getInstance().getChargingStationId()[s]]
-                            -solution.getInstance().getBatteryConsumption()[solution.getInstance().getChargingStationId()[s]][union[j]]
+                    if(solution.getBatteryLoadOfVehicleAtLocation()[k][union[j]-1]
+                            >solution.getBatteryLoadOfVehicleAtLocation()[k][solution.getInstance().getChargingStationId()[s]-1]
+                            +solution.getInstance().getStationRechargingRate()[s]
+                            *solution.getChargingTimeOfVehicleAtStation()[k][s]
+                            -solution.getInstance().getBatteryConsumption()[solution.getInstance().getChargingStationId()[s]-1][union[j]-1]
                             +solution.getInstance().getVehicleBatteryCapacity()[k]
-                            *(1-solution.getVehicleSeqStopAtLocations()[k][solution.getInstance().getChargingStationId()[s]][union[j]]))
+                            *(1-solution.getVehicleSeqStopAtLocations()[k][solution.getInstance().getChargingStationId()[s]-1][union[j]-1]))
                         return false;
                 }
             }

@@ -10,7 +10,7 @@ option cplex_options 'mipemphasis=1 mipdisplay=2 timelimit=3600';
 option display_round 2;
 
 model Model.mod;
-data  u2-20-0.7.dat;
+data  u2-16-0.7.dat;
 
 solve; 
 
@@ -29,7 +29,7 @@ printf 'Number of customers:\n';
 display n;
 
 printf 'Number of origin depots,destination depots and recharging stations:\n';
-display Origin, F, S;
+display O, F, S;
 
 printf 'Number of vehicles:\n';
 display numVehicles;
@@ -58,26 +58,38 @@ print '';
 printf 'Objective Value:\n';
 display one;	
 
-printf 'Objective Value 1st component (by vehicle):\n';
-#76.814362
-
-printf 'Objective Value 2nd component (by vehicle):\n';
-#NaN
-
-printf 'Objective Value 3rd component (by vehicle):\n';
-#0.0
-
 print 'SOLUTION';
-#printf 'i, j, T[i], T[j],arr[i],dep[i],arr[j],dep[j],t[i,j],B[i],e[i]\n';
-display	T;
 
+display	 X;
 print '';
 
-printf 'Number of visited stations (per vehicle):\n';
-/*display {k in K}
-	(sum{s in S}{i in V} X[k,s,i]);
+display	 T;
+print '';
 
+display	 L;
+print '';
+
+display B;
+print '';
+
+display E;
+print '';
+
+display R;
+print '';
+
+#printf {i in V, j in V} 'i, j, T[i], T[j],arr[i],dep[i],arr[j],dep[j],t[i,j],B[i],e[i]\n'
+#(i, j, T[i], T[j],arr[i],dep[i],arr[j],dep[j],t[i,j],B[i],e[i]\n);
+
+printf 'Number of visited stations (per vehicle):\n';
+display {k in K}
+	(sum{s in S, i in V} X[k,s,i]);
+/*
 printf 'Charging time (per vehicle):\n';
 display {k in K}
 	(sum{s in S} E[K,S]);
 */
+
+print '-------------------------------\n';
+printf 'R:\n';
+printf {p in P} '%f\n',R[p];

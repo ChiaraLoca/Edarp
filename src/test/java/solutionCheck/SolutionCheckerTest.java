@@ -26,4 +26,17 @@ public class SolutionCheckerTest {
 
     }
 
+    @Test
+    void singleTest() throws Exception {
+        Instance instance = InstanceReader.getInstanceReader().read(new File("src/test/resources/instances/u2-16-0.7.txt"),true);
+        Solver solver = new Solver(instance);
+        Solution solution = solver.solveProva();
+        assert solution!=null;
+        System.out.println(solution);
+
+        AbstractConstraint check=new BatteryLevelStateAfterCharging1(solution);
+        assertTrue(check.check());
+
+    }
+
 }
