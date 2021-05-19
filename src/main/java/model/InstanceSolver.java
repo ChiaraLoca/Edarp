@@ -10,6 +10,7 @@ public class InstanceSolver {
     private final Instance instance;
 
     private List<List<List<VehicleInfo>>> listOfPossibleSolution = new ArrayList<>();
+    private List<SolutionHolder> listOfPossibleSolutionHolders = new ArrayList<>();
     private List<List<List<WaitingInfo>>> infos = new ArrayList<>();
 
     private List<List<List<VehicleInfo>>> listOfPossibleSolutionOptimized;
@@ -39,13 +40,15 @@ public class InstanceSolver {
                 unvisitedNodesMap.put(n, instance.getPickupAndDropoffLocations().get(n.getId() + instance.getnCustomers() - 1));
         }
         unvisitedNodesMap = Util.orderNodeNodeMapBy(unvisitedNodesMap,Order.DESTINATION_DEPARTURE);
-        BruteSolver bruteSolver = new BruteSolver(vehicleInfos, instance, unvisitedNodesMap);
+        BruteSolver bruteSolver = new BruteSolver(vehicleInfos, instance, unvisitedNodesMap, 10);
         bruteSolver.start();
 
 
         listOfPossibleSolution.add(bruteSolver.getSolution());
         infos.add(bruteSolver.getWaits());
 
+
+        listOfPossibleSolutionHolders=bruteSolver.getSolutionList();
 
         Charger charger = new Charger(instance,listOfPossibleSolution,infos);
         listOfPossibleSolutionOptimized = charger.optimizeAll();

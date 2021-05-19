@@ -15,10 +15,16 @@ public class BruteSolver {
     private Map<Node, Node> originalUnsolved;
     private static int depth=0;
     private List<List<WaitingInfo>> waits = new ArrayList<>();
-    private List<List<List<VehicleInfo>>> solutionList= new ArrayList<>();
-    private List<Integer> chargingWaits = new ArrayList<>();
+    private List<SolutionHolder> solutionList= new ArrayList<>();
 
-    public BruteSolver(List<VehicleInfo> vehicleInfos, Instance instance, Map<Node, Node> originalUnsolved) {
+    public List<SolutionHolder> getSolutionList() {
+        return solutionList;
+    }
+
+    private List<Integer> chargingWaits = new ArrayList<>();
+    private int nSol;
+
+    public BruteSolver(List<VehicleInfo> vehicleInfos, Instance instance, Map<Node, Node> originalUnsolved, int nSol) {
         this.vehicleInfos = vehicleInfos;
         this.instance = instance;
         nVehicles= instance.getnVehicles();
@@ -28,7 +34,7 @@ public class BruteSolver {
             waits.add(new ArrayList<>());
             chargingWaits.add(3);
         }
-
+        this.nSol=nSol;
         this.originalUnsolved= originalUnsolved;
     }
 
@@ -102,7 +108,7 @@ public class BruteSolver {
         depth++;
         if(nodePermanentlyLost(unsolved))
             return;
-        System.out.println(depth);
+        System.out.println(depth+"\t"+solutionList.size());
         if(unsolved.isEmpty()){
             found=true;
             return;
@@ -118,19 +124,19 @@ public class BruteSolver {
                     boolean chargeWaited = false;
 
 
-                    if(vehicleInfos.get(vehicleId).getCurrentBatteryLevel()<(vehicleInfos.get(vehicleId).getMaxBatteryCapacity()/2) && wait>0 /*&& isPossibleNode(new PairOfNodes(e.getKey(), e.getValue()), wait+14, vehicleInfos.get(vehicleId))*/&& chargingWaits.get(vehicleId)>0){
+                    /*if(vehicleInfos.get(vehicleId).getCurrentBatteryLevel()<(vehicleInfos.get(vehicleId).getMaxBatteryCapacity()/2) && wait>0 /*&& isPossibleNode(new PairOfNodes(e.getKey(), e.getValue()), wait+14, vehicleInfos.get(vehicleId))&& chargingWaits.get(vehicleId)>0){
 
 
-                        Node ccn = getClosestChargingNode(vehicleInfos.get(vehicleId).getCurrentPosition());
+                        /*Node ccn = getClosestChargingNode(vehicleInfos.get(vehicleId).getCurrentPosition());
                         double rechargeRate = instance.getStationRechargingRate()[ccn.getId()-instance.getChargingStationId()[0]];
 
                         double maxChargingTime = (vehicleInfos.get(vehicleId).getMaxBatteryCapacity()-vehicleInfos.get(vehicleId).getCurrentBatteryLevel())/ rechargeRate;
 
                         wait= wait+maxChargingTime;
-                        wait= wait+40;
+                        //wait= wait+40;
                         chargingWaits.set(vehicleId, chargingWaits.get(vehicleId)-1);
                         chargeWaited=true;
-                    }
+                    }*/
 
                     Map<Node, Node> modifiedMap = new HashMap<>(unsolved);
                     VehicleInfo saved = new VehicleInfo(vehicleInfos.get(vehicleId));
@@ -156,8 +162,21 @@ public class BruteSolver {
                     depth--;
                     if (found){
                         waits.get(vehicleId).add(0,new WaitingInfo(wait, e.getValue(), batteryCharge));
-                        return;
-
+                        if(solutionList.size()<nSol){
+                            SolutionHolder solutionHolder= new SolutionHolder(new ArrayList<>(solution), new ArrayList<>(waits));
+                            boolean adding= true;
+                            for(SolutionHolder sh:solutionList){
+                                if(sh.equals(solutionHolder)){
+                                    adding=false;
+                                }
+                            }
+                            if (adding){
+                                solutionList.add(solutionHolder);
+                            }
+                        } else{
+                            return;
+                        }
+                        found=false;
                     }
                     if(chargeWaited){
                         chargingWaits.set(vehicleId, chargingWaits.get(vehicleId)+1);

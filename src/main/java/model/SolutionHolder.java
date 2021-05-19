@@ -7,41 +7,49 @@ import java.util.List;
 import java.util.Objects;
 
 public class SolutionHolder {
-    private Solution solution;
-    private Scorer scorer;
-    private double score;
+    private List<List<VehicleInfo>> vehicleInfos;
+    private List<List<WaitingInfo>> waits;
 
-
-
-    public SolutionHolder(Solution solution, List<List<WaitingInfo>> waitingInfos, Scorer scorer) {
-        this.solution = solution;
-        this.waitingInfos = waitingInfos;
-        this.score= scorer.score(solution);
+    public List<List<VehicleInfo>> getVehicleInfos() {
+        return vehicleInfos;
     }
 
-    private List<List<WaitingInfo>> waitingInfos;
-
-
-
-    public double getScore() {
-        return score;
+    public void setVehicleInfos(List<List<VehicleInfo>> vehicleInfos) {
+        this.vehicleInfos = vehicleInfos;
     }
 
-    public void setScore(double score) {
-        this.score = score;
+    public List<List<WaitingInfo>> getWaits() {
+        return waits;
     }
 
-    public List<List<WaitingInfo>> getWaitingInfos() {
-        return waitingInfos;
+    public void setWaits(List<List<WaitingInfo>> waits) {
+        this.waits = waits;
     }
 
-    public void setWaitingInfos(List<List<WaitingInfo>> waitingInfos) {
-        this.waitingInfos = waitingInfos;
+    public SolutionHolder(List<List<VehicleInfo>> vehicleInfos, List<List<WaitingInfo>> waits) {
+        this.vehicleInfos = vehicleInfos;
+        this.waits = waits;
     }
 
 
+    public boolean equals(SolutionHolder solutionHolder) {
+        for(List<VehicleInfo> v: vehicleInfos){
+            if (v.size()!=solutionHolder.getVehicleInfos().get(vehicleInfos.indexOf(v)).size())
+                return false;
+        }
+        for(List<VehicleInfo> v: vehicleInfos){
+            for(VehicleInfo vehicleInfo: v){
+                if(!vehicleInfo.getCurrentPosition().equals(
+                        solutionHolder.getVehicleInfos().get(vehicleInfos.indexOf(v)).get(v.indexOf(vehicleInfo)).getCurrentPosition()
+                )){
+                   return false;
+                }
+            }
+        }
+        return true;
 
 
+    }
 
 
 }
