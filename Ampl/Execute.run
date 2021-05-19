@@ -101,6 +101,9 @@ printf {k in K}'%f\n',sum{s in S} E[k,s];
 
 
 printf '\n-------------------OUTPUT FOR PARSER-------------------\n';
+#Open the log file
+option log_file "outForParser.txt";
+
 for {k in K} {
 	printf 'X[%d,*,*]: \n',k;
 	for{i in V} {
@@ -151,6 +154,11 @@ print '';
 printf 'R:\n';
 printf {i in P} '%f\n',R[i];
 print '';
+
+
+#Close the log file
+option log_file ""; 
+close;
 
 
 
