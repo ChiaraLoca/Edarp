@@ -48,7 +48,10 @@ public class InstanceSolver {
         Charger charger = new Charger(instance,listOfPossibleSolution);
         listOfPossibleSolutionOptimized = charger.optimizeAll();
 
-        System.out.println();
+        Translate translate = new Translate(instance, listOfPossibleSolutionOptimized);
 
+        listOfSolution = translate.translateAll();
+
+        System.out.println();
     }
 }
