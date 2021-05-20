@@ -15,7 +15,7 @@ public class BeginningOfService extends AbstractConstraint{
     boolean check() {
         for (int k = 0; k < solution.getInstance().getnVehicles(); k++) {
             for (Node ni:solution.getInstance().getNodes()) {
-                int i = ni.getId();
+                int i = ni.getId()-1;
                 if(ni.getArrival()>solution.getTimeVehicleStartsAtLocation()[k][i])
                     return false;
                 if(solution.getTimeVehicleStartsAtLocation()[k][i]>ni.getDeparture())

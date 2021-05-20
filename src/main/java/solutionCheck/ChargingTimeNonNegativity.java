@@ -15,8 +15,7 @@ public class ChargingTimeNonNegativity extends AbstractConstraint {
     boolean check() {
         for(int k=0; k<solution.getInstance().getnVehicles(); k++) {
             for(int s=0; s<solution.getInstance().getChargingStationId().length;s++) {
-                if(solution.getChargingTimeOfVehicleAtStation()[k]
-                        [solution.getInstance().getChargingStationId()[s]-solution.getInstance().getChargingStationId()[0]]<0)
+                if(solution.getChargingTimeOfVehicleAtStation()[k][s]<0)
                     return false;
             }
         }
