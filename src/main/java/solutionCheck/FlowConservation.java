@@ -28,8 +28,8 @@ public class FlowConservation extends AbstractConstraint{
                     if(i==j)
                         continue;
 
-                    sum1 = solution.getVehicleSeqStopAtLocations()[k][i][j];
-                    sum2 = solution.getVehicleSeqStopAtLocations()[k][j][i];
+                    sum1 = solution.getVehicleSeqStopAtLocations()[k][i-1][j-1];
+                    sum2 = solution.getVehicleSeqStopAtLocations()[k][j-1][i-1];
                 }
                 if(sum1-sum2 !=0){
                     return false;

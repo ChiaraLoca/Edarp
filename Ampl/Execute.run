@@ -78,18 +78,87 @@ print '';
 display R;
 print '';
 
-#printf {i in V, j in V} 'i, j, T[i], T[j],arr[i],dep[i],arr[j],dep[j],t[i,j],B[i],e[i]\n'
-#(i, j, T[i], T[j],arr[i],dep[i],arr[j],dep[j],t[i,j],B[i],e[i]\n);
+printf '\ti,\t j,\t T[i],\t\t T[j],\t\t arr[i],\t\t dep[i],\t\t arr[j],\t\t dep[j],\t\t t[i,j],\t\t B[i]\n';
+for {k in K}{
+	printf 'Vehicle %d:\n',k;
+	for {i in V, j in V} {
+		if X[k,i,j] = 1 then {
+			printf '\t%d,\t %d,\t %f,\t %f,\t %f,\t %f,\t %f,\t %f,\t %f,\t %f\n',
+			i, j, T[k,i], T[k,j], arr[i], dep[i], arr[j], dep[j], t[i,j], B[k,i];
+			print '';
+		}
+		
+	}
+}
+
 
 printf 'Number of visited stations (per vehicle):\n';
 display {k in K}
 	(sum{s in S, i in V} X[k,s,i]);
-/*
-printf 'Charging time (per vehicle):\n';
-display {k in K}
-	(sum{s in S} E[K,S]);
-*/
 
-print '-------------------------------\n';
+printf 'Charging time (per vehicle):\n';
+printf {k in K}'%f\n',sum{s in S} E[k,s];
+
+
+printf '\n-------------------OUTPUT FOR PARSER-------------------\n';
+#Open the log file
+option log_file "outForParser.txt";
+
+for {k in K} {
+	printf 'X[%d,*,*]: \n',k;
+	for{i in V} {
+		for{j in V} {
+			printf '%d,',X[k,i,j];
+		}
+		printf '\n';
+	}
+}
+
+printf 'T:\n';
+for {k in K} {
+	for {i in V} {
+		printf '%f,',T[k,i];   
+	}
+	printf '\n';
+}
+print '';
+
+printf 'L:\n';
+for {k in K} {
+	for {i in V} {
+		printf '%f,',L[k,i];   
+	}
+	printf '\n';
+}
+print '';
+
+printf 'B:\n';
+for {k in K} {
+	for {i in V} {
+		printf '%f,',B[k,i];   
+	}
+	printf '\n';
+}
+print '';
+
+printf 'E:\n';
+for {k in K} {
+	for {s in S} {
+		printf '%f,',E[k,s];   
+	}
+	printf '\n';
+}
+print '';
+
+
 printf 'R:\n';
-printf {p in P} '%f\n',R[p];
+printf {i in P} '%f\n',R[i];
+print '';
+
+
+#Close the log file
+option log_file ""; 
+close;
+
+
+

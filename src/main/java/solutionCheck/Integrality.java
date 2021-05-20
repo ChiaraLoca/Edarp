@@ -16,9 +16,9 @@ public class Integrality extends AbstractConstraint {
         for(int k=0; k<solution.getInstance().getnVehicles(); k++) {
             for(int i=0; i<solution.getInstance().getNodes().size(); i++) {
                 for(int j=0; j<solution.getInstance().getNodes().size();j++) {
-                    if(solution.getVehicleSeqStopAtLocations()[k][solution.getInstance().getNodes().get(i).getId()][solution.getInstance().getNodes().get(j).getId()]
+                    if(solution.getVehicleSeqStopAtLocations()[k][solution.getInstance().getNodes().get(i).getId()-1][solution.getInstance().getNodes().get(j).getId()-1]
                             !=0
-                            &&solution.getVehicleSeqStopAtLocations()[k][solution.getInstance().getNodes().get(i).getId()][solution.getInstance().getNodes().get(j).getId()]
+                            &&solution.getVehicleSeqStopAtLocations()[k][solution.getInstance().getNodes().get(i).getId()-1][solution.getInstance().getNodes().get(j).getId()-1]
                             !=1)
                         return false;
                 }
