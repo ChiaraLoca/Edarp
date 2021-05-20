@@ -102,7 +102,7 @@ public class BruteSolver {
         depth++;
         if(nodePermanentlyLost(unsolved))
             return;
-        System.out.println(depth);
+        //System.out.println(depth);
         if(unsolved.isEmpty()){
             found=true;
             return;
@@ -252,10 +252,9 @@ public class BruteSolver {
     public List<SolutionHolder> start() throws Exception {
 
         solve(originalUnsolved, 0);
-        /*for (List<VehicleInfo> v: solution) {
+        for (List<VehicleInfo> v: solution) {
             System.out.println(v);
-
-        }*/
+        }
         return null;
     }
     public boolean nodePermanentlyLost(Map<Node, Node> map){

@@ -98,6 +98,10 @@ public class Charger {
         System.out.println("\n\n\n");
         System.out.println("OPTIMIZED");
 
+        for (List<VehicleInfo> v: tmp) {
+            System.out.println(v);
+        }
+
         return tmp;
     }
 
@@ -109,6 +113,8 @@ public class Charger {
             llv = optimize(notOptimizedSolution.get(i),infos.get(i),i);
             optimized.add(new ArrayList<>(llv));
         }
+
+
 
         return optimized;
 

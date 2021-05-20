@@ -23,7 +23,7 @@ public class BatteryLevelStateLocToLoc2 extends AbstractConstraint {
                 for(int j=0; j<union2.length; j++) {
                     if(i==j)
                         continue;
-                    if(solution.getBatteryLoadOfVehicleAtLocation()[k][union2[j]]
+                    if(solution.getBatteryLoadOfVehicleAtLocation()[k][union2[j-1]]
                             <solution.getBatteryLoadOfVehicleAtLocation()[k][union1[i]]
                             -solution.getInstance().getBatteryConsumption()[union1[i]][union2[j]]
                             -solution.getInstance().getVehicleBatteryCapacity()[k]
