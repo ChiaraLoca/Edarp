@@ -48,8 +48,11 @@ public class Charger {
         solution.add(solution.indexOf(present)+1, new VehicleInfo(preCharge));
         Util.moveToNextNode(preCharge, solution.get(solution.indexOf(present)+2).getCurrentPosition(), charginTime,instance);
 
+
         VehicleInfo oldInfo= new VehicleInfo(solution.get(solution.indexOf(present)+2));
-        solution.set(solution.indexOf(present)+2, new VehicleInfo(preCharge));
+        VehicleInfo newV = new VehicleInfo(preCharge);
+        newV.setTimeSpendAtCharging(0);
+        solution.set(solution.indexOf(present)+2, newV);
         double chargeDifference= preCharge.getCurrentBatteryLevel()-oldInfo.getCurrentBatteryLevel();
 
         if(solution.indexOf(present)+3< solution.size()) {

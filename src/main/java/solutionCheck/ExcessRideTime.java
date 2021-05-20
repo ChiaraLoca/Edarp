@@ -16,11 +16,11 @@ public class ExcessRideTime extends AbstractConstraint{
 
         for (int k = 0; k < solution.getInstance().getnVehicles(); k++) {
             for (int i:solution.getInstance().getPickupLocationsId()) {
-                double value = solution.getTimeVehicleStartsAtLocation()[k][n+i]
-                        -solution.getTimeVehicleStartsAtLocation()[k][n+i]
-                        -solution.getInstance().getNodes().get(i).getServiceTime()
-                        -solution.getInstance().getTravelTime()[i][n+i];
-                if (solution.getExcessRideTimeOfPassenger()[i]<value)
+                double value = solution.getTimeVehicleStartsAtLocation()[k][n+i-1]
+                        -solution.getTimeVehicleStartsAtLocation()[k][n+i-1]
+                        -solution.getInstance().getNodes().get(i-1).getServiceTime()
+                        -solution.getInstance().getTravelTime()[i-1][n+i-1];
+                if (solution.getExcessRideTimeOfPassenger()[i-1]<value)
                     return false;
             }
         }

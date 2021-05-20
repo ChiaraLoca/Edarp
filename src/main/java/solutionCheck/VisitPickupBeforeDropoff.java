@@ -17,10 +17,10 @@ public class VisitPickupBeforeDropoff extends AbstractConstraint{
         int n = solution.getInstance().getPickupLocationsId().length;
         for (int k = 0; k < solution.getInstance().getnVehicles(); k++) {
             for (int i :solution.getInstance().getPickupLocationsId() ) {
-                double sum = solution.getTimeVehicleStartsAtLocation()[k][i] +
-                        solution.getInstance().getNodes().get(i).getServiceTime() +
-                        solution.getInstance().getTravelTime()[i][n+i];
-                if (sum>solution.getTimeVehicleStartsAtLocation()[k][i+n])
+                double sum = solution.getTimeVehicleStartsAtLocation()[k][i-1] +
+                        solution.getInstance().getNodes().get(i-1).getServiceTime() +
+                        solution.getInstance().getTravelTime()[i-1][n+i-1];
+                if (sum>solution.getTimeVehicleStartsAtLocation()[k][i+n-1])
                     return false;
             }
         }

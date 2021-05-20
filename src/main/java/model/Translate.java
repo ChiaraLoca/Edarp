@@ -73,7 +73,7 @@ public class Translate {
 
         for(int i = 0; i<K; i++) {
             Node node;
-            for(int n = 1; n<vehicleInfoList.get(i).size(); n++) {
+            for(int n = 0; n<vehicleInfoList.get(i).size(); n++) {
                 node = vehicleInfoList.get(i).get(n).getCurrentPosition();
                 solution.getTimeVehicleStartsAtLocation()[i][node.getId()-1] = vehicleInfoList.get(i).get(n).getTimeOfMission();
 

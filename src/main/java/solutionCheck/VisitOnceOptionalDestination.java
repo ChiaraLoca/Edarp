@@ -23,7 +23,7 @@ public class VisitOnceOptionalDestination extends AbstractConstraint{
                         solution.getInstance().getChargingStationId(),
                         new int[]{solution.getInstance().getArtificialDestinationDepotId()[k]});
                 for (int i:DSOkUnion) {
-                    sum+=solution.getVehicleSeqStopAtLocations()[k][i][j];
+                    sum+=solution.getVehicleSeqStopAtLocations()[k][i-1][j-1];
                 }
             }
             if(sum>1)

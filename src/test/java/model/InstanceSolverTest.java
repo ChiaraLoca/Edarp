@@ -14,7 +14,7 @@ class InstanceSolverTest {
 
     @Test
     void solveTest() throws Exception {
-        Instance instance = InstanceReader.getInstanceReader().read(new File("src/test/resources/instances/u2-16-0.7.txt"),true);
+        Instance instance = InstanceReader.getInstanceReader().read(new File("src/test/resources/instances/u3-18-0.7.txt"),true);
 
         InstanceSolver instanceSolver = new InstanceSolver(instance);
         instanceSolver.solve();

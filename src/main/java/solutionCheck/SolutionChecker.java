@@ -2,6 +2,7 @@ package solutionCheck;
 
 import model.Instance;
 import model.Solution;
+import model.Util;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Constructor;
@@ -26,6 +27,8 @@ public class SolutionChecker {
                 if(!constraint.check()) {
                     System.err.println("Error constraint: "+aClass.getSimpleName());
                     //return false;
+                } else {
+                    Util.printGreen("Passed constraint: "+aClass.getSimpleName()+"\n");
                 }
             } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
                 e.printStackTrace();

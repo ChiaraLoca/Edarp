@@ -102,7 +102,7 @@ public class BruteSolver {
         depth++;
         if(nodePermanentlyLost(unsolved))
             return;
-        //System.out.println(depth);
+        System.out.println(depth);
         if(unsolved.isEmpty()){
             found=true;
             return;
@@ -121,13 +121,13 @@ public class BruteSolver {
                     if(vehicleInfos.get(vehicleId).getCurrentBatteryLevel()<(vehicleInfos.get(vehicleId).getMaxBatteryCapacity()/2) && wait>0 /*&& isPossibleNode(new PairOfNodes(e.getKey(), e.getValue()), wait+14, vehicleInfos.get(vehicleId))*/&& chargingWaits.get(vehicleId)>0){
 
 
-                        Node ccn = getClosestChargingNode(vehicleInfos.get(vehicleId).getCurrentPosition());
+                        /*Node ccn = getClosestChargingNode(vehicleInfos.get(vehicleId).getCurrentPosition());
                         double rechargeRate = instance.getStationRechargingRate()[ccn.getId()-instance.getChargingStationId()[0]];
 
                         double maxChargingTime = (vehicleInfos.get(vehicleId).getMaxBatteryCapacity()-vehicleInfos.get(vehicleId).getCurrentBatteryLevel())/ rechargeRate;
 
-                        wait= wait+maxChargingTime;
-                        wait= wait+40;
+                        wait= wait+maxChargingTime;*/
+                        //wait= wait+40;
                         chargingWaits.set(vehicleId, chargingWaits.get(vehicleId)-1);
                         chargeWaited=true;
                     }
@@ -175,26 +175,7 @@ public class BruteSolver {
 
 
     }
-    public void moveToNextNode(VehicleInfo vehicleInfo, Node nextNode,double wait)
-    {
-        if(nextNode.getNodeType().equals(NodeType.PICKUP))
-            vehicleInfo.getPassengerDestination().add(instance.getNodes().get(nextNode.getId()+ instance.getnCustomers()-1));
-        else if(nextNode.getNodeType().equals(NodeType.DROPOFF))
-            vehicleInfo.getPassengerDestination().remove(nextNode);
 
-
-        double time = computeTimeToArriveToNextNode(vehicleInfo.getCurrentPosition(),nextNode,wait, vehicleInfo);
-        vehicleInfo.setTimeOfMission(time+vehicleInfo.getTimeOfMission());
-
-        double movingTime = computeTimeToArriveToNextNode(vehicleInfo.getCurrentPosition(),nextNode,0, vehicleInfo);
-
-        vehicleInfo.setCurrentBatteryLevel(vehicleInfo.getCurrentBatteryLevel()-movingTime*instance.getVehicleDischargingRate());
-
-        vehicleInfo.setWaitingTime(0);
-
-        vehicleInfo.setCurrentPosition(nextNode);
-
-    }
 
     public double computeTimeToArriveToNextNode( Node start, Node arrive, double wait, VehicleInfo vehicleInfo) {
         double standardTime = vehicleInfo.getTimeOfMission();
