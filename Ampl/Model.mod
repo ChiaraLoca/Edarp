@@ -80,3 +80,5 @@ s.t. twentysix 	{k in K, s in S, i in D union S union O : i != s}: 	T[k, s] - t[
 s.t. custom1		{k in K, i in V, f in F}: 				X[k,f,i] = 0;		# To avoid vehicles departing from destination deposits
 s.t. custom2		{k in K, i in V, o in O diff {Ok[k]}}: 	X[k,o,i] = 0; 		# To avoid vehicles departing multiple times
 s.t. custom3		{k in K, o in O, f in F}: 				X[k,o,f] = 0; 		# To avoid path O-F
+
+s.t. custom4		{i in Origin diff O,j in V,k in K}: 	X[k,i,j] = 0;			# To avoid artificial origin departing

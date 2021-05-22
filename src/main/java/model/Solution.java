@@ -20,12 +20,12 @@ public class Solution {
     private String details="";
 
     // Decision variables:
-    private int[][][] vehicleSeqStopAtLocations; // X: 1 if vehicle k sequentially stops at location i and j ∈ V, 0 otherwise X{K,V,V}
-    private double[][] timeVehicleStartsAtLocation; // T: time at which vehicle k starts its service at location i ∈ V T{K,V};
-    private double[][] loadOfVehicleAtLocation; // L: load of vehicle k at location i ∈ V L{K,V};
-    private double[][] batteryLoadOfVehicleAtLocation; // B: battery load of vehicle k at location i ∈ V B{K,V}
-    private double[][] chargingTimeOfVehicleAtStation; // E: charging time of vehicle k at charging station s ∈ S E{K,S}
-    private double[] excessRideTimeOfPassenger; // R: excess ride-time of passenger i ∈ P  R{P};
+    public int[][][] vehicleSeqStopAtLocations; // X: 1 if vehicle k sequentially stops at location i and j ∈ V, 0 otherwise X{K,V,V}
+    public double[][] timeVehicleStartsAtLocation; // T: time at which vehicle k starts its service at location i ∈ V T{K,V};
+    public double[][] loadOfVehicleAtLocation; // L: load of vehicle k at location i ∈ V L{K,V};
+    public double[][] batteryLoadOfVehicleAtLocation; // B: battery load of vehicle k at location i ∈ V B{K,V}
+    public double[][] chargingTimeOfVehicleAtStation; // E: charging time of vehicle k at charging station s ∈ S E{K,S}
+    public double[] excessRideTimeOfPassenger; // R: excess ride-time of passenger i ∈ P  R{P};
 
     private double score;
     private String constraint;
