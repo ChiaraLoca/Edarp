@@ -10,7 +10,7 @@ option cplex_options 'mipemphasis=1 mipdisplay=2 timelimit=3600';
 option display_round 2;
 
 model Model.mod;
-data  u2-16-0.7.dat;
+data  a2-16-0.7.dat;
 
 solve; 
 
@@ -99,6 +99,9 @@ display {k in K}
 printf 'Charging time (per vehicle):\n';
 printf {k in K}'%f\n',sum{s in S} E[k,s];
 
+/* 	# Uncomment for parser output
+	# !) Works only if opened as administrator
+	# !) For some apml version this code dosen't work
 
 printf '\n-------------------OUTPUT FOR PARSER-------------------\n';
 #Open the log file
@@ -158,6 +161,5 @@ print '';
 
 #Close the log file
 option log_file ""; 
-close;
-
+close; */
 
