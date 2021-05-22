@@ -14,20 +14,21 @@ public class InstanceSolver {
 
     private final Instance instance;
 
-    private List<List<List<VehicleInfo>>> listOfPossibleSolution = new ArrayList<>();
-    private List<List<List<WaitingInfo>>> infos = new ArrayList<>();
+    private List<List<VehicleInfo>> solutionWithoutCharge = new ArrayList<>();
+    private List<List<WaitingInfo>> infos = new ArrayList<>();
 
-    private List<List<List<VehicleInfo>>> listOfPossibleSolutionOptimized;
-    private List<Solution> listOfSolution;
+    private List<List<VehicleInfo>> solutionWithCharge = new ArrayList<>();
+
     private Solution theSolution;
 
     public InstanceSolver(Instance instance) {
         this.instance = instance;
-        listOfPossibleSolution = new ArrayList<>();
+
     }
 
     public void solve() throws Exception {
 
+        //inizializzazione vehicleInfo
         List<VehicleInfo> vehicleInfos = new ArrayList<>();
         boolean batteryCheat = false;
         for (int i = 0; i < instance.getnVehicles(); i++) {
@@ -38,35 +39,40 @@ public class InstanceSolver {
                     batteryCheat ? 100 : instance.getVehicleBatteryCapacity()[i],
                     instance.getVehicleCapacity()[i])) ;
         }
+        //inizializzazione e ordinamento map dei nodi di pickup con relativa dropoff
         Map<Node, Node> unvisitedNodesMap= new HashMap<>();
         for (Node n : instance.getPickupAndDropoffLocations()) {
             if (n.getNodeType().equals(NodeType.PICKUP))
                 unvisitedNodesMap.put(n, instance.getPickupAndDropoffLocations().get(n.getId() + instance.getnCustomers() - 1));
         }
         unvisitedNodesMap = Util.orderNodeNodeMapBy(unvisitedNodesMap, Order.DESTINATION_DEPARTURE);
+
+        //SOLVER
         Solver bruteSolver = new Solver(vehicleInfos, instance, unvisitedNodesMap);
         bruteSolver.start();
+        solutionWithoutCharge = bruteSolver.getSolution();
+        infos = bruteSolver.getWaits();
 
+        //CHARGER
+        Charger charger = new Charger(instance,solutionWithoutCharge,infos);
+        solutionWithCharge = charger.optimize();
 
-        listOfPossibleSolution.add(bruteSolver.getSolution());
-        infos.add(bruteSolver.getWaits());
+        //TRANSLATE
+        Translate translate = new Translate(instance, solutionWithCharge);
+        theSolution = translate.translate();
 
-
-        Charger charger = new Charger(instance,listOfPossibleSolution,infos);
-        listOfPossibleSolutionOptimized = charger.optimizeAll();
-
-        Translate translate = new Translate(instance, listOfPossibleSolutionOptimized);
-
-        listOfSolution = translate.translateAll();
-
-
-        SolutionChecker solutionChecker = new SolutionChecker(listOfSolution.get(0));
+        //CHECKER
+        SolutionChecker solutionChecker = new SolutionChecker(theSolution);
         solutionChecker.checkAll();
 
-
-        theSolution = listOfSolution.get(0);
-        System.out.println();
     }
+
+
+
+
+
+
+
 
     public Instance getInstance() {
         return instance;

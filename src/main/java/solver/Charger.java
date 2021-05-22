@@ -9,11 +9,10 @@ import java.util.List;
 public class Charger {
 
     private final Instance instance;
-    private List<List<List<VehicleInfo>>>  optimized= new ArrayList<>();
-    private List<List<List<VehicleInfo>>> notOptimizedSolution = new ArrayList<>();
-    private List<List<List<WaitingInfo>>> infos = new ArrayList<>();
+    private List<List<VehicleInfo>> notOptimizedSolution = new ArrayList<>();
+    private List<List<WaitingInfo>> infos = new ArrayList<>();
 
-    public Charger(Instance instance,List<List<List<VehicleInfo>>> notOptimizedSolution,List<List<List<WaitingInfo>>> infos) {
+    public Charger(Instance instance,List<List<VehicleInfo>> notOptimizedSolution,List<List<WaitingInfo>> infos) {
         this.instance = instance;
         this.notOptimizedSolution = notOptimizedSolution;
         this.infos = infos;
@@ -25,12 +24,12 @@ public class Charger {
         List<VehicleInfo> newSolution= new ArrayList<>(solution);
         for(VehicleInfo n : solution){
             if(worthChargingAt(n, vehicleId, newSolution,waitingInfos))
-                charge(n, vehicleId, newSolution,waitingInfos);
+                charge(n, newSolution,waitingInfos);
         }
         return newSolution;
     }
 
-    private void charge(VehicleInfo present, int vehicleId, List<VehicleInfo> solution,List<WaitingInfo> waitingInfos) {
+    private void charge(VehicleInfo present, List<VehicleInfo> solution,List<WaitingInfo> waitingInfos) {
 
         Node chargingStation= getBestChargingStation(present.getCurrentPosition(), solution.get(solution.indexOf(present)+1).getCurrentPosition());
         double inTime = Util.computeTimeToArriveToNextNode(present.getCurrentPosition(),chargingStation,0, instance);
@@ -81,50 +80,30 @@ public class Charger {
         if(waitingInfos.get(((int)(solution.indexOf(present)/2)+1)).getWaitTime()<(inTime+outTime))
             return false;
 
-
-
-
-        //vehicleInfo.setCurrentBatteryLevel(vehicleInfo.getCurrentBatteryLevel()-movingTime*instance.getVehicleDischargingRate());
-
         return true;
     }
 
 
 
-    public List<List<VehicleInfo>>  optimize(List<List<VehicleInfo>> solutionHolder,List<List<WaitingInfo>> infos,int nSolution){
+    public List<List<VehicleInfo>>  optimize(){
 
         List<List<VehicleInfo>> tmp = new ArrayList<>();
 
 
         for (int i = 0; i < instance.getnVehicles(); i++) {
-            List<VehicleInfo> vi =optimizeVehicle(solutionHolder.get(i), i,infos.get(i));
+            List<VehicleInfo> vi =optimizeVehicle(notOptimizedSolution.get(i), i,infos.get(i));
             tmp.add(new ArrayList<>(vi));
         }
 
-        System.out.println("\n\n\n");
-        System.out.println("OPTIMIZED");
+        System.out.println("\nOPTIMIZED");
 
         for (List<VehicleInfo> v: tmp) {
             System.out.println(v);
         }
 
-        return tmp;
+        return tmp; 
     }
 
-    public List<List<List<VehicleInfo>>> optimizeAll()
-    {
-        List<List<VehicleInfo>> llv;
-        for (int i = 0; i < notOptimizedSolution.size(); i++)
-        {
-            llv = optimize(notOptimizedSolution.get(i),infos.get(i),i);
-            optimized.add(new ArrayList<>(llv));
-        }
-
-
-
-        return optimized;
-
-    }
 
 
 

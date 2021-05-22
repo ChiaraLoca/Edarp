@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.ArrayList;
 
-public class SolveAllInstance {
+public class AllInstanceSolver {
 
     public static void main(String[] args) throws Exception {
 

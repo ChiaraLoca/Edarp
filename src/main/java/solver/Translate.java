@@ -10,7 +10,7 @@ import java.util.List;
 public class Translate {
 
     private Instance instance;
-    private List<List<List<VehicleInfo>>> allVehicleInfoList;
+    private List<List<VehicleInfo>> allVehicleInfoList;
     List<Solution> solutions = new ArrayList<>();
 
     private int K;
@@ -18,7 +18,7 @@ public class Translate {
     private int C;
 
     private Scorer scorer = new TravelScorer();
-    public Translate(Instance instance, List<List<List<VehicleInfo>>> allVehicleInfoList ) {
+    public Translate(Instance instance, List<List<VehicleInfo>> allVehicleInfoList ) {
         this.instance = instance;
         this.allVehicleInfoList = allVehicleInfoList;
         K = instance.getnVehicles();
@@ -26,43 +26,20 @@ public class Translate {
         C = instance.getChargingStationId().length;
     }
 
-    public List<Solution> translateAll(){
 
 
-        for(List<List<VehicleInfo>> vehicleInfoList : allVehicleInfoList) {
-            Solution s = translate(vehicleInfoList);
-            s.setScore(scorer.score(s));
-            solutions.add(s);
-        }
-
-
-        return solutions;
-    }
-
-    public Solution translate(List<List<VehicleInfo>> vehicleInfoList)
+    public Solution translate()
     {
         Solution solution = new Solution(instance);
-
-        /*
-
-        vehicleSeqStopAtLocations = new int[K][V][V];
-        timeVehicleStartsAtLocation =  new double[K][V];
-        loadOfVehicleAtLocation = new double [K][V];
-        batteryLoadOfVehicleAtLocation = new double [K][V];
-        chargingTimeOfVehicleAtStation = new double [K][instance.getChargingStationId().length];
-
-
-         */
-
 
         //vehicleSeqStopAtLocations = new int[K][V][V];
         for(int i = 0; i<K; i++)
         {
-            Node prima = vehicleInfoList.get(i).get(0).getCurrentPosition();
+            Node prima = allVehicleInfoList.get(i).get(0).getCurrentPosition();
             Node ora =null;
-            for(int n = 1; n<vehicleInfoList.get(i).size(); n++)
+            for(int n = 1; n<allVehicleInfoList.get(i).size(); n++)
             {
-                ora =vehicleInfoList.get(i).get(n).getCurrentPosition();
+                ora =allVehicleInfoList.get(i).get(n).getCurrentPosition();
                 solution.getVehicleSeqStopAtLocations()[i][prima.getId()-1][ora.getId()-1]=1;
                 prima = ora;
             }
@@ -74,13 +51,13 @@ public class Translate {
 
         for(int i = 0; i<K; i++) {
             Node node;
-            for(int n = 0; n<vehicleInfoList.get(i).size(); n++) {
-                node = vehicleInfoList.get(i).get(n).getCurrentPosition();
-                solution.getTimeVehicleStartsAtLocation()[i][node.getId()-1] = vehicleInfoList.get(i).get(n).getTimeOfMission();
+            for(int n = 0; n<allVehicleInfoList.get(i).size(); n++) {
+                node = allVehicleInfoList.get(i).get(n).getCurrentPosition();
+                solution.getTimeVehicleStartsAtLocation()[i][node.getId()-1] = allVehicleInfoList.get(i).get(n).getTimeOfMission();
 
-                solution.getLoadOfVehicleAtLocation()[i][node.getId()-1] = vehicleInfoList.get(i).get(n).getPassengerDestination().size();
+                solution.getLoadOfVehicleAtLocation()[i][node.getId()-1] = allVehicleInfoList.get(i).get(n).getPassengerDestination().size();
 
-                solution.getBatteryLoadOfVehicleAtLocation()[i][node.getId()-1] = vehicleInfoList.get(i).get(n).getCurrentBatteryLevel();
+                solution.getBatteryLoadOfVehicleAtLocation()[i][node.getId()-1] = allVehicleInfoList.get(i).get(n).getCurrentBatteryLevel();
             }
         }
 
@@ -88,8 +65,8 @@ public class Translate {
         for(int i = 0; i<K; i++) {
             Node node;
             VehicleInfo info;
-            for(int n = 1; n<vehicleInfoList.get(i).size(); n++) {
-                info = vehicleInfoList.get(i).get(n);
+            for(int n = 1; n<allVehicleInfoList.get(i).size(); n++) {
+                info = allVehicleInfoList.get(i).get(n);
                 node = info.getCurrentPosition();
 
                 if(info.getTimeSpendAtCharging()>0 && node.getNodeType().equals(NodeType.CHARGE)) {
@@ -99,39 +76,11 @@ public class Translate {
             }
         }
 
+        solution.setScore(scorer.score(solution));
 
-
-
-
-            return solution;
+        return solution;
 
     }
 
-    public void sort()
-    {
-        List<Double> maxTime = new ArrayList<>();
-        for (Solution s:solutions) {
-            double tmp =Double.MIN_VALUE;
-            int indexK=0;
-            int indexJ=0;
-            for(int k = 0; k<K; k++)
-            {
-                for(int j = 0; j<s.getTimeVehicleStartsAtLocation()[k].length; j++)
-                {
-                    if(s.getTimeVehicleStartsAtLocation()[k][j]>tmp) {
-                        tmp = s.getTimeVehicleStartsAtLocation()[k][j];
-                        indexK =k;
-                        indexJ =j;
-                    }
 
-
-                }
-            }
-
-            maxTime.add(s.getTimeVehicleStartsAtLocation()[indexK][indexJ]);
-
-        }
-
-        System.out.println();
-    }
 }
