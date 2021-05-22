@@ -1,24 +1,22 @@
-package parser;
+package model;
 
-
-import model.Instance;
 import org.junit.jupiter.api.Test;
+import parser.InstanceReader;
+import parser.ModelReader;
+import solutionCheck.SolutionChecker;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.net.URL;
-import java.text.ParseException;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
-class ModelReaderTest {
-
+public class ModelSolverTest {
     @Test
-    void readTest() throws FileNotFoundException, ParseException {
+    void solveTest() throws Exception {
         Instance instance = InstanceReader.getInstanceReader().read(new File("src/test/resources/instances/u2-16-0.7.txt"),true);
 
         ModelReader modelReader = ModelReader.getModelReader();
         File file = new File("src/test/resources/outputFiles/outForParser.txt");
-        modelReader.read(file, instance);
+        Solution s=modelReader.read(file, instance);
+
+        SolutionChecker solutionChecker = new SolutionChecker(s);
+        solutionChecker.checkAll();
     }
 }
