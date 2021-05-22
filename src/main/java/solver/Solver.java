@@ -106,9 +106,12 @@ public class Solver {
     //nodi da risolvere
     public void solve(Map<Node, Node> unsolved, int vehicleId) throws Exception {
         depth++;
+
+        //  Se un nodo non è più raggiungibile
         if(nodePermanentlyLost(unsolved))
             return;
 
+        //  Se non ci sono nodi insoddisfatti
         if(unsolved.isEmpty()){
             found=true;
             return;
@@ -127,43 +130,40 @@ public class Solver {
         }
         else
             counter--;
-        //ogni nodo
+
         double wait=0;
         while(Util.isTimeHorizonRespected(vehicleId, instance.getTimeHorizon(), vehicleInfos.get(vehicleId).getTimeOfMission(), wait)){
+            //  Per ogni coppia di nodi non risolta
             for (Map.Entry<Node, Node> e : unsolved.entrySet()) {
+                //  Se la coppia di nodi è raggiungibile correttamente
                 if (isPossibleNode(new PairOfNodes(e.getKey(), e.getValue()), wait, vehicleInfos.get(vehicleId))) {
-                    //System.out.println("" + vehicleId + '\t' + e.getKey() + '\t' + e.getValue());
                     boolean chargeWaited = false;
 
-
-
-
+                    //  Salvo lo stato attuale
                     Map<Node, Node> modifiedMap = new HashMap<>(unsolved);
                     VehicleInfo saved = new VehicleInfo(vehicleInfos.get(vehicleId));
-                    //veicolo va al nuovo punto
+                    //  Muovo al primo nodo della coppia
                     Util.moveToNextNode(vehicleInfos.get(vehicleId), e.getKey(), wait,instance);
-                    //aggiungo i nodi alla soluzione
                     VehicleInfo pickupNode = new VehicleInfo(vehicleInfos.get(vehicleId));
+                    //  Aggiungo il primo nodo alla soluzione
                     solution.get(vehicleId).add(pickupNode);
-
+                    //  Muovo al secondo nodo della coppia
                     Util.moveToNextNode(vehicleInfos.get(vehicleId), e.getValue(), 0,instance);
                     VehicleInfo dropoffNode = new VehicleInfo(vehicleInfos.get(vehicleId));
+                    //  Aggiungo il secondo nodo alla soluzione
                     solution.get(vehicleId).add(dropoffNode);
+
                     double batteryCharge = vehicleInfos.get(vehicleId).getCurrentBatteryLevel();
 
+                    //  Rimuovo la coppiua di nodi dagli insoddisfatti
                     modifiedMap.remove(e.getKey());
-                    /*for (List<Node> l: solution) {
-                        System.out.println(l);
 
-                    }
-                    System.out.println();*/
-
+                    //  Chiamo il prossimo veicolo a risolvere
                     solve(modifiedMap, vehicleId + 1);
-                    /*if(nodePermanentlyLost(unsolved)) {
-                        wait = 0;
 
-                    }*/
                     depth--;
+
+                    //  Se ho trovato una soluzione
                     if (found){
                         waits.get(vehicleId).add(0,new WaitingInfo(wait, e.getValue(), batteryCharge));
                         return;
@@ -172,15 +172,15 @@ public class Solver {
                     if(chargeWaited){
                         chargingWaits.set(vehicleId, chargingWaits.get(vehicleId)+1);
                     }
-
+                    //  Ripristino lo stato
                     vehicleInfos.set(vehicleId, new VehicleInfo(saved));
                     solution.get(vehicleId).remove(pickupNode);
                     solution.get(vehicleId).remove(dropoffNode);
                 }
 
             }
+            // Se nessuno dei nodi è fattibile aspetto e riprovo
             wait+=1;
-           // System.out.println("wait: "+wait);
         }
 
 
