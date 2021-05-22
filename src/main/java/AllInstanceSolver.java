@@ -3,8 +3,6 @@ import parser.InstanceReader;
 import solver.InstanceSolver;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.text.ParseException;
 import java.util.ArrayList;
 
 public class AllInstanceSolver {
@@ -35,6 +33,6 @@ public class AllInstanceSolver {
         {
             System.out.println(s);
         }
-        System.out.println("fine");
+
     }
 }
