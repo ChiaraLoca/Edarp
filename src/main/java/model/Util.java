@@ -107,7 +107,11 @@ public class Util {
             case DESTINATION_DEPARTURE:{
                 result = map.entrySet()
                         .stream()
-                        .sorted((o1, o2) -> {return o1.getValue().getArrival()>o2.getValue().getArrival() ? 1:-1;})
+                        .sorted((o1, o2) -> {
+                            double a = o1.getKey().getDeparture()<o1.getValue().getDeparture()?o1.getKey().getDeparture():o1.getValue().getDeparture();
+                            double b = o2.getKey().getDeparture()<o2.getValue().getDeparture()?o2.getKey().getDeparture():o2.getValue().getDeparture();
+                            return a>=b?1:-1;
+                        })
                         .collect(Collectors.toMap(
                                 Map.Entry::getKey,
                                 Map.Entry::getValue,

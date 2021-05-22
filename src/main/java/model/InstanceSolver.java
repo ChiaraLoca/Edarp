@@ -61,7 +61,16 @@ public class InstanceSolver {
         solutionChecker.checkAll();
 
 
-
+        theSolution = listOfSolution.get(0);
         System.out.println();
     }
+
+    public Instance getInstance() {
+        return instance;
+    }
+
+    public Solution getTheSolution() {
+        return theSolution;
+    }
 }
+

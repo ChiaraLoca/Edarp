@@ -26,13 +26,15 @@ public class Node {
     public String toString() {
         return "Node{" +
                 "id=" + id +
+                ", lat=" + lat +
+                ", lon=" + lon +
+                ", serviceTime=" + serviceTime +
+                ", load=" + load +
                 ", arrival=" + arrival +
                 ", departure=" + departure +
+                ", nodeType=" + nodeType +
                 '}';
     }
-
-
-
 
     @Override
     public boolean equals(Object o) {

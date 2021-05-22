@@ -17,6 +17,8 @@ public class SolutionChecker {
     }
 
     public boolean checkAll() {
+        int total=0;
+        int pass=0;
         Reflections reflections = new Reflections("solutionCheck");
         Set<Class<? extends AbstractConstraint>> classes = reflections.getSubTypesOf(AbstractConstraint.class);
         for (Class<? extends AbstractConstraint> aClass : classes) {
@@ -29,11 +31,14 @@ public class SolutionChecker {
                     //return false;
                 } else {
                     Util.printGreen("Passed constraint: "+aClass.getSimpleName()+"\n");
+                    pass++;
                 }
+                total++;
             } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
+        solution.setConstraint("Constraint: "+pass+"/"+total);
         return true;
     }
 

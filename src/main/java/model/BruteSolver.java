@@ -18,6 +18,9 @@ public class BruteSolver {
     private List<List<List<VehicleInfo>>> solutionList= new ArrayList<>();
     private List<Integer> chargingWaits = new ArrayList<>();
 
+    int counter=50;
+    int numberUnsolved;
+
     public BruteSolver(List<VehicleInfo> vehicleInfos, Instance instance, Map<Node, Node> originalUnsolved) {
         this.vehicleInfos = vehicleInfos;
         this.instance = instance;
@@ -102,13 +105,25 @@ public class BruteSolver {
         depth++;
         if(nodePermanentlyLost(unsolved))
             return;
-        System.out.println(depth);
+
         if(unsolved.isEmpty()){
             found=true;
             return;
         }
+        if(counter==0) {
+            found = true;
+            return;
+        }
+
         if(vehicleId>=nVehicles)
             vehicleId=0;
+        System.out.println(depth+"\t"+solution.get(vehicleId).size()+"\t"+unsolved.size()+"\t"+vehicleId+"\t"+vehicleInfos.get(vehicleId).getTimeOfMission());
+        if(numberUnsolved!=unsolved.size()) {
+            numberUnsolved = unsolved.size();
+            counter =50;
+        }
+        else
+            counter--;
         //ogni nodo
         double wait=0;
         while(Util.isTimeHorizonRespected(vehicleId, instance.getTimeHorizon(), vehicleInfos.get(vehicleId).getTimeOfMission(), wait)){
@@ -118,19 +133,7 @@ public class BruteSolver {
                     boolean chargeWaited = false;
 
 
-                    if(vehicleInfos.get(vehicleId).getCurrentBatteryLevel()<(vehicleInfos.get(vehicleId).getMaxBatteryCapacity()/2) && wait>0 /*&& isPossibleNode(new PairOfNodes(e.getKey(), e.getValue()), wait+14, vehicleInfos.get(vehicleId))*/&& chargingWaits.get(vehicleId)>0){
 
-
-                        /*Node ccn = getClosestChargingNode(vehicleInfos.get(vehicleId).getCurrentPosition());
-                        double rechargeRate = instance.getStationRechargingRate()[ccn.getId()-instance.getChargingStationId()[0]];
-
-                        double maxChargingTime = (vehicleInfos.get(vehicleId).getMaxBatteryCapacity()-vehicleInfos.get(vehicleId).getCurrentBatteryLevel())/ rechargeRate;
-
-                        wait= wait+maxChargingTime;*/
-                        //wait= wait+40;
-                        chargingWaits.set(vehicleId, chargingWaits.get(vehicleId)-1);
-                        chargeWaited=true;
-                    }
 
                     Map<Node, Node> modifiedMap = new HashMap<>(unsolved);
                     VehicleInfo saved = new VehicleInfo(vehicleInfos.get(vehicleId));
@@ -153,6 +156,10 @@ public class BruteSolver {
                     System.out.println();*/
 
                     solve(modifiedMap, vehicleId + 1);
+                    /*if(nodePermanentlyLost(unsolved)) {
+                        wait = 0;
+
+                    }*/
                     depth--;
                     if (found){
                         waits.get(vehicleId).add(0,new WaitingInfo(wait, e.getValue(), batteryCharge));
@@ -170,6 +177,7 @@ public class BruteSolver {
 
             }
             wait+=1;
+           // System.out.println("wait: "+wait);
         }
 
 
@@ -193,23 +201,35 @@ public class BruteSolver {
     public boolean isPossibleNode(PairOfNodes pairOfNodes, double wait, VehicleInfo vehicleInfo) throws Exception {
         //nodo non scaduto, raggiungibile in tempo ora->pik->drop, pick->drop in 8 minuti , ora->pik->drop->char,
 
-        if(vehicleInfo.getTimeOfMission()>pairOfNodes.getDropoff().getDeparture())
+        double timeMission_wait = vehicleInfo.getTimeOfMission()+wait;
+
+        if(timeMission_wait>pairOfNodes.getDropoff().getDeparture())
+            return false;
+        if(timeMission_wait>pairOfNodes.getPickup().getDeparture())
             return false;
 
-        double d = computeTimeToArriveToNextNode(vehicleInfo.getCurrentPosition(),pairOfNodes.getPickup(),wait, vehicleInfo)+
-                computeTimeToArriveToNextNode(pairOfNodes.getPickup(),pairOfNodes.getDropoff(),0, vehicleInfo);
-        if(vehicleInfo.getTimeOfMission()+d>pairOfNodes.getDropoff().getDeparture())
+        double currPick = computeTimeToArriveToNextNode(vehicleInfo.getCurrentPosition(),pairOfNodes.getPickup(),0, vehicleInfo);
+        if(currPick+timeMission_wait>pairOfNodes.getPickup().getDeparture())
             return false;
+
+        double currPickDrop = computeTimeToArriveToNextNode(pairOfNodes.getPickup(),pairOfNodes.getDropoff(),0, vehicleInfo)+
+                currPick;
+        if(currPickDrop+ timeMission_wait>pairOfNodes.getDropoff().getDeparture())
+            return false;
+
+
 /*
         double c= computeTimeToArriveToNextNode(pairOfNodes.getDropoff(),getClosestChargingNode(pairOfNodes.getDropoff()),0, vehicleInfo);
         double charge = (vehicleInfo.getTimeOfMission()+d+c) * instance.getVehicleDischargingRate();
         if(charge>vehicleInfo.getCurrentBatteryLevel())
             return false;
 */
-        double e = vehicleInfo.getTimeOfMission()+
+        /*double e = vehicleInfo.getTimeOfMission()+
                 computeTimeToArriveToNextNode(vehicleInfo.getCurrentPosition(),pairOfNodes.getPickup(),wait, vehicleInfo)+
-                computeTimeToArriveToNextNode(pairOfNodes.getPickup(),pairOfNodes.getDropoff(),0, vehicleInfo);
-        if(e<pairOfNodes.getDropoff().getArrival())
+                computeTimeToArriveToNextNode(pairOfNodes.getPickup(),pairOfNodes.getDropoff(),0, vehicleInfo);*/
+        if(currPickDrop+ timeMission_wait<pairOfNodes.getDropoff().getArrival())
+            return false;
+        if(currPick+ timeMission_wait<pairOfNodes.getPickup().getArrival())
             return false;
         return true;
     }
@@ -249,7 +269,9 @@ public class BruteSolver {
     public boolean vehicleLostNode(VehicleInfo vehicleInfo, Map<Node, Node> map){
         for (Map.Entry<Node, Node> e: map.entrySet()) {
             if(vehicleInfo.getTimeOfMission()>e.getValue().getDeparture())
-                return true;
+            {
+
+                return true;}
         }
         return false;
     }

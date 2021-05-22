@@ -28,6 +28,7 @@ public class Solution {
     private double[] excessRideTimeOfPassenger; // R: excess ride-time of passenger i ∈ P  R{P};
 
     private double score;
+    private String constraint;
 
 
 
@@ -93,6 +94,14 @@ public class Solution {
 
     public void setScore(double score) {
         this.score = score;
+    }
+
+    public String getConstraint() {
+        return constraint;
+    }
+
+    public void setConstraint(String constraint) {
+        this.constraint = constraint;
     }
 
     @Override
