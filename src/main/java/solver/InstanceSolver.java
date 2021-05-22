@@ -58,7 +58,7 @@ public class InstanceSolver {
         solutionWithCharge = charger.optimize();
 
         //TRANSLATE
-        Translate translate = new Translate(instance, solutionWithCharge);
+        Translator translate = new Translator(instance, solutionWithCharge);
         theSolution = translate.translate();
 
         //CHECKER

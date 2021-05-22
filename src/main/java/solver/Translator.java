@@ -7,7 +7,7 @@ import scorer.TravelScorer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Translate {
+public class Translator {
 
     private Instance instance;
     private List<List<VehicleInfo>> allVehicleInfoList;
@@ -18,7 +18,7 @@ public class Translate {
     private int C;
 
     private Scorer scorer = new TravelScorer();
-    public Translate(Instance instance, List<List<VehicleInfo>> allVehicleInfoList ) {
+    public Translator(Instance instance, List<List<VehicleInfo>> allVehicleInfoList ) {
         this.instance = instance;
         this.allVehicleInfoList = allVehicleInfoList;
         K = instance.getnVehicles();
