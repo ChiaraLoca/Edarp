@@ -1,6 +1,11 @@
-package model;
+package util;
 
 
+
+import model.Instance;
+import model.Node;
+import model.NodeType;
+import model.VehicleInfo;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -56,7 +61,7 @@ public class Util {
 
     }
 
-    public static HashMap<Node,Double> orderNodeDoubleMapBy(HashMap<Node,Double>map,Order order) {
+    public static HashMap<Node,Double> orderNodeDoubleMapBy(HashMap<Node,Double>map, Order order) {
 
         Map<Node,Double> result = null;
         switch (order)
@@ -174,7 +179,7 @@ public class Util {
         Util.printRed("Tempo: "+time+"\n\n");
     }
 
-    public static double computeTimeToArriveToNextNode( Node start, Node arrive, double wait,Instance instance) {
+    public static double computeTimeToArriveToNextNode(Node start, Node arrive, double wait, Instance instance) {
 
         double travelTime = getTravelTimeFrom(start, arrive,instance) + wait;
         double additionalTime = start.getNodeType().equals(NodeType.CHARGE) ? 0: start.getServiceTime();
@@ -185,7 +190,7 @@ public class Util {
         return instance.getTravelTime()[startNode.getId() - 1][arriveNode.getId() - 1];
     }
 
-    public static  void moveToNextNode(VehicleInfo vehicleInfo, Node nextNode,double wait,Instance instance)
+    public static  void moveToNextNode(VehicleInfo vehicleInfo, Node nextNode, double wait, Instance instance)
     {
         if(nextNode.getNodeType().equals(NodeType.PICKUP))
             vehicleInfo.getPassengerDestination().add(instance.getNodes().get(nextNode.getId()+ instance.getnCustomers()-1));

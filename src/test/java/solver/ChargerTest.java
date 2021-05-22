@@ -1,4 +1,4 @@
-package model;
+package solver;
 
 import org.junit.jupiter.api.Test;
 import parser.InstanceReader;

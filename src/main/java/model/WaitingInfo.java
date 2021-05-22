@@ -14,18 +14,6 @@ public class WaitingInfo {
         return waitTime;
     }
 
-    public void setWaitTime(double waitTime) {
-        this.waitTime = waitTime;
-    }
-
-    public Node getWaitLocation() {
-        return waitLocation;
-    }
-
-    public void setWaitLocation(Node waitLocation) {
-        this.waitLocation = waitLocation;
-    }
-
     public double getBattery() {
         return battery;
     }

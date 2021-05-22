@@ -1,4 +1,7 @@
-package model;
+package solver;
+
+import model.*;
+import util.Util;
 
 import java.util.ArrayList;
 import java.util.List;

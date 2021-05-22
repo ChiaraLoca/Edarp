@@ -1,8 +1,7 @@
 package solutionCheck;
 
-import model.Instance;
 import model.Solution;
-import model.Util;
+import util.Util;
 import org.reflections.Reflections;
 
 import java.lang.reflect.Constructor;
@@ -27,7 +26,7 @@ public class SolutionChecker {
 
                 AbstractConstraint constraint = (AbstractConstraint) constructor.newInstance(solution);
                 if(!constraint.check()) {
-                    System.err.println("Error constraint: "+aClass.getSimpleName());
+                    Util.printRed("Error constraint: "+aClass.getSimpleName()+"\n");
                     //return false;
                 } else {
                     Util.printGreen("Passed constraint: "+aClass.getSimpleName()+"\n");

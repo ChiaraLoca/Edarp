@@ -1,6 +1,9 @@
-package model;
+package solver;
 
+import model.*;
 import solutionCheck.SolutionChecker;
+import util.Order;
+import util.Util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,8 +43,8 @@ public class InstanceSolver {
             if (n.getNodeType().equals(NodeType.PICKUP))
                 unvisitedNodesMap.put(n, instance.getPickupAndDropoffLocations().get(n.getId() + instance.getnCustomers() - 1));
         }
-        unvisitedNodesMap = Util.orderNodeNodeMapBy(unvisitedNodesMap,Order.DESTINATION_DEPARTURE);
-        BruteSolver bruteSolver = new BruteSolver(vehicleInfos, instance, unvisitedNodesMap);
+        unvisitedNodesMap = Util.orderNodeNodeMapBy(unvisitedNodesMap, Order.DESTINATION_DEPARTURE);
+        Solver bruteSolver = new Solver(vehicleInfos, instance, unvisitedNodesMap);
         bruteSolver.start();
 
 

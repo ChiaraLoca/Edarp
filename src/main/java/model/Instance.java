@@ -39,88 +39,35 @@ public class Instance {
     private  ArrayList<Node> pickupAndDropoffLocations; // N = P ∪ D: set of pickup and dropoff locations
     private double[][] m; // Mi,j = max{0, depi + di + ti,j − arrj}
     private double[][] g; // Mi,j = max{0, depi + di + ti,j − arrj}
-    //private final int[] allPossibleLocationsId; // V = N ∪ O ∪ F ∪ S: set
-    private ArrayList<Node> chargingStationNodes;
 
+    private ArrayList<Node> chargingStationNodes;
 
     public ArrayList<Node> getChargingStationNodes() {
         return chargingStationNodes;
-    }
-
-    public void setChargingStationNodes(ArrayList<Node> chargingStationNodes) {
-        this.chargingStationNodes = chargingStationNodes;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public int getnVehicles() {
         return nVehicles;
     }
 
-    public void setnVehicles(int nVehicles) {
-        this.nVehicles = nVehicles;
-    }
-
     public int getnCustomers() {
         return nCustomers;
-    }
-
-    public void setnCustomers(int nCustomers) {
-        this.nCustomers = nCustomers;
     }
 
     public double getMinBatteryRatioLvl() {
         return minBatteryRatioLvl;
     }
 
-    public void setMinBatteryRatioLvl(double minBatteryRatioLvl) {
-        this.minBatteryRatioLvl = minBatteryRatioLvl;
-    }
-
-    public int getnOriginDepots() {
-        return nOriginDepots;
-    }
-
-    public void setnOriginDepots(int nOriginDepots) {
-        this.nOriginDepots = nOriginDepots;
-    }
-
-    public int getnDestinationDepots() {
-        return nDestinationDepots;
-    }
-
-    public void setnDestinationDepots(int nDestinationDepots) {
-        this.nDestinationDepots = nDestinationDepots;
-    }
-
     public int getnStations() {
         return nStations;
-    }
-
-    public void setnStations(int nStations) {
-        this.nStations = nStations;
-    }
-
-    public int getnReplications() {
-        return nReplications;
-    }
-
-    public void setnReplications(int nReplications) {
-        this.nReplications = nReplications;
     }
 
     public double getTimeHorizon() {
@@ -221,18 +168,9 @@ public class Instance {
         return pickupAndDropoffLocations;
     }
 
-    public void setPickupAndDropoffLocations(ArrayList<Node> pickupAndDropoffLocations) {
-        this.pickupAndDropoffLocations = pickupAndDropoffLocations;
-    }
-
-    /*public int[] getAllPossibleLocationsId() {
-        return allPossibleLocationsId;
-    }*/
-
     public double[][] getG() {
         return g;
     }
-
 
     public double[][] getM() {
         return m;

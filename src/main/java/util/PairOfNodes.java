@@ -1,4 +1,6 @@
-package model;
+package util;
+
+import model.Node;
 
 import java.util.Objects;
 

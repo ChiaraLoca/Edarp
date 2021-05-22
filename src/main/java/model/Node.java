@@ -60,56 +60,28 @@ public class Node {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public double getLat() {
         return lat;
-    }
-
-    public void setLat(double lat) {
-        this.lat = lat;
     }
 
     public double getLon() {
         return lon;
     }
 
-    public void setLon(double lon) {
-        this.lon = lon;
-    }
-
     public double getServiceTime() {
         return serviceTime;
-    }
-
-    public void setServiceTime(double serviceTime) {
-        this.serviceTime = serviceTime;
     }
 
     public double getLoad() {
         return load;
     }
 
-    public void setLoad(double load) {
-        this.load = load;
-    }
-
     public double getArrival() {
         return arrival;
     }
 
-    public void setArrival(double arrival) {
-        this.arrival = arrival;
-    }
-
     public double getDeparture() {
         return departure;
-    }
-
-    public void setDeparture(double departure) {
-        this.departure = departure;
     }
 
     public NodeType getNodeType() {

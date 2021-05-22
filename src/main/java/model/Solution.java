@@ -72,22 +72,6 @@ public class Solution {
         return excessRideTimeOfPassenger;
     }
 
-    public boolean isSolutionComplete() {
-        return solutionComplete;
-    }
-
-    public void setSolutionComplete(boolean solutionComplete) {
-        this.solutionComplete = solutionComplete;
-    }
-
-    public String getDetails() {
-        return details;
-    }
-
-    public void setDetails(String details) {
-        this.details = details;
-    }
-
     public double getScore() {
         return score;
     }

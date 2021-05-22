@@ -1,15 +1,12 @@
-package model;
+package solver;
 
+import model.Instance;
 import org.junit.jupiter.api.Test;
 import parser.InstanceReader;
-import parser.InstanceWriter;
+import solver.InstanceSolver;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.text.ParseException;
 import java.util.ArrayList;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class InstanceSolverTest {
 

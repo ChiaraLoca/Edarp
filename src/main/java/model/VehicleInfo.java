@@ -80,10 +80,7 @@ public class VehicleInfo{
 
     }
 
-    public double getMissingCharge()
-    {
-        return maxBatteryCapacity-getCurrentBatteryLevel();
-    }
+
 
     public int getVehicleId() {
         return vehicleId;
@@ -125,19 +122,8 @@ public class VehicleInfo{
         return passengerDestination;
     }
 
-    public void setPassengerDestination(List<Node> passengerDestination) {
-        this.passengerDestination = passengerDestination;
-    }
-
     public double getPossibleTimeToArriveToNextNode() {
         return possibleTimeToArriveToNextNode;
-    }
-
-    public void setPossibleTimeToArriveToNextNode(double possibleTimeToArriveToNextNode) {
-        this.possibleTimeToArriveToNextNode = possibleTimeToArriveToNextNode;
-    }
-    public void addTimeToArriveToNextNode(double timeToArriveToNextNode) {
-        this.possibleTimeToArriveToNextNode += timeToArriveToNextNode;
     }
 
     public double getTimeSpendAtCharging() {
@@ -148,41 +134,14 @@ public class VehicleInfo{
         this.timeSpendAtCharging = timeSpendAtCharging;
     }
 
-    public void resetCurrentBatteryLevel() {
-        possibleBatteryLevel = maxBatteryCapacity;
-    }
-
-    public void decreseCurrentBatteryLevel(double d) {
-        possibleBatteryLevel = currentBatteryLevel-d;
-    }
-
     public double getPossibleBatteryLevel() {
         return possibleBatteryLevel;
-    }
-
-    public void setPossibleBatteryLevel(double possibleBatteryLevel) {
-        this.possibleBatteryLevel = possibleBatteryLevel;
     }
 
     public List<Node> getPossiblePassengerDestination() {
         return possiblePassengerDestination;
     }
 
-    public void setPossiblePassengerDestination(List<Node> possiblePassengerDestination) {
-        this.possiblePassengerDestination = possiblePassengerDestination;
-    }
-    public void update(Node nextNode)
-    {
-        /*setCurrentPosition(nextNode);
-        passengerDestination.clear();
-        passengerDestination.addAll(possiblePassengerDestination);
-
-
-
-        currentBatteryLevel= possibleBatteryLevel;
-        waitingTime =0;
-        timeOfMission= possibleTimeToArriveToNextNode;*/
-    }
 
     public double getWaitingTime() {
         return waitingTime;
@@ -192,9 +151,6 @@ public class VehicleInfo{
         this.waitingTime = waitingTime;
     }
 
-    public void addWaitingTime(double waitingTime) {
-        this.waitingTime += waitingTime;
-    }
 
     public double getTimeOfMission() {
         return timeOfMission;
@@ -208,31 +164,12 @@ public class VehicleInfo{
         return possibleDistanceFromPossibleDestination;
     }
 
-    public void setPossibleDistanceFromPossibleDestination(double possibleDistanceFromPossibleDestination) {
-        this.possibleDistanceFromPossibleDestination = possibleDistanceFromPossibleDestination;
-    }
-
-    public boolean isFullyCharged() {
-        if(currentBatteryLevel<maxBatteryCapacity)
-            return false;
-        return true;
-    }
-
     public boolean isTimeOver() {
         return timeOver;
     }
 
-    public void setTimeOver(boolean timeOver) {
-        System.out.println(getVehicleId()+ "time is over");
-        this.timeOver = timeOver;
-    }
-
     public double getTimeAvailableToCharge() {
         return timeAvailableToCharge;
-    }
-
-    public void setTimeAvailableToCharge(double timeAvailableToCharge) {
-        this.timeAvailableToCharge = timeAvailableToCharge;
     }
 
     public Node getLastTimeAtEmpty() {
@@ -250,9 +187,6 @@ public class VehicleInfo{
                 "}\n";
     }
 
-    public void setLastTimeAtEmpty(Node lastTimeAtEmpty) {
-        this.lastTimeAtEmpty = lastTimeAtEmpty;
-    }
 
     @Override
     public boolean equals(Object o) {

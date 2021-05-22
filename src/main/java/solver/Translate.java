@@ -1,5 +1,6 @@
-package model;
+package solver;
 
+import model.*;
 import scorer.Scorer;
 import scorer.TravelScorer;
 
