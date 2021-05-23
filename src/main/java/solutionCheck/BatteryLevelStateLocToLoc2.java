@@ -19,17 +19,17 @@ public class BatteryLevelStateLocToLoc2 extends AbstractConstraint {
         Integer[] union1=arrayDiff(nodeToArray(solution.getInstance().getNodes()),solution.getInstance().getChargingStationId());
         Integer[] union2=arrayDiff(nodeToArray(solution.getInstance().getNodes()),solution.getInstance().getArtificialOriginDepotId());
         for(int k=0; k<solution.getInstance().getnVehicles(); k++) {
-            for(int i=0; i<union1.length; i++) {
-                for(int j=0; j<union2.length; j++) {
-                    if(i==j)
+            for (int i = 0; i < union1.length; i++) {
+                for (int j = 0; j < union2.length; j++) {
+                    if (i == j)
                         continue;
-                    double sum = solution.getBatteryLoadOfVehicleAtLocation()[k][union1[i]-1]
-                            -solution.getInstance().getBatteryConsumption()[union1[i]-1][union2[j]-1]
-                            -solution.getInstance().getVehicleBatteryCapacity()[k]
-                            *(1-solution.getVehicleSeqStopAtLocations()[k][union1[i]-1][union2[j]-1]);
-                    double diff = Math.abs(sum-solution.getBatteryLoadOfVehicleAtLocation()[k][union2[j]-1]);
+                    double sum = solution.getBatteryLoadOfVehicleAtLocation()[k][union1[i] - 1]
+                            - solution.getInstance().getBatteryConsumption()[union1[i] - 1][union2[j] - 1]
+                            - solution.getInstance().getVehicleBatteryCapacity()[k]
+                            * (1 - solution.getVehicleSeqStopAtLocations()[k][union1[i] - 1][union2[j] - 1]);
+                    double diff = Math.abs(sum - solution.getBatteryLoadOfVehicleAtLocation()[k][union2[j] - 1]);
 
-                    if(solution.getBatteryLoadOfVehicleAtLocation()[k][union2[j]-1] < sum && diff<1E-7)
+                    if (solution.getBatteryLoadOfVehicleAtLocation()[k][union2[j] - 1] < sum && diff > TOLERANCE)
                         return false;
                 }
             }

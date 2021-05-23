@@ -21,7 +21,7 @@ public class MissionExecuteSameCar1 extends AbstractConstraint{
                     int j = node.getId();
                     if(i==j)
                         continue;
-                    sum += solution.getVehicleSeqStopAtLocations()[k][i][j];
+                    sum += solution.getVehicleSeqStopAtLocations()[k][i-1][j-1];
                 }
             }
             if (sum!=1)

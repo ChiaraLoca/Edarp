@@ -30,7 +30,7 @@ public class BatteryLevelStateLocToLoc1 extends AbstractConstraint {
                             *(1-solution.getVehicleSeqStopAtLocations()[k][union1[i]-1][union2[j]-1]);
 
                     double diff = Math.abs(sum-solution.getBatteryLoadOfVehicleAtLocation()[k][union2[j]-1]);
-                    if(solution.getBatteryLoadOfVehicleAtLocation()[k][union2[j]-1]>sum && diff < 1E-7)
+                    if(solution.getBatteryLoadOfVehicleAtLocation()[k][union2[j]-1]>sum && diff > TOLERANCE)
                         return false;
                 }
             }

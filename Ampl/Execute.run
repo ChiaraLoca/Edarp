@@ -10,7 +10,7 @@ option cplex_options 'mipemphasis=1 mipdisplay=2 timelimit=3600';
 option display_round 2;
 
 model Model.mod;
-data  a2-16-0.7.dat;
+data  u3-30-0.7.dat;# u3-30-0.7.dat u4-24-0.7.dat
 
 solve; 
 

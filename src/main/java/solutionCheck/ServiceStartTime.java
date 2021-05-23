@@ -21,8 +21,8 @@ public class ServiceStartTime extends AbstractConstraint{
                         continue;
                     if(solution.getInstance().getM()[i-1][j-1]==0)
                         continue;
-                    /**TODO:Controllo se va messo if(solution.getVehicleSeqStopAtLocations()[k][i-1][j-1]==0)
-                        continue;*/
+                    if(solution.getVehicleSeqStopAtLocations()[k][i-1][j-1]==0)
+                        continue;
 
                     double v1 = solution.getTimeVehicleStartsAtLocation()[k][i-1]
                             +solution.getInstance().getTravelTime()[i-1][j-1]

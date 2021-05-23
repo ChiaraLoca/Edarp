@@ -26,7 +26,7 @@ public class BatteryLevelStateAfterCharging1 extends AbstractConstraint {
                            +solution.getInstance().getVehicleBatteryCapacity()[k]
                            *(1-solution.getVehicleSeqStopAtLocations()[k][solution.getInstance().getChargingStationId()[s]-1][union[j]-1]);
                    double diff = Math.abs(sum - solution.getBatteryLoadOfVehicleAtLocation()[k][union[j]-1]);
-                    if(solution.getBatteryLoadOfVehicleAtLocation()[k][union[j]-1] > sum && diff < 1E-7)
+                    if(solution.getBatteryLoadOfVehicleAtLocation()[k][union[j]-1] > sum && diff > TOLERANCE)
                         return false;
                 }
             }

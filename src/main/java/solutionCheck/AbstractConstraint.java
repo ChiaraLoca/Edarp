@@ -6,6 +6,7 @@ import java.util.*;
 
 public abstract class AbstractConstraint {
     protected Solution solution;
+    protected static final double TOLERANCE = 0.5;
 
     public AbstractConstraint(Solution solution) {
         this.solution=solution;

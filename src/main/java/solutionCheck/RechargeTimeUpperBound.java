@@ -26,9 +26,10 @@ public class RechargeTimeUpperBound extends AbstractConstraint {
                             *(1-solution.getVehicleSeqStopAtLocations()[k][union[i]-1][solution.getInstance().getChargingStationId()[s]-1]);
 
                     double diff = Math.abs(sum - solution.getChargingTimeOfVehicleAtStation()[k][s]);
-                    if(solution.getChargingTimeOfVehicleAtStation()[k][s] > sum &&  diff < 1E-7)
+                    if(solution.getChargingTimeOfVehicleAtStation()[k][s] > sum &&  diff > TOLERANCE)
                         return false;
                     }
+
             }
         }
         return true;
