@@ -15,7 +15,7 @@ public class OccupancyLowerBound extends AbstractConstraint {
     boolean check() {
         for(int k=0; k<solution.getInstance().getnVehicles(); k++) {
             for(int i=0; i<solution.getInstance().getPickupAndDropoffLocations().size(); i++) {
-                if(solution.getLoadOfVehicleAtLocation()[k][solution.getInstance().getPickupAndDropoffLocations().get(i).getId()]
+                if(solution.getLoadOfVehicleAtLocation()[k][solution.getInstance().getPickupAndDropoffLocations().get(i).getId()-1]
                         <Math.max(0,solution.getInstance().getPickupAndDropoffLocations().get(i).getLoad()))
                     return false;
             }

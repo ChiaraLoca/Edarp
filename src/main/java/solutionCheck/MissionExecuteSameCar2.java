@@ -21,9 +21,9 @@ public class MissionExecuteSameCar2 extends AbstractConstraint{
                 for (Node node:solution.getInstance().getPickupAndDropoffLocations()) {
                     int j=node.getId();
                     if(j!=i)
-                        sum1+= solution.getVehicleSeqStopAtLocations()[k][i][j];
+                        sum1+= solution.getVehicleSeqStopAtLocations()[k][i-1][j-1];
                     if(j!=n+i)
-                        sum2+= solution.getVehicleSeqStopAtLocations()[k][j][n+i];
+                        sum2+= solution.getVehicleSeqStopAtLocations()[k][j-1][n+i-1];
                 }
                 if(sum1-sum2 !=0)
                     return false;

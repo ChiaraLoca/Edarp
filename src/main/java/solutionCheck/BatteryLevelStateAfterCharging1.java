@@ -19,13 +19,14 @@ public class BatteryLevelStateAfterCharging1 extends AbstractConstraint {
                 for (int j=0; j<union.length;j++) {
                    if(s==j)
                        continue;
-                    if(solution.getBatteryLoadOfVehicleAtLocation()[k][union[j]-1]
-                            >solution.getBatteryLoadOfVehicleAtLocation()[k][solution.getInstance().getChargingStationId()[s]-1]
-                            +solution.getInstance().getStationRechargingRate()[s]
-                            *solution.getChargingTimeOfVehicleAtStation()[k][s]
-                            -solution.getInstance().getBatteryConsumption()[solution.getInstance().getChargingStationId()[s]-1][union[j]-1]
-                            +solution.getInstance().getVehicleBatteryCapacity()[k]
-                            *(1-solution.getVehicleSeqStopAtLocations()[k][solution.getInstance().getChargingStationId()[s]-1][union[j]-1]))
+                   double sum = solution.getBatteryLoadOfVehicleAtLocation()[k][solution.getInstance().getChargingStationId()[s]-1]
+                           +solution.getInstance().getStationRechargingRate()[s]
+                           *solution.getChargingTimeOfVehicleAtStation()[k][s]
+                           -solution.getInstance().getBatteryConsumption()[solution.getInstance().getChargingStationId()[s]-1][union[j]-1]
+                           +solution.getInstance().getVehicleBatteryCapacity()[k]
+                           *(1-solution.getVehicleSeqStopAtLocations()[k][solution.getInstance().getChargingStationId()[s]-1][union[j]-1]);
+                   double diff = Math.abs(sum - solution.getBatteryLoadOfVehicleAtLocation()[k][union[j]-1]);
+                    if(solution.getBatteryLoadOfVehicleAtLocation()[k][union[j]-1] > sum && diff < 1E-7)
                         return false;
                 }
             }

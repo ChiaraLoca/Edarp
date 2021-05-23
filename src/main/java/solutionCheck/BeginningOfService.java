@@ -16,8 +16,9 @@ public class BeginningOfService extends AbstractConstraint{
         for (int k = 0; k < solution.getInstance().getnVehicles(); k++) {
             for (Node ni:solution.getInstance().getNodes()) {
                 int i = ni.getId()-1;
+
                 if(ni.getArrival()>solution.getTimeVehicleStartsAtLocation()[k][i])
-                    return false;
+                    return false; //todo: si rompe qua (getArrival ritorna sempre 0.0)
                 if(solution.getTimeVehicleStartsAtLocation()[k][i]>ni.getDeparture())
                     return false;
             }
