@@ -24,7 +24,7 @@ public class ControlPath extends AbstractConstraint {
                         [solution.getInstance().getArtificialDestinationDepotId()[k]-1][j-1];
             }
             if (sum != 1)
-                return false;
+                return false; // todo: bisogna guardarlo
         }
 
         return true;

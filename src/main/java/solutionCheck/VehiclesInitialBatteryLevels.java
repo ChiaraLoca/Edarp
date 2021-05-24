@@ -16,8 +16,11 @@ public class VehiclesInitialBatteryLevels extends AbstractConstraint {
         for(int k=0; k<solution.getInstance().getnVehicles(); k++) {
             for(int i=0; i<solution.getInstance().getArtificialOriginDepotId().length; i++) {
                 if(solution.getBatteryLoadOfVehicleAtLocation()[k][solution.getInstance().getArtificialOriginDepotId()[i]-1]
-                        !=solution.getInstance().getVehicleInitBatteryInventory()[k])
-                    return false;
+                        !=solution.getInstance().getVehicleInitBatteryInventory()[k]) {
+                    //System.out.println(solution.getInstance().getArtificialOriginDepotId()[i]-1+" "+solution.getBatteryLoadOfVehicleAtLocation()[k][solution.getInstance().getArtificialOriginDepotId()[i]-1]+" "+solution.getInstance().getVehicleInitBatteryInventory()[k]);
+                    return false; // todo questo va sistemato
+                }
+
             }
         }
         return true;

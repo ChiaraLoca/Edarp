@@ -29,8 +29,10 @@ public class ServiceStartTime extends AbstractConstraint{
                             +ni.getServiceTime();
                     double v2 = -solution.getInstance().getM()[i-1][j-1] * (1-solution.getVehicleSeqStopAtLocations()[k][i-1][j-1]);
 
-                    if(v1+v2>solution.getTimeVehicleStartsAtLocation()[k][j-1])
+                    double diff=Math.abs(v1+v2 - solution.getTimeVehicleStartsAtLocation()[k][j-1]);
+                    if(v1+v2>solution.getTimeVehicleStartsAtLocation()[k][j-1] && diff > TOLERANCE) {
                         return false;
+                    }
                 }
             }
         }
