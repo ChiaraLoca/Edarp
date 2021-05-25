@@ -22,11 +22,13 @@ public class InstanceReader {
 
     public Instance read(File file,boolean implementChanges) throws ParseException, FileNotFoundException {
 
+        if (!file.exists())
+            throw new FileNotFoundException();
+
         String title = file.getName();
         String name = "" + title.toCharArray()[0];
         title = title.substring(0, title.length() - 4);
-        if (!file.exists())
-            throw new FileNotFoundException();
+
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             int i = 1;
             List<String[]> lines = bufferedReader.lines().collect(() -> new ArrayList<String[]>(),
@@ -37,7 +39,7 @@ public class InstanceReader {
             if (lines.get(0).length != 7)
                 throw new ParseException("First line not Parsable", i);
 
-            //TODO time-service 15 minuti
+
             int nVehicles = Integer.parseInt(lines.get(0)[0]);
             int nCustomers = Integer.parseInt(lines.get(0)[1]);
             int nOriginDepots = Integer.parseInt(lines.get(0)[2]);

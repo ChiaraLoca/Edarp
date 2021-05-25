@@ -22,11 +22,12 @@ public class AllInstanceSolver {
 
         for(InstanceSolver i: instanceSolvers)
         {
-
-            long startTime = System.currentTimeMillis();
-            i.solve();
-            long endTime = System.currentTimeMillis();
-            output.add(""+i.getInstance().getTitle()+"\t"+i.getTheSolution().getScore()+"\t"+i.getTheSolution().getConstraint()+"\t"+(endTime-startTime));
+            if(i.getInstance().getName().equals("u")) {
+                long startTime = System.currentTimeMillis();
+                i.solve();
+                long endTime = System.currentTimeMillis();
+                output.add("" + i.getInstance().getTitle() + "\t" + i.getTheSolution().getScore() + "\t" + i.getTheSolution().getConstraint() + "\t" + (endTime - startTime));
+            }
         }
 
         for(String s : output)
