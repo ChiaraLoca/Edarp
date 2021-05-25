@@ -18,7 +18,7 @@ class InstanceReaderTest {
 
         InstanceReader instanceReader = InstanceReader.getInstanceReader();
 
-        Instance instance = instanceReader.read(new File("src/test/resources/instances/a2-16-0.7.txt"),false);
+        Instance instance = instanceReader.read(new File("src/main/resources/instances/a2-16-0.7.txt"),false);
         assert instance!=null;
         System.out.println(instance);
 
@@ -27,7 +27,7 @@ class InstanceReaderTest {
     void readU() throws FileNotFoundException, ParseException {
 
         InstanceReader instanceReader = InstanceReader.getInstanceReader();
-        Instance instance = instanceReader.read(new File("src/test/resources/instances/u2-16-0.7.txt"),false);
+        Instance instance = instanceReader.read(new File("src/main/resources/instances/u2-16-0.7.txt"),false);
 
         assert instance!=null;
         System.out.println(instance);
@@ -48,11 +48,11 @@ class InstanceReaderTest {
     void impementDatChangesTest() throws FileNotFoundException, ParseException {
         InstanceReader instanceReader = InstanceReader.getInstanceReader();
 
-        Instance instanceBase = instanceReader.read(new File("src/test/resources/instances/a2-16-0.7.txt"),false);
+        Instance instanceBase = instanceReader.read(new File("src/main/resources/instances/a2-16-0.7.txt"),false);
         assert instanceBase!=null;
 
 
-        Instance instanceModificata = instanceReader.read(new File("src/test/resources/instances/a2-16-0.7.txt"),true);
+        Instance instanceModificata = instanceReader.read(new File("src/main/resources/instances/a2-16-0.7.txt"),true);
         assert instanceModificata!=null;
 
         System.out.println("Time Horizon");

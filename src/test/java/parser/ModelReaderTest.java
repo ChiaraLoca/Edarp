@@ -20,7 +20,7 @@ class ModelReaderTest {
         Instance instance = InstanceReader.getInstanceReader().read(new File("src/main/resources/instances/u2-16-0.7.txt"),true);
 
         ModelReader modelReader = ModelReader.getModelReader();
-        File file = new File("src/test/resources/outputFiles/outForParser.txt");
+        File file = new File("src/main/resources/outputFiles/outForParser.txt");
         modelReader.read(file, instance);
 
         SolutionChecker solutionChecker = new SolutionChecker(modelReader.read(file, instance));
