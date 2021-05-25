@@ -5,29 +5,24 @@ import java.util.List;
 import java.util.Map;
 
 public class Solution {
-    public Instance getInstance() {
-        return instance;
-    }
-
-    public void setInstance(Instance instance) {
-        this.instance = instance;
-    }
 
     private Instance instance;
 
-    private boolean solutionComplete =false;
-
-    private String details="";
-
     // Decision variables:
-    public int[][][] vehicleSeqStopAtLocations; // X: 1 if vehicle k sequentially stops at location i and j ∈ V, 0 otherwise X{K,V,V}
-    public double[][] timeVehicleStartsAtLocation; // T: time at which vehicle k starts its service at location i ∈ V T{K,V};
-    public double[][] loadOfVehicleAtLocation; // L: load of vehicle k at location i ∈ V L{K,V};
-    public double[][] batteryLoadOfVehicleAtLocation; // B: battery load of vehicle k at location i ∈ V B{K,V}
-    public double[][] chargingTimeOfVehicleAtStation; // E: charging time of vehicle k at charging station s ∈ S E{K,S}
-    public double[] excessRideTimeOfPassenger; // R: excess ride-time of passenger i ∈ P  R{P};
+    public int[][][] vehicleSeqStopAtLocations;         // X: 1 if vehicle k sequentially stops at location i and j ∈ V, 0 otherwise X{K,V,V}
+    public double[][] timeVehicleStartsAtLocation;      // T: time at which vehicle k starts its service at location i ∈ V T{K,V};
+    public double[][] loadOfVehicleAtLocation;          // L: load of vehicle k at location i ∈ V L{K,V};
+    public double[][] batteryLoadOfVehicleAtLocation;   // B: battery load of vehicle k at location i ∈ V B{K,V}
+    public double[][] chargingTimeOfVehicleAtStation;   // E: charging time of vehicle k at charging station s ∈ S E{K,S}
+    public double[] excessRideTimeOfPassenger;          // R: excess ride-time of passenger i ∈ P  R{P};
 
     private double score;
+
+
+
+
+
+
     private String constraint;
 
 
@@ -88,11 +83,12 @@ public class Solution {
         this.constraint = constraint;
     }
 
-    @Override
-    public String toString() {
-        return "Solution{" +
-                "solutionComplete=" + solutionComplete +
-                ", details='" + details + '\'' +
-                '}';
+    public Instance getInstance() {
+        return instance;
     }
+
+    public void setInstance(Instance instance) {
+        this.instance = instance;
+    }
+
 }
