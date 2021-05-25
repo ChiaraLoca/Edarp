@@ -20,7 +20,7 @@ public class MaxRideTime extends AbstractConstraint {
                         -solution.getTimeVehicleStartsAtLocation()[k][i-1]
                         -solution.getInstance().getNodes().get(i-1).getServiceTime();
                 if (value>solution.getInstance().getUserMaxRideTime()[i-1])
-                    return false; //todo si spacca euristica (ma é giusto)
+                    return false;
             }
         }
         return true;

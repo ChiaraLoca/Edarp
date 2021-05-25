@@ -22,7 +22,7 @@ public class ModelReader {
     }
 
     public Solution read(File file, Instance instance) throws ParseException, FileNotFoundException {
-        Solution solution=new Solution(instance); 
+        Solution solution=new Solution(instance);
 
         String title = file.getName();
         String name = "" + title.toCharArray()[0];

@@ -29,7 +29,7 @@ public class Instance {
     private final double[] vehicleInitBatteryInventory; // Bk0: initial battery capacity of vehicle k ∈ K
     private final double[] vehicleBatteryCapacity; // Q: effective battery capacity
     private final double[] minEndBatteryRatioLvl;
-    private final double[] stationRechargingRate; // αs: recharge rate at charging facility s ∈ S TODO: va bene il tipo?
+    private final double[] stationRechargingRate; // αs: recharge rate at charging facility s ∈ S
     private double vehicleDischargingRate;
     private final double[] weightFactor;
     private double[][] travelTime; // t: travel time from location i ∈ V to location j ∈ V
@@ -214,14 +214,9 @@ public class Instance {
         this.travelTime = null;
         weightFactor = new double[2];
 
-        this.pickupLocationsId=new int[nCustomers]; // TODO: populate
-        this.dropoffLocationsId=new int[nCustomers]; // TODO: populate
+        this.pickupLocationsId=new int[nCustomers];
+        this.dropoffLocationsId=new int[nCustomers];
         this.pickupAndDropoffLocations=new ArrayList<>();
-        //this.allPossibleLocationsId=new int[nodes.size()]; // TODO: recupera da nodes (id)
-        //this.batteryConsumption=new double[20][5]; // TODO: init setter (nodes size)
-        //this.m=new double[5][5]; // TODO: init setter (nodes size)
-        //this.g=new double[5][5]; // TODO: init setter (nodes size)
-
     }
 
     private String printMatrix(double[][] m){

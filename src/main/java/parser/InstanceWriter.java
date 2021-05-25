@@ -35,8 +35,6 @@ public class InstanceWriter {
     public void write()
     {
 
-
-
         writeSingleParam("n",instance.getnCustomers());//n = number of customer*/
 
         writeSingleParam("numVehicles",instance.getnVehicles());//n = number of stations*/
@@ -51,7 +49,6 @@ public class InstanceWriter {
         writeKeyValueParam("Ok",instance.getArtificialOriginDepotId());
         writeSet("S",instance.getChargingStationId());//set S = Charging stations*/
 
-        //TODO controllare
         int[] res2 =new int[instance.getCommonDestinationDepotId().length+ instance.getArtificialDestinationDepotId().length];
         System.arraycopy(instance.getCommonDestinationDepotId(),0,res2,0,instance.getCommonDestinationDepotId().length);
         System.arraycopy(instance.getArtificialDestinationDepotId(),0,res2,instance.getCommonDestinationDepotId().length,instance.getArtificialDestinationDepotId().length);
@@ -158,15 +155,6 @@ public class InstanceWriter {
         printWriter.close();
     }
 
-    private void writeSet(String name,double data[])
-    {
-        printWriter.print("set " + name +" :=");
-        for(int i =0;i<data.length;i++)
-        {
-            printWriter.print(" "+data[i]);
-        }
-        printWriter.println(";");
-    }
     private void writeSet(String name,int data[])
     {
         printWriter.print("set " + name +" :=");
@@ -205,27 +193,6 @@ public class InstanceWriter {
 
     }
 
-    private void writeMatrixParam(String name,int data[][],int row,int column)
-    {
-        printWriter.println("param "+name+":");
-        for(int i =0;i<column;i++)
-        {
-            printWriter.print(" "+(i+1));
-        }
-        printWriter.println(":=");
-        for(int k =0;k<row;k++)
-        {
-            printWriter.print((k+1));
-
-            for(int j =0;j<column;j++)
-            {
-                printWriter.print(" "+data[k][j]);
-            }
-            printWriter.println();
-        }
-        printWriter.println(";");
-
-    }
 
     private void writeKeyValueParam(String name,int[] value)
     {
@@ -246,16 +213,6 @@ public class InstanceWriter {
         printWriter.println(";");
     }
 
-    private void writeKeyValueParam(String name,int key[],int[] value)
-    {
-        printWriter.print("param "+name+" :=");
-        for(int i =0;i<value.length;i++)
-        {
-            printWriter.print(" "+key[i]+ " "+ value[i]);
-        }
-        printWriter.println(";");
-    }
-
     private void writeKeyValueParam(String name,int key[],double[] value)
     {
         printWriter.print("param "+name+" :=");
@@ -265,11 +222,6 @@ public class InstanceWriter {
         }
         printWriter.println(";");
     }
-
-
-
-
-
 
 }
 

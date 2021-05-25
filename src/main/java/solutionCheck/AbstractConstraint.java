@@ -19,7 +19,7 @@ public abstract class AbstractConstraint {
         for(int[] p:param) {
             set.addAll(Arrays.asList(toInteger(p)));
         }
-        set.remove(0); //todo: da rimuovere
+        set.remove(0);
         Integer[] unionArray = set.toArray(new Integer[set.size()]);
         Arrays.sort(unionArray);
         return unionArray;
