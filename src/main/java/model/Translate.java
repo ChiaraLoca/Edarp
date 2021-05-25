@@ -76,7 +76,6 @@ public class Translate {
             for(int n = 0; n<vehicleInfoList.get(i).size(); n++) {
                 node = vehicleInfoList.get(i).get(n).getCurrentPosition();
                 solution.getTimeVehicleStartsAtLocation()[i][node.getId()-1] = vehicleInfoList.get(i).get(n).getTimeOfMission();
-
                 solution.getLoadOfVehicleAtLocation()[i][node.getId()-1] = vehicleInfoList.get(i).get(n).getPassengerDestination().size();
 
                 solution.getBatteryLoadOfVehicleAtLocation()[i][node.getId()-1] = vehicleInfoList.get(i).get(n).getCurrentBatteryLevel();
