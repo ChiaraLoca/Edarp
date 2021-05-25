@@ -19,14 +19,17 @@ public class RechargeTimeUpperBound extends AbstractConstraint {
                 for(int i=0; i<union.length; i++) {
                     if(i==s)
                         continue;
-                    if(solution.getChargingTimeOfVehicleAtStation()[k][s]
-                            >solution.getTimeVehicleStartsAtLocation()[k][solution.getInstance().getChargingStationId()[s]-1]
+                    double sum = solution.getTimeVehicleStartsAtLocation()[k][solution.getInstance().getChargingStationId()[s]-1]
                             -solution.getInstance().getTravelTime()[union[i]-1][solution.getInstance().getChargingStationId()[s]-1]
                             -solution.getTimeVehicleStartsAtLocation()[k][union[i]-1]
                             +solution.getInstance().getM()[union[i]-1][solution.getInstance().getChargingStationId()[s]-1]
-                            *(1-solution.getVehicleSeqStopAtLocations()[k][union[i]-1][solution.getInstance().getChargingStationId()[s]-1]))
+                            *(1-solution.getVehicleSeqStopAtLocations()[k][union[i]-1][solution.getInstance().getChargingStationId()[s]-1]);
+
+                    double diff = Math.abs(sum - solution.getChargingTimeOfVehicleAtStation()[k][s]);
+                    if(solution.getChargingTimeOfVehicleAtStation()[k][s] > sum &&  diff > TOLERANCE)
                         return false;
-                }
+                    }
+
             }
         }
         return true;

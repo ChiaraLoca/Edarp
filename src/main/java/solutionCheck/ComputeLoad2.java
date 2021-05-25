@@ -26,8 +26,10 @@ public class ComputeLoad2 extends AbstractConstraint{
                     double v2 = solution.getInstance().getG()[k][i-1]
                             * (1 - solution.getVehicleSeqStopAtLocations()[k][i-1][j-1]);
 
-                    if (v1 + v2 < solution.getLoadOfVehicleAtLocation()[k][i-1])
+                    if (v1 + v2 < solution.getLoadOfVehicleAtLocation()[k][i-1]) {
                         return false;
+                    }
+
                 }
             }
         }

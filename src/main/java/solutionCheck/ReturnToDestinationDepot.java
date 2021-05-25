@@ -20,7 +20,7 @@ public class ReturnToDestinationDepot extends AbstractConstraint{
             int sum=0;
             for (int j : solution.getInstance().getArtificialDestinationDepotId()) {
                 for (int i : DSOkUnion) {
-                    sum += solution.getVehicleSeqStopAtLocations()[k][i-1][j];
+                    sum += solution.getVehicleSeqStopAtLocations()[k][i-1][j-1];
                 }
             }
             if (sum != 1)
